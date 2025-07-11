@@ -18,9 +18,9 @@ export const AuthProvider = ( { children } ) => {
 
   const [ auth, setAuth ] = useState( initialState );
 
-  const login = async ( email, password ) => {
+  const login = async ( correo, password ) => {
 
-    const respuesta = await fetchSinToken( 'login', { email, password }, 'POST' );
+    const respuesta = await fetchSinToken( 'login', { correo, password }, 'POST' );
 
     if ( respuesta.ok ) {
 
@@ -40,9 +40,9 @@ export const AuthProvider = ( { children } ) => {
 
   };
 
-  const register = async ( nombre, email, password ) => {
+  const register = async ( nombre, correo, password ) => {
 
-    const respuesta = await fetchSinToken( 'login/new', { nombre, email, password }, 'POST' );
+    const respuesta = await fetchSinToken( 'login/new', { nombre, correo, password }, 'POST' );
 
     if ( respuesta.ok ) {
 

@@ -9,11 +9,15 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
+import { AuthContext } from '@/auth/AuthContext';
+import Swal from 'sweetalert2';
 
 
 
 export const LoginPage = () => {
+
+  const { login } = useContext( AuthContext)
 
   const [ form, setForm ] = useState( {
     email: 'test1@test.com',
@@ -48,13 +52,19 @@ export const LoginPage = () => {
       rememberme: !form.rememberme
     } );
   }
-  const onSubmit = ( e ) => {
+  const onSubmit = async ( e ) => {
     e.preventDefault();
     
     if( form.rememberme){ localStorage.setItem( 'email', form.email );      
     } else { localStorage.removeItem( 'email' ); }
     //TODO: conectarl al backend
-    console.log(form.email, form.password)
+     const ok = await login( form.email, form.password );
+     console.log(ok)
+     if( !ok){
+              
+          Swal.fire( 'Error al iniciar sesión', 'Por favor verifica tus credenciales', 'error' );	
+        }
+     
 
   };
 

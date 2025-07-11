@@ -2328,6 +2328,11 @@ supports-color@^7.1.0:
   dependencies:
     has-flag "^4.0.0"
 
+sweetalert2@^11.22.2:
+  version "11.22.2"
+  resolved "https://registry.yarnpkg.com/sweetalert2/-/sweetalert2-11.22.2.tgz#d4d82a2edd4e97024306fe37f1bc64fa576e9bc9"
+  integrity sha512-GFQGzw8ZXF23PO79WMAYXLl4zYmLiaKqYJwcp5eBF07wiI5BYPbZtKi2pcvVmfUQK+FqL1risJAMxugcPbGIyg==
+
 tailwind-merge@^3.3.1:
   version "3.3.1"
   resolved "https://registry.yarnpkg.com/tailwind-merge/-/tailwind-merge-3.3.1.tgz#a7e7db7c714f6020319e626ecfb7e7dac8393a4b"
