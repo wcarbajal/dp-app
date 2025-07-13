@@ -5,23 +5,18 @@ const baseUrl = import.meta.env.VITE_API_URL // fallback to empty string if not 
 
 // If using Create React App, you can use:
 // const baseUrl = process.env.REACT_APP_API_URL || '';
-
 export const fetchSinToken = async ( endpoint, data, method = 'GET' ) => {
 
-  console.log('inicio fetchSinToken');
  try {
   
    const url = `${ baseUrl }/${ endpoint }`;
-   console.log('url', url);
 
   if ( method === 'GET' ) {
-    console.log("1")
     
     const respuesta = await fetch( url );
     return await respuesta.json();
 
   } else {
-    console.log("2")
     const respuesta = await fetch( url, {
       method,
       headers: {
@@ -30,7 +25,6 @@ export const fetchSinToken = async ( endpoint, data, method = 'GET' ) => {
       body: JSON.stringify( data )
 
     } );
-    console.log(respuesta)
     return await respuesta.json();
   }
 

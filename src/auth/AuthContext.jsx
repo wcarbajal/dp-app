@@ -4,14 +4,14 @@ import { fetchConToken, fetchSinToken } from '../helpers/fetch';
 import { createContext } from 'react';
 
 // eslint-disable-next-line react-refresh/only-export-components
-export const AuthContext = createContext()
+export const AuthContext = createContext();
 
 const initialState = {
   id: null,
   checking: true,
   logged: false,
   name: null,
-  email: null
+  correo: null
 };
 
 export const AuthProvider = ( { children } ) => {
@@ -28,34 +28,49 @@ export const AuthProvider = ( { children } ) => {
       const { usuario } = respuesta;
 
       setAuth( {
-        uid: usuario.uid,
+        id: usuario.id,
         checking: false,
         logged: true,
         name: usuario.nombre,
-        email: usuario.email
+        correo: usuario.correo
       } );
+      console.log( "Autenticado!" );
     }
     return respuesta.ok;
 
 
   };
 
-  const register = async ( nombre, correo, password ) => {
+  const register = async ( nombre, correo, password, rol ) => {
 
-    const respuesta = await fetchSinToken( 'login/new', { nombre, correo, password }, 'POST' );
+    const respuesta = await fetchSinToken( 'login/registrar',
+      {
+        nombre,
+        correo,
+        password,
+        rol
+      },
+      'POST' );
+
+    console.log( "Se recibe del fetch sin token", respuesta );
+    console.log( "respuesta.ok", respuesta.ok );
+    console.log( "respuesta.msg", respuesta.msg );
+
 
     if ( respuesta.ok ) {
-
+      console.log( "entra al if de respuesta ok" );
       localStorage.setItem( 'token', respuesta.token );
       const { usuario } = respuesta;
 
       setAuth( {
-        uid: usuario.uid,
+        uid: usuario.id,
         checking: false,
         logged: true,
         name: usuario.nombre,
-        email: usuario.email
+        correo: usuario.email
       } );
+      console.log( "Autenticado!" );
+      return true;
     }
 
     return respuesta;
@@ -68,49 +83,51 @@ export const AuthProvider = ( { children } ) => {
     const token = localStorage.getItem( 'token' );
 
     if ( !token ) {
-      return setAuth( {
-        uid: null,
+      setAuth( {
+        id: null,
         checking: false,
         logged: false,
         name: null,
-        email: null
+        correo: null
       } );
+      return false;
     }
-     const resp = await fetchConToken( 'login/renew', {}, 'GET' );
+    const resp = await fetchConToken( 'login/renovar' );
 
-     if (resp.ok) {
+    if ( resp.ok ) {
       localStorage.setItem( 'token', resp.token );
       const { usuario } = resp;
 
       setAuth( {
-        uid: usuario.uid,
+        id: usuario.id,
         checking: false,
         logged: true,
         name: usuario.nombre,
-        email: usuario.email
+        correo: usuario.correo
       } );
-      
-      return true
-     }else {
-    return setAuth( {
-        uid: null,
-        checking: false,    
+      console.log( "Autenticado con token renovado!" );
+      return true;
+    } else {
+      setAuth( {
+        id: null,
+        checking: false,
         logged: false,
         name: null,
-        email: null
+        correo: null
       } );
-     }    
-    
-
+    }
+    return false;
   }, [] );
 
   const logout = () => {
     localStorage.removeItem( 'token' );
     setAuth( {
-      uid: null,
+      id: null,
       checking: false,
       logged: false,
-      
+      name: null,
+      correo: null
+
     } );
 
   };

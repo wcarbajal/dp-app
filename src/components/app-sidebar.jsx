@@ -1,4 +1,4 @@
-import * as React from "react"
+import * as React from "react";
 import {
   IconCamera,
   IconChartBar,
@@ -15,12 +15,12 @@ import {
   IconSearch,
   IconSettings,
   IconUsers,
-} from "@tabler/icons-react"
+} from "@tabler/icons-react";
 
-import { NavDocuments } from "@/components/nav-documents"
-import { NavMain } from "@/components/nav-main"
-import { NavSecondary } from "@/components/nav-secondary"
-import { NavUser } from "@/components/nav-user"
+import { NavDocuments } from "@/components/nav-documents";
+import { NavMain } from "@/components/nav-main";
+import { NavSecondary } from "@/components/nav-secondary";
+import { NavUser } from "@/components/nav-user";
 import {
   Sidebar,
   SidebarContent,
@@ -29,7 +29,8 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-} from "@/components/ui/sidebar"
+} from "@/components/ui/sidebar";
+import { AuthContext } from '@/auth/AuthContext';
 
 const data = {
   user: {
@@ -146,13 +147,15 @@ const data = {
       icon: IconFileWord,
     },
   ],
-}
+};
 
-export function AppSidebar({
+export function AppSidebar( {
   ...props
-}) {
+} ) {
+  const { auth } = React.useContext( AuthContext );
+
   return (
-    (<Sidebar collapsible="offcanvas" {...props}>
+    ( <Sidebar collapsible="offcanvas" { ...props }>
       <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem>
@@ -166,13 +169,17 @@ export function AppSidebar({
         </SidebarMenu>
       </SidebarHeader>
       <SidebarContent>
-        <NavMain items={data.navMain} />
-        <NavDocuments items={data.documents} />
-        <NavSecondary items={data.navSecondary} className="mt-auto" />
+        <NavMain items={ data.navMain } />
+        {/* <NavDocuments items={ data.documents } /> */}
+        <NavSecondary items={ data.navSecondary } className="mt-auto" />
       </SidebarContent>
       <SidebarFooter>
-        <NavUser user={data.user} />
+        <NavUser user={ {
+          name: auth.name,
+          email: auth.correo,
+          avatar: "https://github.com/shadcn.png",
+        } } />
       </SidebarFooter>
-    </Sidebar>)
+    </Sidebar> )
   );
 }
