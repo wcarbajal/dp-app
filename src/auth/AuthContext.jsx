@@ -34,7 +34,7 @@ export const AuthProvider = ( { children } ) => {
         name: usuario.nombre,
         correo: usuario.correo
       } );
-      console.log( "Autenticado!" );
+      
     }
     return respuesta.ok;
 
@@ -52,9 +52,7 @@ export const AuthProvider = ( { children } ) => {
       },
       'POST' );
 
-    console.log( "Se recibe del fetch sin token", respuesta );
-    console.log( "respuesta.ok", respuesta.ok );
-    console.log( "respuesta.msg", respuesta.msg );
+   
 
 
     if ( respuesta.ok ) {
