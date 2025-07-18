@@ -7,6 +7,7 @@ import { AuthContext } from '../auth/AuthContext';
 
 
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const SocketContext = createContext();
 
 
@@ -18,11 +19,14 @@ export const SocketProvider = ({ children }) => {
 
     useEffect(() => {
       if (auth.logged){
+        console.log("el auth.logged", auth.logged)
         conectarSocket();
       }
     }, [auth, conectarSocket])
 
        useEffect(() => {
+
+         console.log("el auth.logged", auth.logged)
       if (!auth.logged){
         desconectarSocket();
       }

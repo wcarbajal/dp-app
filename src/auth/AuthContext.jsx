@@ -1,10 +1,12 @@
 
-import { useCallback, useState } from 'react';
+import { useCallback,  useState } from 'react';
 import { fetchConToken, fetchSinToken } from '../helpers/fetch';
 import { createContext } from 'react';
+import { SocketContext } from '@/context/SocketContext';
 
 // eslint-disable-next-line react-refresh/only-export-components
 export const AuthContext = createContext();
+
 
 const initialState = {
   id: null,
@@ -17,6 +19,9 @@ const initialState = {
 export const AuthProvider = ( { children } ) => {
 
   const [ auth, setAuth ] = useState( initialState );
+
+ 
+  
 
   const login = async ( correo, password ) => {
 
