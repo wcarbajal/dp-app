@@ -15,18 +15,20 @@ export const SocketProvider = ({ children }) => {
 
     const { socket, online, conectarSocket, desconectarSocket  } = useSocket('http://localhost:8080');
     const { auth } = useContext( AuthContext );
-    
+
+      
 
     useEffect(() => {
       if (auth.logged){
-        console.log("el auth.logged", auth.logged)
+        
+//        console.log({socket})
         conectarSocket();
       }
     }, [auth, conectarSocket])
 
        useEffect(() => {
 
-         console.log("el auth.logged", auth.logged)
+         
       if (!auth.logged){
         desconectarSocket();
       }
@@ -34,7 +36,7 @@ export const SocketProvider = ({ children }) => {
     //escuchar los cambios en los usuarios conectados
     useEffect(() => {
       socket?.on('si-logeado', (data)=> {
-        console.log("Logeado con la data:", data)
+    console.log("Data enviada por el frontend",data)    
       })
 
     }, [socket])

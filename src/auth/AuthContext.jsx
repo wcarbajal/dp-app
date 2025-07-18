@@ -46,24 +46,22 @@ export const AuthProvider = ( { children } ) => {
 
   };
 
-  const register = async ( nombre, correo, password, rol ) => {
+  const register = async ( nombre, correo, password, rol  ) => {
 
     const respuesta = await fetchSinToken( 'login/registrar',
       {
         nombre,
         correo,
         password,
-        rol
+        rol: rol || 'USER'
       },
       'POST' );
 
-    console.log( "Se recibe del fetch sin token", respuesta );
-    console.log( "respuesta.ok", respuesta.ok );
-    console.log( "respuesta.msg", respuesta.msg );
-
+    
+console.log("respuesta del fetchSin token", respuesta)
 
     if ( respuesta.ok ) {
-      console.log( "entra al if de respuesta ok" );
+      
       localStorage.setItem( 'token', respuesta.token );
       const { usuario } = respuesta;
 
