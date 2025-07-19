@@ -24,7 +24,7 @@ export const useSocket = ( serverPath ) => {
       }
     } );
     setSocket( tokenTemp );
-    console.log( "Conectando al socket:", tokenTemp );
+    
   }, [ serverPath ] );
 
   const desconectarSocket = useCallback( () => {

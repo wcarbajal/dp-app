@@ -2,7 +2,10 @@
 import * as React from "react"
 import { Slot } from "@radix-ui/react-slot"
 import { cva } from "class-variance-authority";
-import { PanelLeftIcon } from "lucide-react"
+
+import { TiThMenuOutline } from "react-icons/ti";
+import { MdOutlineMenuOpen } from "react-icons/md";
+
 
 import { useIsMobile } from "@/hooks/use-mobile"
 import { cn } from "@/lib/utils"
@@ -240,7 +243,7 @@ function SidebarTrigger({
         toggleSidebar()
       }}
       {...props}>
-      <PanelLeftIcon />
+      <MdOutlineMenuOpen />
       <span className="sr-only">Toggle Sidebar</span>
     </Button>)
   );

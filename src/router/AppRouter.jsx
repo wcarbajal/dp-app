@@ -1,13 +1,11 @@
 import { AuthContext } from '@/auth/AuthContext';
-import { DashboardPage } from '@/pages/DashboardPage';
 import { ErrorPage } from '@/pages/ErrorPage';
-import { LoginPage } from '@/pages/LoginPage';
-import { RegisterPage } from '@/pages/RegisterPage';
 import { useContext, useEffect } from 'react';
 import { Route, Routes } from 'react-router';
 import { PublicRoute } from './PublicRoute';
 import { AuthRouter } from './AuthRouter';
 import { PrivateRoute } from './PrivateRoute';
+import { PrincipalRouter } from './PrincipalRouter';
 
 
 export const AppRouter = () => {
@@ -31,7 +29,8 @@ export const AppRouter = () => {
         <Route path="auth/*" element={ <AuthRouter /> } />
       </Route>
       <Route element={ <PrivateRoute isAuthenticated={ auth.logged } /> } >
-        <Route path="/" element={ <DashboardPage /> } />
+        <Route path="/*" element={ <PrincipalRouter /> } />
+
       </Route>
       <Route path="*" element={ <ErrorPage /> } />
     </Routes>
