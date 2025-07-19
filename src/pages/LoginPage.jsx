@@ -7,7 +7,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
+
 import { Label } from "@/components/ui/label";
 import { useContext, useEffect, useState } from 'react';
 import { AuthContext } from '@/auth/AuthContext';
@@ -17,7 +17,7 @@ import Swal from 'sweetalert2';
 
 export const LoginPage = () => {
 
-  const { login } = useContext( AuthContext)
+  const { login } = useContext( AuthContext )
 
   const [ form, setForm ] = useState( {
     email: 'test1@test.com',

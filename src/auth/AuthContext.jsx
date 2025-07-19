@@ -1,10 +1,13 @@
 
-import { useCallback, useState } from 'react';
+import { useCallback,  useState } from 'react';
 import { fetchConToken, fetchSinToken } from '../helpers/fetch';
 import { createContext } from 'react';
 
+
+
 // eslint-disable-next-line react-refresh/only-export-components
 export const AuthContext = createContext();
+
 
 const initialState = {
   id: null,
@@ -17,6 +20,9 @@ const initialState = {
 export const AuthProvider = ( { children } ) => {
 
   const [ auth, setAuth ] = useState( initialState );
+
+ 
+  
 
   const login = async ( correo, password ) => {
 
@@ -41,22 +47,19 @@ export const AuthProvider = ( { children } ) => {
 
   };
 
-  const register = async ( nombre, correo, password, rol ) => {
+  const register = async ( nombre, correo, password, rol  ) => {
 
     const respuesta = await fetchSinToken( 'login/registrar',
       {
         nombre,
         correo,
         password,
-        rol
+        rol: rol || 'USER'
       },
       'POST' );
 
-   
-
-
     if ( respuesta.ok ) {
-      console.log( "entra al if de respuesta ok" );
+      
       localStorage.setItem( 'token', respuesta.token );
       const { usuario } = respuesta;
 
