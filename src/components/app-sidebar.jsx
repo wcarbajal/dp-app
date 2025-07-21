@@ -14,9 +14,9 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 
-import { 
+import {
   AuthContext
- } from '@/auth/AuthContext';
+} from '@/auth/AuthContext';
 
 import { itemsNav } from './listNav';
 import { Separator } from '@radix-ui/react-dropdown-menu';
@@ -28,23 +28,23 @@ export function AppSidebar( {
   const { auth } = React.useContext( AuthContext );
 
   return (
-    ( <Sidebar collapsible="offcanvas" { ...props }>
-      <SidebarHeader className=" border-b-1">
+    <Sidebar collapsible="offcanvas" { ...props }>
+      <SidebarHeader className=" border-b-1 shadow-lg">
         <SidebarMenu >
           <SidebarMenuItem>
             <SidebarMenuButton asChild className="itemsNav-[slot=sidebar-menu-button]:!p-1.5">
               <Link to="/">
-                <TiFlowMerge size={20} />
+                <TiFlowMerge size={ 20 } />
                 <span className="text-base font-semibold">Process doc</span>
               </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarHeader>
-      <Separator  />
+      <Separator />
       <SidebarContent >
         <NavMain items={ itemsNav.navMain } />
-        {/* <NavDocuments items={ itemsNav.documents } /> */}
+
         <NavSecondary items={ itemsNav.navSecondary } className="mt-auto" />
       </SidebarContent>
       <SidebarFooter>
@@ -54,6 +54,6 @@ export function AppSidebar( {
           avatar: "https://github.com/shadcn.png",
         } } />
       </SidebarFooter>
-    </Sidebar> )
+    </Sidebar>
   );
 }
