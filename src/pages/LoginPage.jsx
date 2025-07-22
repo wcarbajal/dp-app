@@ -12,6 +12,7 @@ import { Label } from "@/components/ui/label";
 import { useContext, useEffect, useState } from 'react';
 import { AuthContext } from '@/auth/AuthContext';
 import Swal from 'sweetalert2';
+import { Link } from 'react-router';
 
 
 
@@ -117,9 +118,9 @@ export const LoginPage = () => {
                   <div className="grid gap-3">
                     <div className="flex items-center">
                       <Label htmlFor="password">Password</Label>
-                      <a href="#" className="ml-auto text-sm underline-offset-4 hover:underline">
+                      <Link to="#" className="ml-auto text-sm underline-offset-4 hover:underline">
                         Olvidó su contraseña?
-                      </a>
+                      </Link>
                     </div>
                     <input id="password" type="password" required name="password"
                       value={ form.password }
@@ -152,9 +153,9 @@ export const LoginPage = () => {
                 </div>
                 <div className="text-center text-sm">
                  ¿No tiene una cuenta?{ " " }
-                  <a href="/auth/register" className="underline underline-offset-4">
+                  <Link to="/auth/register" className="underline underline-offset-4">
                     Registrese
-                  </a>
+                  </Link>
                 </div>
               </div>
             </form>
@@ -163,7 +164,7 @@ export const LoginPage = () => {
          <div
           className="text-muted-foreground *:[a]:hover:text-primary text-center text-xs text-balance *:[a]:underline *:[a]:underline-offset-4">
           Al hacer click en registrar, usted acepta nuestros <a href="#">Terminos de Servicio</a>{ " " }
-          y <a href="#">Politicas de privacidad</a>.
+          y <Link to="#">Politicas de privacidad</Link>.
         </div>
       </div>
 

@@ -4,6 +4,8 @@ import { useCallback, useEffect, useState } from 'react';
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 
+import { AlertDialog, AlertDialogTrigger, AlertDialogContent, AlertDialogHeader, AlertDialogTitle, AlertDialogDescription, AlertDialogFooter, AlertDialogCancel, AlertDialogAction } from "@/components/ui/alert-dialog";
+
 
 import { Button } from '../ui/button';
 import { IconPlus } from '@tabler/icons-react';
@@ -39,6 +41,7 @@ import {
 
 import { Input } from '../ui/input';
 import { nuevoProcesoSchema } from './schema/SchemaProcesos';
+import { MdDeleteOutline } from 'react-icons/md';
 
 
 
@@ -52,11 +55,14 @@ export const ListaProcesos = () => {
       descripcion: "",
       nivel: "",
       tipo: "",
-      parentId: "", // Usa undefined para campos opcionales numéricos
+      parentId: undefined, // Usa undefined para campos opcionales numéricos
     },
   } );
 
   const [ procesos, setProcesos ] = useState( [] );
+
+  const [ procesoAEliminar, setProcesoAEliminar ] = useState( null );
+  const [ openDialog, setOpenDialog ] = useState( false );
 
 
   const cargarProcesos = useCallback( async () => {
@@ -69,9 +75,10 @@ export const ListaProcesos = () => {
     }
   }, [] );
 
-  useEffect( () => {
-    cargarProcesos();
-  }, [ cargarProcesos ] );
+  useEffect(
+    () => {
+      cargarProcesos();
+    }, [ cargarProcesos ] );
 
   const onSubmit = async ( values ) => {
 
@@ -80,13 +87,35 @@ export const ListaProcesos = () => {
     console.log( values );
     // Enviar los datos al servidor
     const respuesta = await fetchConToken( 'procesos/registrar', values, 'POST' );
-    console.log( respuesta );
+    if ( respuesta.ok ) {
+      // Recargar la lista de procesos
+      cargarProcesos();
+    } else {
+      console.error( 'Error al crear el proceso:', respuesta.msg );
+      console.log( respuesta );
+    }
+  };
+
+  const handleEliminarProceso = async () => {
+    if ( !procesoAEliminar ) return;
+    try {
+      const respuesta = await fetchConToken( `procesos/${ procesoAEliminar }`, {}, 'DELETE' );
+      if ( respuesta.ok ) {
+        cargarProcesos();
+      } else {
+        console.error( 'Error al eliminar el proceso:', respuesta.msg );
+      }
+    } catch ( error ) {
+      console.error( 'Error al eliminar el proceso:', error );
+    } finally {
+      setOpenDialog( false );
+      setProcesoAEliminar( null );
+    }
   };
 
   return (
     <>
-      <div className="flex justify-between align-center  p-2  rounded-lg"
-      >
+      <div className="flex justify-between align-center  p-2  rounded-lg" >
         <h1 className="flex self-center font-bold  -m-2">Procesos</h1>
         <Dialog>
 
@@ -217,10 +246,12 @@ export const ListaProcesos = () => {
                           {
                             procesos && procesos.length > 0 &&
                             procesos.map( proceso => (
+
                               <SelectItem key={ proceso.id } value={ proceso.id.toString() }>
                                 { proceso.codigo } - { proceso.nombre }
-                                <Button>delete</Button>
+
                               </SelectItem>
+
                             ) )
                           }
                         </SelectContent>
@@ -237,42 +268,47 @@ export const ListaProcesos = () => {
 
         </Dialog>
       </div >
-
-
       <div>
         {
-          // ordenar la lista segun el codigo
           procesos && procesos.length > 0 &&
-          procesos.sort( ( a, b ) => a.codigo.localeCompare( b.codigo ) ).map( proceso => (
-
-            <div key={ proceso.id } className="">
-              <span className="text-xs">  { proceso.codigo } - { proceso.nombre }</span>
-
-            </div>
-          ) )
+          procesos
+            .sort( ( a, b ) => a.codigo.localeCompare( b.codigo ) )
+            .map( proceso => (
+              <div key={ proceso.id } className="flex justify-between items-center gap-2">
+                <span className="text-xs">{ proceso.codigo } - { proceso.nombre }</span>
+                <AlertDialog open={ openDialog && procesoAEliminar === proceso.id } onOpenChange={ setOpenDialog }>
+                  <AlertDialogTrigger asChild>
+                    <Button
+                      variant="secundary"
+                      className="cursor-pointer"
+                      size="icon"
+                      onClick={ () => {
+                        setProcesoAEliminar( proceso.id );
+                        setOpenDialog( true );
+                      } }
+                    >
+                      <MdDeleteOutline size={ 20 } />
+                    </Button>
+                  </AlertDialogTrigger>
+                  <AlertDialogContent>
+                    <AlertDialogHeader>
+                      <AlertDialogTitle>¿Eliminar proceso?</AlertDialogTitle>
+                      <AlertDialogDescription>
+                        ¿Está seguro que desea eliminar este proceso? Esta acción no se puede deshacer.
+                      </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                      <AlertDialogCancel onClick={ () => setOpenDialog( false ) }>Cancelar</AlertDialogCancel>
+                      <AlertDialogAction onClick={ handleEliminarProceso }>Eliminar</AlertDialogAction>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialog>
+              </div>
+            ) )
         }
       </div>
 
 
-      {/*  <div className="p-2">
-        <h2 className="text-lg font-semibold">Nuevo Proceso</h2>
-        <form onSubmit={ handleSubmit }>
-          <input
-            type="text"
-            placeholder="Nombre"
-            value={ nuevoProceso.nombre }
-            onChange={ ( e ) => setNuevoProceso( { ...nuevoProceso, nombre: e.target.value } ) }
-            required
-          />
-          <textarea
-            placeholder="Descripción"
-            value={ nuevoProceso.descripcion }
-            onChange={ ( e ) => setNuevoProceso( { ...nuevoProceso, descripcion: e.target.value } ) }
-            required
-          />
-          <button type="submit">Agregar Proceso</button>
-        </form>
-      </div> */}
     </>
   );
 };

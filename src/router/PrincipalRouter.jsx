@@ -7,6 +7,7 @@ import { ReportePage } from '@/pages/ReportePage';
 
 import { EquipoPage } from '@/pages/EquipoPage';
 import { MapaPage } from '@/pages/MapaPage';
+import { ConfiguracionesPage } from '@/pages/ConfiguracionesPage';
 
 
 export const PrincipalRouter = () => {
@@ -19,6 +20,7 @@ export const PrincipalRouter = () => {
         <Route path="mapa" element={ <MapaPage /> } />
         <Route path="reportes" element={ <ReportePage /> } />
         <Route path="equipo" element={ <EquipoPage /> } />
+        <Route path="configuraciones" element={ <ConfiguracionesPage /> } />
 
 
       </Route>
