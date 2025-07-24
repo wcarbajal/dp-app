@@ -40,7 +40,7 @@ import {
 } from "@/components/ui/dialog";
 
 import { Input } from '../ui/input';
-import { nuevoProcesoSchema } from './schema/SchemaProcesos';
+import { nuevoProcesoSchema } from '../../schema/SchemaProcesos';
 import { MdDeleteOutline } from 'react-icons/md';
 
 
@@ -128,7 +128,7 @@ export const ListaProcesos = () => {
           <DialogContent className="sm:max-w-[425px] " aria-describedby="dialog-description" >
             <DialogHeader>
               <DialogTitle className="text-center">Nuevo Proceso</DialogTitle>
-              <DialogDescription id="dialog-description">
+              <DialogDescription id="dialog-description" aria-describedby="dialog-description">
                 Complete los datos para crear un nuevo proceso.
               </DialogDescription>
             </DialogHeader>

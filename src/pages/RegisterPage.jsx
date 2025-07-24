@@ -145,7 +145,7 @@ console.log("Usuario registrado correctamente");
         </Card>
         <div
           className="text-muted-foreground *:[a]:hover:text-primary text-center text-xs text-balance *:[a]:underline *:[a]:underline-offset-4">
-          Al hacer click en registrar, usted acepta nuestros <a href="#">Terminos de Servicio</a>{ " " }
+          Al hacer click en registrar, usted acepta nuestros <Link to="#">Terminos de Servicio</Link>{ " " }
           y <Link to="#">Politicas de privacidad</Link>.
         </div>
       </div>

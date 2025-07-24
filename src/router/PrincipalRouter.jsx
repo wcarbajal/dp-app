@@ -9,6 +9,10 @@ import { EquipoPage } from '@/pages/EquipoPage';
 import { MapaPage } from '@/pages/MapaPage';
 import { ConfiguracionesPage } from '@/pages/ConfiguracionesPage';
 
+import { UsuariosConfig } from '@/components/configuraciones/UsuariosConfig';
+import { ReportesConfig } from '@/components/configuraciones/ReportesConfig';
+import { ProcesosConfig } from '@/components/configuraciones/procesos-config/ProcesosConfig';
+
 
 export const PrincipalRouter = () => {
   return (
@@ -21,6 +25,9 @@ export const PrincipalRouter = () => {
         <Route path="reportes" element={ <ReportePage /> } />
         <Route path="equipo" element={ <EquipoPage /> } />
         <Route path="configuraciones" element={ <ConfiguracionesPage /> } />
+        <Route path="configuraciones/procesos" element={ <ProcesosConfig /> } />
+        <Route path="configuraciones/usuarios" element={ <UsuariosConfig /> } />
+        <Route path="configuraciones/reportes" element={ <ReportesConfig /> } />
 
 
       </Route>
