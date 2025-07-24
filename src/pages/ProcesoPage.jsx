@@ -1,17 +1,18 @@
-import { DiagramaProceso } from '@/components/procesos/DiagramaProceso';
+
 import { ListaProcesos } from '@/components/procesos/ListaProcesos';
+//import { useState } from 'react';
 
 export const ProcesoPage = () => {
+
+  /*  const [ procesos, setProcesos ] = useState( [] );
+    const [ tipoFiltro, setTipoFiltro ] = useState( "" ); */
   return (
-   <div className="grid grid-cols-12 flex-1 min-h-0 h-full ">
-      <div className="p-4 col-span-5 lg:col-span-3 xl:col-span-2 h-full flex flex-col min-h-0 border-r">
+   <div className="flex-1 min-h-0 h-full ">
+      
         <ListaProcesos />
-      </div>
+      
 
-
-      <div className=" p-4 col-span-7 lg:col-span-9 xl:col-span-10 h-full flex flex-col min-h-0">
-        <DiagramaProceso /> 
-      </div>
+     
     </div>
   );
 };

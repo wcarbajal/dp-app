@@ -25,9 +25,9 @@ export const ProcesosConfig = () => {
 
 
   const [ procesos, setProcesos ] = useState( [] );
+  const [ tipoFiltro, setTipoFiltro ] = useState( "" );
   const [ openDialog, setOpenDialog ] = useState( false );
   const [ editId, setEditId ] = useState( null );
-  const [ tipoFiltro, setTipoFiltro ] = useState( "" );
 
 
   const cargarProcesos = async () => {
@@ -117,7 +117,7 @@ export const ProcesosConfig = () => {
       <div className="space-y-2">
         { procesos.length === 0
           ? <span className="text-muted-foreground text-sm ">No hay procesos registrados</span>
-          : getProcesosTree( procesos, tipoFiltro ).map( proceso => renderProcesoTreeVertical( proceso, handleEditar, handleEliminar ) )
+          : getProcesosTree( procesos, tipoFiltro ).map( proceso => renderProcesoTreeVertical( proceso, handleEditar, handleEliminar, true ) )
         }
 
       </div>
