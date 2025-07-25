@@ -1,11 +1,42 @@
-
+import { useEffect, useState } from "react";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { fetchConToken } from '@/helpers/fetch';
+import { DescripcionProceso } from './detalle/DescripcionProceso';
+import { DiagramaProceso } from './detalle/DiagramaProceso';
+import { FichaProceso } from './detalle/FichaProceso';
+import { ProcedimientoProceso } from './detalle/ProcedimientoProceso';
+import { IndicadoresProceso } from './detalle/IndicadoresProceso';
 
-export const DetalleProceso = ( { proceso } ) => {
+export const DetalleProceso = ( { procesoId } ) => {
+  const [ proceso, setProceso ] = useState( null );
+  const [ loading, setLoading ] = useState( true );
+
+  useEffect( () => {
+    const cargarDetalle = async () => {
+
+      console.log( "ID del proceso:", procesoId );
+      setLoading( true );
+      try {
+        // Ajusta la ruta según tu API
+        const consulta = await fetchConToken( `procesos/detalle/${ procesoId }` );
+        console.log( "Detalle del proceso:", consulta.proceso );
+        setProceso( consulta.proceso );
+      } catch ( error ) {
+        setProceso( null );
+        console.log( "Error al cargar el detalle del proceso:", error );
+      } finally {
+        setLoading( false );
+      }
+    };
+    if ( procesoId ) cargarDetalle();
+  }, [ procesoId ] );
+
+  if ( loading ) return <div className="p-4">Cargando...</div>;
+  if ( !proceso ) return <div className="p-4 text-red-500">No se encontró el detalle del proceso.</div>;
+
   return (
     <div>
-      <h2 className="font-bold mb-2">{ proceso.codigo } - { proceso.nombre }</h2>
-
+      <h2 className="font-bold mb-2">{ proceso?.codigo } - { proceso?.nombre }</h2>
       <div className="w-full h-full flex flex-col">
         <Tabs defaultValue="descripcion" className="w-full h-full flex flex-col">
           <TabsList className="mb-4">
@@ -16,30 +47,19 @@ export const DetalleProceso = ( { proceso } ) => {
             <TabsTrigger value="indicadores">Indicadores</TabsTrigger>
           </TabsList>
           <TabsContent value="descripcion" className="flex-1 w-full h-full p-4">
-            <h2 className="font-bold mb-2">Descripción</h2>
-            <p>{ proceso.descripcion || "Sin descripción disponible." }</p>
+            <DescripcionProceso proceso={ proceso } />
           </TabsContent>
           <TabsContent value="diagrama" className="flex-1 w-full h-full p-4">
-            <div className="w-full h-full flex items-center justify-center">
-              <img
-                src={ proceso.imagenUrl }
-                alt={ `Diagrama de ${ proceso.nombre }` }
-                className="w-full h-full object-contain"
-                style={ { maxHeight: "100%", maxWidth: "100%" } }
-              />
-            </div>
+            <DiagramaProceso proceso={ proceso } />
           </TabsContent>
           <TabsContent value="ficha" className="flex-1 w-full h-full p-4">
-            <h2 className="font-bold mb-2">Ficha</h2>
-            <p>{ proceso.ficha || "Sin ficha disponible." }</p>
+            <FichaProceso proceso={ proceso } />
           </TabsContent>
           <TabsContent value="procedimiento" className="flex-1 w-full h-full p-4">
-            <h2 className="font-bold mb-2">Procedimiento</h2>
-            <p>{ proceso.procedimiento || "Sin procedimiento disponible." }</p>
+            <ProcedimientoProceso proceso={ proceso } />
           </TabsContent>
           <TabsContent value="indicadores" className="flex-1 w-full h-full p-4">
-            <h2 className="font-bold mb-2">Indicadores</h2>
-            <p>{ proceso.indicadores || "Sin indicadores disponibles." }</p>
+            <IndicadoresProceso proceso={ proceso } />
           </TabsContent>
         </Tabs>
       </div>

@@ -56,7 +56,9 @@ export const ListaProcesos = () => {
       </div>
       <div className="flex-1 -ml-6 p-4 bg-white border rounded-lg shadow-lg">
         { procesoSeleccionado ? (
-          <DetalleProceso proceso={ procesoSeleccionado } />
+          console.log( "Id seleccionado:", procesoSeleccionado.id),
+          
+          <DetalleProceso procesoId={ procesoSeleccionado.id } />
         ) : (
           <div className="text-muted-foreground">Seleccione un proceso para el detalle.</div>
         ) }
