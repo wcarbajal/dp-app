@@ -33,3 +33,11 @@ export const actualizarProcesoSchema = z.object({
     .optional()
     .or(z.literal("")).optional(),
 });
+
+export const actualizarDescripcion = z.object({
+  codigo: z.string().min(1, "El código es obligatorio"),
+  nombre: z.string().min(1, "El nombre es obligatorio"),
+  tipo: z.enum(["Estratégico", "Misional", "Soporte"], { message: "Seleccione un tipo válido" }),
+  nivel: z.string().min(1, "El nivel es obligatorio"),
+  descripcion: z.string().optional(),
+});

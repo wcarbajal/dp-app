@@ -1,5 +1,5 @@
 {
-  "include": ["src", "../db-server/schemas"],
+  "include": ["src", "../db-server/schemas", "../db-server/prisma/seed.js"],
   "references": [   
   ],
   "compilerOptions": {

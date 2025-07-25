@@ -120,14 +120,13 @@ export const FormProcesoConfig = ( { form, handleSubmit, procesos, editId } ) =>
                 <SelectContent>
                   {
                     procesos && procesos.length > 0 &&
-                    procesos.map( proceso => (
-
-                      <SelectItem key={ proceso.id } value={ proceso.id.toString() }>
-                        { proceso.codigo } - { proceso.nombre }
-
-                      </SelectItem>
-
-                    ) )
+                    [ ...procesos ]
+                      .sort( ( a, b ) => a.codigo.localeCompare( b.codigo ) )
+                      .map( proceso => (
+                        <SelectItem key={ proceso.id } value={ proceso.id.toString() }>
+                          { proceso.codigo } - { proceso.nombre }
+                        </SelectItem>
+                      ) )
                   }
                 </SelectContent>
               </Select>
