@@ -39,7 +39,7 @@ export const DescripcionProceso = ({ proceso, onSubmit: onSubmitProp }) => {
   };
 
   return (
-    <div>
+    <div className="flex ">
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 max-w-xl mx-auto">
         <FormField

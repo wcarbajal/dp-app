@@ -11,6 +11,21 @@ export const DetalleProceso = ( { procesoId } ) => {
   const [ proceso, setProceso ] = useState( null );
   const [ loading, setLoading ] = useState( true );
 
+  const onActualizarDiagrama = async (file) => {
+    if (!file) return null;
+    
+    const formData = new FormData();
+    formData.append("diagrama", file);
+    console.log("formData", formData);
+    try {
+     const imageResult = await fetchConToken(`procesos/actualizar-diagrama/${procesoId}`, formData, "POST");
+      return imageResult;
+    } catch (error) {
+      console.error("Error al actualizar el diagrama:", error);
+      return null;
+    }
+  };
+
   useEffect( () => {
     const cargarDetalle = async () => {
 
@@ -35,9 +50,9 @@ export const DetalleProceso = ( { procesoId } ) => {
   if ( !proceso ) return <div className="p-4 text-red-500">No se encontró el detalle del proceso.</div>;
 
   return (
-    <div>
+    <div className="flex flex-col gap-4 h-full ">
       <h2 className="font-bold mb-2">{ proceso?.codigo } - { proceso?.nombre }</h2>
-      <div className="w-full h-full flex flex-col">
+      <div className="w-full h-full flex flex-col ">
         <Tabs defaultValue="descripcion" className="w-full h-full flex flex-col">
           <TabsList className="mb-4">
             <TabsTrigger value="descripcion">Descripción</TabsTrigger>
@@ -46,11 +61,11 @@ export const DetalleProceso = ( { procesoId } ) => {
             <TabsTrigger value="procedimiento">Procedimiento</TabsTrigger>
             <TabsTrigger value="indicadores">Indicadores</TabsTrigger>
           </TabsList>
-          <TabsContent value="descripcion" className="flex-1 w-full h-full p-4">
+          <TabsContent value="descripcion" className="w-full h-full p-4 ">
             <DescripcionProceso proceso={ proceso } />
           </TabsContent>
           <TabsContent value="diagrama" className="flex-1 w-full h-full p-4">
-            <DiagramaProceso proceso={ proceso } />
+            <DiagramaProceso proceso={ proceso } onActualizarDiagrama={ onActualizarDiagrama } />
           </TabsContent>
           <TabsContent value="ficha" className="flex-1 w-full h-full p-4">
             <FichaProceso proceso={ proceso } />

@@ -3,7 +3,12 @@ import { Button } from "@/components/ui/button";
 import { fetchConToken } from "@/helpers/fetch";
 import { MdEdit } from "react-icons/md";
 import { DetalleProceso } from './DetalleProceso';
-import { Separator } from '../ui/separator';
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 
 export const ListaProcesos = () => {
   const [ procesos, setProcesos ] = useState( [] );
@@ -27,38 +32,50 @@ export const ListaProcesos = () => {
     <div className="flex gap-8 m-1">
       <div className="w-1/4 p-4 bg-white border rounded-lg shadow-lg">
         <h2 className="font-bold mb-2 text-center">Procesos activos</h2>
-        <div className="space-y-2">
-          { [ "Estratégico" , "Misional", "Soporte"].map( tipo => {
+        <Accordion
+          type="single"
+          collapsible
+          className="w-full"
+          defaultValue="item-estratégico"
+        >
+          { [ "Estratégico", "Misional", "Soporte" ].map( tipo => {
             const procesosPorTipo = procesos
               .filter( p => p.tipo === tipo )
               .sort( ( a, b ) => a.codigo.localeCompare( b.codigo ) );
             if ( procesosPorTipo.length === 0 ) return null;
             return (
-              <div key={ tipo }>
-                <div className="font-bold text-base mb-1">{ tipo }</div>
-                { procesosPorTipo.map( proceso => (
-                  <div
-                    key={ proceso.id }
-                    className={ `flex items-center justify-between text-sm border-b rounded cursor-pointer hover:bg-gray-100 ${ procesoSeleccionado?.id === proceso.id ? "bg-gray-200 font-semibold border-primary" : "bg-white"
-                      }` }
-                    onClick={ () => setProcesoSeleccionado( proceso ) }
-                  >
-                    <span>
-                      <span className="text-xs">{ proceso.codigo }</span> - { proceso.nombre }
-                    </span>
+              <AccordionItem value={ `item-${ tipo.toLowerCase() }` } key={ tipo }>
+                <AccordionTrigger>
+                  <span className="font-bold text-base">{ tipo }</span>
+                </AccordionTrigger>
+                <AccordionContent>
+                  <div className="max-h-96 overflow-y-auto pr-2">
+                    { procesosPorTipo.map( proceso => (
+                      <div
+                        key={ proceso.id }
+                        className={ `flex items-center justify-between text-sm border-b rounded cursor-pointer hover:bg-gray-100 ${ procesoSeleccionado?.id === proceso.id
+                          ? "bg-gray-200 font-semibold border-primary"
+                          : "bg-white"
+                          }` }
+                        onClick={ () => setProcesoSeleccionado( proceso ) }
+                      >
+                        <span>
+                          <span className="text-xs">{ proceso.codigo }</span> - { proceso.nombre }
+                        </span>
+                      </div>
+                    ) ) }
                   </div>
-                ) ) }
-                <div className="my-6" />
-              </div>
+                </AccordionContent>
+              </AccordionItem>
             );
           } ) }
-        </div>
+        </Accordion>
       </div>
-      <div className="flex-1 -ml-6 p-4 bg-white border rounded-lg shadow-lg">
+      <div className="flex-1 -ml-6 p-4  border rounded-lg shadow-lg">
         { procesoSeleccionado ? (
-          console.log( "Id seleccionado:", procesoSeleccionado.id),
           
           <DetalleProceso procesoId={ procesoSeleccionado.id } />
+          
         ) : (
           <div className="text-muted-foreground">Seleccione un proceso para el detalle.</div>
         ) }

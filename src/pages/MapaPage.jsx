@@ -1,7 +1,17 @@
+import { EntradaSalida } from '@/components/mapa/EntradaSalida';
+import { ProcesosMapa } from '@/components/mapa/ProcesosMapa';
 import { fetchConToken } from '@/helpers/fetch';
 import { useEffect, useState } from "react";
 
 export const MapaPage = () => {
+
+  const [ es ] = useState(
+    {
+      entrada: "Ciudadanos de bajos, insucientes recursos o alto rendimiento académico con barreras de acceso a la educación superior de calidad.",
+      salida: "Ciudadanos que accedieron a la educación superior de calidad y contribuyen al desarrollo económico y social."
+    }
+  )
+    
   const [ procesos, setProcesos ] = useState( [] );
   const [ loading, setLoading ] = useState( true );
 
@@ -26,112 +36,30 @@ export const MapaPage = () => {
   const soporte = procesos.filter( p => p.tipo === "Soporte" );
 
   return (
-    <div className="max-w-6xl mx-auto mt-8 p-4">
-      <h1 className="text-2xl font-bold mb-8 text-center">Mapa de Procesos</h1>
+    <div className="flex flex-col gap-5 w-full justify-center items-center shadow-lg">
+      <h1 className="text-xl font-bold text-center ">Mapa de Procesos del PRONABEC</h1>
       { loading ? (
         <div className="text-center text-gray-500">Cargando...</div>
       ) : (
-        <div className="flex gap-5">
-          <div className="bg-[#3B5C9F] rounded-lg shadow p-4 flex items-center justify-center min-h-[180px]">
-            <span
-              className="text-md text-white font-bold"
-              style={ { writingMode: 'vertical-rl', transform: 'rotate(180deg)' } }
-            >
-              entrada
-            </span>
-          </div>
+        <div className="flex gap-5 h-[650px] m-2 rounded-2xl w-[900px]">
 
-          <div className="space-y-8">
+          {/* entradas */ }
+          <EntradaSalida objetivo={ es.entrada } />
+          
+          {/* Procesos */ }
+          <div className="flex gap-5 flex-col ">
             {/* Procesos Estratégicos */ }
-            <div className="w-[1000px] mx-auto">
-              <div className="bg-cyan-200 rounded-lg shadow p-4">
-                <h2 className="text-xl font-bold text-center mb-4">PROCESOS ESTRATÉGICOS</h2>
-                <div className="flex flex-wrap justify-center gap-4">
-                  { estrategicos.length === 0 ? (
-                    <span className="text-gray-500">Sin procesos estratégicos</span>
-                  ) : (
-                    estrategicos.map( proc => (
-                      <div
-                        key={ proc.id }
-                        className="bg-white border border-cyan-400 rounded px-4 py-2 shadow text-center min-w-[180px]"
-                      >
-                        <div className="font-mono text-cyan-700 font-semibold">{ proc.codigo }</div>
-                        <div className="text-gray-700">{ proc.nombre }</div>
-                      </div>
-                    ) )
-                  ) }
-                </div>
-              </div>
-              <div
-                className="w-0 h-0 mx-auto rotate-180"
-                style={ {
-                  borderLeft: "500px solid transparent",
-                  borderRight: "500px solid transparent",
-                  borderBottom: "48px solid #a2f4fd"
-                } }
-              />
-            </div>
+            <ProcesosMapa procesos={ estrategicos } tipo="estrategicos" />
             {/* Procesos Misionales */ }
-            <div className="bg-fuchsia-200 rounded-lg shadow p-4">
-              <h2 className="text-xl font-bold text-center mb-4">PROCESOS OPERATIVOS</h2>
-              <div className="flex flex-wrap justify-center gap-4">
-                { misionales.length === 0 ? (
-                  <span className="text-gray-500">Sin procesos operativos</span>
-                ) : (
-                  misionales.map( proc => (
-                    <div
-                      key={ proc.id }
-                      className="bg-white border border-fuchsia-400 rounded px-4 py-2 shadow text-center min-w-[180px]"
-                    >
-                      <div className="font-mono text-fuchsia-700 font-semibold">{ proc.codigo }</div>
-                      <div className="text-gray-700">{ proc.nombre }</div>
-                    </div>
-                  ) )
-                ) }
-              </div>
-            </div>
+            <ProcesosMapa procesos={ misionales } tipo="misionales" />
 
             {/* Procesos de Soporte */ }
-
-            <div className="w-[1000px] mx-auto">
-              <div
-                className="w-0 h-0 mx-auto "
-                style={ {
-                  borderLeft: "500px solid transparent",
-                  borderRight: "500px solid transparent",
-                  borderBottom: "48px solid #D8F999"
-                } }
-              />
-              <div className="bg-lime-200 rounded-lg shadow p-4">
-                <h2 className="text-xl font-bold text-center mb-4">PROCESOS DE SOPORTE</h2>
-                <div className="flex flex-wrap justify-center gap-4">
-                  { soporte.length === 0 ? (
-                    <span className="text-gray-500">Sin procesos de soporte</span>
-                  ) : (
-                    soporte.map( proc => (
-                      <div
-                        key={ proc.id }
-                        className="bg-white border border-lime-400 rounded px-4 py-2 shadow text-center min-w-[180px]"
-                      >
-                        <div className="font-mono text-lime-700 font-semibold">{ proc.codigo }</div>
-                        <div className="text-gray-700">{ proc.nombre }</div>
-                      </div>
-                    ) )
-                  ) }
-                </div>
-              </div>
-            </div>
+            <ProcesosMapa procesos={ soporte } tipo="soporte" />
 
           </div>
 
-          <div className="bg-[#3B5C9F] rounded-lg shadow p-4 flex items-center justify-center min-h-[180px]">
-            <span
-              className="text-md text-white font-bold"
-              style={ { writingMode: 'vertical-rl', transform: 'rotate(180deg)' } }
-            >
-              Salida
-            </span>
-          </div>
+          {/* Salida */ }
+          <EntradaSalida objetivo={ es.salida } /> 
         </div>
       ) }
     </div>
