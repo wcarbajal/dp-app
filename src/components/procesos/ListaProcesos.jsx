@@ -71,7 +71,7 @@ export const ListaProcesos = () => {
           } ) }
         </Accordion>
       </div>
-      <div className="flex-1 -ml-6 p-4  border rounded-lg shadow-lg">
+      <div className="flex-1 -ml-6 pt-2 pl-2 border rounded-lg shadow-lg  p-5">
         { procesoSeleccionado ? (
           
           <DetalleProceso procesoId={ procesoSeleccionado.id } />

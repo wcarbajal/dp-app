@@ -1,43 +1,52 @@
-import { z } from "zod"
- 
-export const nuevoProcesoSchema = z.object({
-  
-  codigo: z.string().min(2, "El código es obligatorio"),
-  nombre: z.string().min(5, "El nombre es obligatorio"),
-  descripcion: z.string().min(5, "La descripción es obligatoria"),
-  nivel: z.enum(["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"], {
-    errorMap: () => ({ message: "Nivel no válido" }),
-  }),
-  tipo: z.enum(["Misional", "Soporte", "Estratégico"], {
-    errorMap: () => ({ message: "Tipo de proceso no válido" }),
-  }),
-  parentId: z.string()
-  .regex(/^\d+$/, "El ID del padre debe ser un número entero positivo")
-  .optional()
-  .or(z.literal("")),
+import { z } from "zod";
 
-});
+export const nuevoProcesoSchema = z.object( {
 
-export const actualizarProcesoSchema = z.object({
-  codigo: z.string().min(2, "El código es obligatorio").optional(),
-  nombre: z.string().min(5, "El nombre es obligatorio").optional(),
-  descripcion: z.string().min(5, "La descripción es obligatoria").optional(),
-  nivel: z.enum(["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"], {
-    errorMap: () => ({ message: "Nivel no válido" }),
-  }).optional(),
-  tipo: z.enum(["Misional", "Soporte", "Estratégico"], {
-    errorMap: () => ({ message: "Tipo de proceso no válido" }),
-  }).optional(),
+  codigo: z.string().min( 2, "El código es obligatorio" ),
+  nombre: z.string().min( 5, "El nombre es obligatorio" ),
+  descripcion: z.string().min( 5, "La descripción es obligatoria" ),
+  nivel: z.enum( [ "0", "1", "2", "3", "4", "5", "6", "7", "8", "9" ], {
+    errorMap: () => ( { message: "Nivel no válido" } ),
+  } ),
+  tipo: z.enum( [ "Misional", "Soporte", "Estratégico" ], {
+    errorMap: () => ( { message: "Tipo de proceso no válido" } ),
+  } ),
   parentId: z.string()
-    .regex(/^\d+$/, "El ID del padre debe ser un número entero positivo")
+    .regex( /^\d+$/, "El ID del padre debe ser un número entero positivo" )
     .optional()
-    .or(z.literal("")).optional(),
-});
+    .or( z.literal( "" ) ),
 
-export const actualizarDescripcion = z.object({
-  codigo: z.string().min(1, "El código es obligatorio"),
-  nombre: z.string().min(1, "El nombre es obligatorio"),
-  tipo: z.enum(["Estratégico", "Misional", "Soporte"], { message: "Seleccione un tipo válido" }),
-  nivel: z.string().min(1, "El nivel es obligatorio"),
-  descripcion: z.string().optional(),
-});
+} );
+
+export const actualizarProcesoSchema = z.object( {
+  codigo: z.string().min( 2, "El código es obligatorio" ).optional(),//ok
+  nombre: z.string().min( 5, "El nombre es obligatorio" ).optional(),// ok
+  descripcion: z.string().min( 5, "La descripción es obligatoria" ).optional(),//ok
+  nivel: z.enum( [ "0", "1", "2", "3", "4", "5", "6", "7", "8", "9" ], {
+    errorMap: () => ( { message: "Nivel no válido" } ),
+  } ).optional(),//
+  tipo: z.enum( [ "Estratégico", "Misional", "Soporte" ], {
+    errorMap: () => ( { message: "Tipo de proceso no válido" } ),
+  } ).optional(),//ok
+  objetivo: z.string().min( 5, "El objetivo es obligatorio" ).optional(),
+  alcance: z.string().min( 5, "El alcance es obligatorio" ).optional(),
+  estrategico: z.string().min( 5, "Los objetivos estratégicos son obligatorios" ).optional(),
+  owners: z.array( z.string() ).optional(),
+} );
+
+
+
+export const procedimientoSchema = z.object( {
+  id: z.number().optional(), // Solo si lo usas en edición
+  actividades: z.array(
+    z.object( {
+      id: z.number().optional(),
+      nombre: z.string().min( 3, "El nombre de la actividad es obligatorio" ),
+      descripcion: z.string().min( 5, "La descripción es obligatoria" ).optional(),
+      unidadOperativa: z.string().min( 5, "La descripción es obligatoria" ).optional(),
+      responsable: z.string().min( 3, "El responsable es obligatorio" )      
+    } )
+  ).optional()
+ 
+} );
+
