@@ -1,20 +1,16 @@
-import { IconCurrentLocation, IconTrendingDown, IconTrendingUp } from "@tabler/icons-react";
+import { IconCurrentLocation, IconTrendingDown } from "@tabler/icons-react";
 import { FcWorkflow } from "react-icons/fc";
 
-import { Badge } from "@/components/ui/badge";
-import {
-  Card,
-  CardAction,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { MdOutlineNumbers } from 'react-icons/md';
-import { Link } from 'react-router';
+
 import { CardConfig } from '@/components/CardConfig';
 
 const listConfiguracciones = [
+  {
+    ruta: '/configuraciones/mapa',
+    objeto: 'Mapa',
+    cantidad: 96,
+    icono: <FcWorkflow />
+  },
   {
     ruta: '/configuraciones/procesos',
     objeto: 'Procesos',

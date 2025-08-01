@@ -12,6 +12,7 @@ import { ConfiguracionesPage } from '@/pages/ConfiguracionesPage';
 import { UsuariosConfig } from '@/components/configuraciones/UsuariosConfig';
 import { ReportesConfig } from '@/components/configuraciones/ReportesConfig';
 import { ProcesosConfig } from '@/components/configuraciones/procesos-config/ProcesosConfig';
+import { MapaConfig } from '@/components/configuraciones/mapa-config/MapaConfig';
 
 
 export const PrincipalRouter = () => {
@@ -28,6 +29,7 @@ export const PrincipalRouter = () => {
         <Route path="configuraciones/procesos" element={ <ProcesosConfig /> } />
         <Route path="configuraciones/usuarios" element={ <UsuariosConfig /> } />
         <Route path="configuraciones/reportes" element={ <ReportesConfig /> } />
+        <Route path="configuraciones/mapa" element={ <MapaConfig /> } />
 
 
       </Route>

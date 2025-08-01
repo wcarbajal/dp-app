@@ -7,34 +7,59 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { procedimientoSchema } from '@/schema/SchemaProcesos';
 import { MdKeyboardArrowDown, MdKeyboardArrowUp, MdOutlineDeleteOutline } from 'react-icons/md';
+import { IoAddOutline } from "react-icons/io5";
+import { fetchConToken } from '@/helpers/fetch';
 
-export const ProcedimientoProceso = ( { procedimiento } ) => {
+export const ProcedimientoProceso = ( { procedimiento, idProceso, idDetalleProcesos } ) => {
   console.log( "Procedimiento:", procedimiento );
 
   const form = useForm( {
     resolver: zodResolver( procedimientoSchema ),
     defaultValues: {
-      id: procedimiento.id || 1,
+      id: idProceso || undefined,
+      iddetalleproceso: idDetalleProcesos || undefined,
+      idprocedimiento: procedimiento.id || undefined,
       actividades: procedimiento.actividades || [],
     },
     mode: "onChange",
   } );
+  
 
   const { fields, append, remove, update } = useFieldArray( {
     control: form.control,
     name: "actividades",
   } );
-  const onSubmit = ( data ) => {
-    console.log( "Campos del formulario:", fields );
-    console.log( "Datos del formulario:", data );
-    // Aquí puedes manejar el envío del formulario, por ejemplo, enviarlo a tu API
+  const moveUp = ( idx ) => {
+    if ( idx === 0 ) return; // Ya está arriba
+    // Intercambia el actual con el anterior usando update
+    update( idx, fields[ idx - 1 ] );
+    update( idx - 1, fields[ idx ] );
+  };
+
+  const moveDown = ( idx ) => {
+    if ( idx === fields.length - 1 ) return; // Ya está abajo
+    // Intercambia el actual con el siguiente usando update
+    update( idx, fields[ idx + 1 ] );
+    update( idx + 1, fields[ idx ] );
+  };
+  const onSubmit = async ( formulario ) => {
+    
+    console.log( { formulario} );
+    // Aquí puedes manejar el envío del formulario a fetchConToken
+    const result = await  fetchConToken(`procesos/registrar-procedimiento/${formulario.id}`, {
+      iddetalleproceso: formulario.iddetalleproceso,
+      idprocedimiento: formulario.idprocedimiento,
+      actividades: formulario.actividades,
+    }, "POST");
+    console.log({result})
   };
 
   return (
     <Form { ...form }>
-      <form onSubmit={ form.handleSubmit( onSubmit ) } className="flex flex-col gap-6">
+      <form onSubmit={ form.handleSubmit( onSubmit ) } className="flex flex-col gap-5">
         <h3 className="text-lg font-bold">Actividades</h3>
-        <table className="min-w-full border rounded">
+
+        <table className="min-w-full border rounded-md">
           <thead>
             <tr className="bg-slate-100">
               <th className="p-2 border">#</th>
@@ -42,7 +67,7 @@ export const ProcedimientoProceso = ( { procedimiento } ) => {
               <th className="p-2 border">Descripción de la actividad</th>
               <th className="p-2 border">Unidad Operativa</th>
               <th className="p-2 border">Responsable de la actividad</th>
-              <th className="p-2 border">Acciones</th>
+              <th className="p-2 border w-[60px]">Acciones</th>
             </tr>
           </thead>
           <tbody>
@@ -112,32 +137,56 @@ export const ProcedimientoProceso = ( { procedimiento } ) => {
                       ) }
                     />
                   </td>
-                  <td className="flex p-2 border ">
-                    <Button type="button" variant="outline" onClick={ () => update( idx ) }>
-                      <MdKeyboardArrowUp />
-                    </Button>
-                    <Button type="button" variant="destructive" onClick={ () => remove( idx ) }>
-                      <MdOutlineDeleteOutline />
-                    </Button>
-                    <Button type="button" variant="outline" onClick={ () => update( idx ) }>
-                      <MdKeyboardArrowDown />
-                    </Button>
+                  <td className=" border w-[60px]">
+                    <div className="flex gap-2 justify-center ">
+                      <Button
+                        type="button"
+                        variant="outline"
+                        className="h-6 w-6 p-1"
+                        onClick={ () => moveUp( idx ) }>
+                        <MdKeyboardArrowUp size={ 10 } />
+                      </Button>
+                      <Button
+                        type="button"
+                        variant="destructive"
+                        className="h-6 w-6 p-1"
+                        onClick={ () => remove( idx ) }>
+                        <MdOutlineDeleteOutline size={ 10 } />
+                      </Button>
+                      <Button
+                        type="button"
+                        variant="outline"
+                        className="h-6 w-6 p-1"
+                        onClick={ () => moveDown( idx ) }>
+                        <MdKeyboardArrowDown size={ 10 } />
+                      </Button>
+                    </div>
                   </td>
                 </tr>
               ) )
             ) }
           </tbody>
+
+          <tfoot>
+            <tr>
+              <td colSpan={ 5 } className="bg-transparent p-2"></td>
+              <td className="flex justify-end bg-transparent p-2">
+                <Button
+                  type="button"
+                  variant="outline"
+                  className="mt-2"
+                  onClick={ () => append( { nombre: "", descripcion: "", unidadOperativa: "", responsable: "" } ) }
+                >
+                  <IoAddOutline /> Agregar
+                </Button>
+              </td>
+            </tr>
+          </tfoot>
+
         </table>
+        <div className=" flex justify-center mt-4 " >
 
-        <Button
-          type="button"
-          className="mt-4"
-          onClick={ () => append( { nombre: "", descripcion: "", unidadOperativa: "", responsable: "" } ) }
-        >
-          Agregar Actividad
-        </Button>
 
-        <div className="mt-4">
           <Button type="submit" disabled={ !form.formState.isDirty }>
             Guardar Procedimiento
           </Button>

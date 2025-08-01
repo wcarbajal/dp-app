@@ -76,7 +76,7 @@ export const DetalleProceso = ( { procesoId } ) => {
             <FichaProceso proceso={ proceso } />
           </TabsContent>
           <TabsContent value="procedimiento" className="flex-1 w-full h-full">
-            <ProcedimientoProceso procedimiento={ proceso.detalleProceso?.procedimiento || [] } />
+            <ProcedimientoProceso procedimiento={ proceso.detalleProceso?.procedimiento || [] } idProceso={ proceso.id } idDetalleProcesos={ proceso.detalleProcesoId } />
           </TabsContent>
           <TabsContent value="indicadores" className="flex-1 w-full h-full">
             <IndicadoresProceso proceso={ proceso } />
