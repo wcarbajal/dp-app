@@ -26,14 +26,14 @@ export const itemsNav = {
       icon: BiTachometer ,
     },
     {
-      title: "Procesos",
-      url: "/procesos",
-      icon: GoWorkflow,
-    },
-    {
       title: "Mapa",
       url: "/mapa",
       icon: FcFlowChart ,
+    },
+    {
+      title: "Procesos",
+      url: "/procesos",
+      icon: GoWorkflow,
     },
     {
       title: "Reportes",
@@ -50,7 +50,7 @@ export const itemsNav = {
   navSecondary: [
     {
       title: "Configuraciones",
-      url: "/configuraciones",
+      url: "/config",
       icon: IconSettings,
     },
     {

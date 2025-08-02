@@ -6,25 +6,25 @@ import { CardConfig } from '@/components/CardConfig';
 
 const listConfiguracciones = [
   {
-    ruta: '/configuraciones/mapa',
+    ruta: '/config/mapa',
     objeto: 'Mapa',
     cantidad: 96,
     icono: <FcWorkflow />
   },
   {
-    ruta: '/configuraciones/procesos',
+    ruta: '/config/procesos',
     objeto: 'Procesos',
     cantidad: 96,
     icono: <FcWorkflow />
   },
   {
-    ruta: '/configuraciones/usuarios',
+    ruta: '/config/usuarios',
     objeto: 'Usuarios',
     cantidad: 12,
     icono: <IconCurrentLocation className="size-4" />
   },
   {
-    ruta: '/configuraciones/reportes',
+    ruta: '/config/reportes',
     objeto: 'Reportes',
     cantidad: 5,
     icono: <IconTrendingDown className="size-4" />

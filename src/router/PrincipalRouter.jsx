@@ -25,11 +25,11 @@ export const PrincipalRouter = () => {
         <Route path="mapa" element={ <MapaPage /> } />
         <Route path="reportes" element={ <ReportePage /> } />
         <Route path="equipo" element={ <EquipoPage /> } />
-        <Route path="configuraciones" element={ <ConfiguracionesPage /> } />
-        <Route path="configuraciones/procesos" element={ <ProcesosConfig /> } />
-        <Route path="configuraciones/usuarios" element={ <UsuariosConfig /> } />
-        <Route path="configuraciones/reportes" element={ <ReportesConfig /> } />
-        <Route path="configuraciones/mapa" element={ <MapaConfig /> } />
+        <Route path="config" element={ <ConfiguracionesPage /> } />
+        <Route path="config/procesos" element={ <ProcesosConfig /> } />
+        <Route path="config/usuarios" element={ <UsuariosConfig /> } />
+        <Route path="config/reportes" element={ <ReportesConfig /> } />
+        <Route path="config/mapa" element={ <MapaConfig /> } />
 
 
       </Route>
