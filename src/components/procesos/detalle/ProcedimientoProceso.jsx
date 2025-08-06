@@ -5,13 +5,13 @@ import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from "
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { procedimientoSchema } from '@/schema/SchemaProcesos';
+import { procedimientoSchema } from '@/schema/ProcesosSchema';
 import { MdKeyboardArrowDown, MdKeyboardArrowUp, MdOutlineDeleteOutline } from 'react-icons/md';
 import { IoAddOutline } from "react-icons/io5";
 import { fetchConToken } from '@/helpers/fetch';
 
 export const ProcedimientoProceso = ( { procedimiento, idProceso, idDetalleProcesos } ) => {
-  console.log( "Procedimiento:", procedimiento );
+
 
   const form = useForm( {
     resolver: zodResolver( procedimientoSchema ),
@@ -23,7 +23,7 @@ export const ProcedimientoProceso = ( { procedimiento, idProceso, idDetalleProce
     },
     mode: "onChange",
   } );
-  
+
 
   const { fields, append, remove, update } = useFieldArray( {
     control: form.control,
@@ -43,15 +43,15 @@ export const ProcedimientoProceso = ( { procedimiento, idProceso, idDetalleProce
     update( idx + 1, fields[ idx ] );
   };
   const onSubmit = async ( formulario ) => {
-    
-    console.log( { formulario} );
+
+
     // Aquí puedes manejar el envío del formulario a fetchConToken
-    const result = await  fetchConToken(`procesos/registrar-procedimiento/${formulario.id}`, {
+    const result = await fetchConToken( `procesos/registrar-procedimiento/${ formulario.id }`, {
       iddetalleproceso: formulario.iddetalleproceso,
       idprocedimiento: formulario.idprocedimiento,
       actividades: formulario.actividades,
-    }, "POST");
-    console.log({result})
+    }, "POST" );
+    console.log( { result } );
   };
 
   return (

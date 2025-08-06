@@ -1,6 +1,6 @@
-import { useState, useEffect } from "react";
+import {  useState } from "react";
 import { Button } from "@/components/ui/button";
-import { fetchConToken } from "@/helpers/fetch";
+
 import { MdEdit } from "react-icons/md";
 import { DetalleProceso } from './DetalleProceso';
 import {
@@ -10,22 +10,10 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 
-export const ListaProcesos = () => {
-  const [ procesos, setProcesos ] = useState( [] );
+export const ListaProcesos = ({procesos}) => {
+  //const [ procesos, setProcesos ] = useState( [] );
   const [ procesoSeleccionado, setProcesoSeleccionado ] = useState( null );
 
-  // Cargar procesos activos
-  useEffect( () => {
-    const cargarProcesos = async () => {
-      try {
-        const data = await fetchConToken( "procesos" );
-        setProcesos( data.procesos || [] );
-      } catch ( error ) {
-        console.error( "Error al cargar procesos:", error );
-      }
-    };
-    cargarProcesos();
-  }, [] );
 
 
   return (
@@ -72,10 +60,11 @@ export const ListaProcesos = () => {
         </Accordion>
       </div>
       <div className="flex-1 -ml-6 pt-2 pl-2 border rounded-lg shadow-lg  p-5">
+        
         { procesoSeleccionado ? (
-          
+
           <DetalleProceso procesoId={ procesoSeleccionado.id } />
-          
+
         ) : (
           <div className="text-muted-foreground">Seleccione un proceso para el detalle.</div>
         ) }

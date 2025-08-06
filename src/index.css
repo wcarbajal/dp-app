@@ -117,4 +117,13 @@
   body {
     @apply bg-background text-foreground;
   }
+  table {
+    @apply border border-gray-300 w-full mb-10;
+  }
+  thead {
+    @apply border-b border-gray-300;
+  }
+  th {
+    @apply bg-slate-400 border font-bold text-center hover:bg-slate-400;
+  }
 }

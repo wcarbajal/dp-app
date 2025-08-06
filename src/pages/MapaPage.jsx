@@ -1,97 +1,111 @@
-import { EntradaSalida } from '@/components/mapa/EntradaSalida';
-import { MapaView } from '@/components/mapa/MapaView';
-import { ProcesosMapa } from '@/components/mapa/ProcesosMapa';
-import { Button } from '@/components/ui/button';
-import { fetchConToken } from '@/helpers/fetch';
 import { useEffect, useState } from "react";
 
-import { Link } from 'react-router';
+import { FlechaSubir } from '@/components/propios/FlechaSubir';
+import { ListaMapas } from '@/components/ListaMapas';
+import { MapaVista } from '@/components/mapa/MapaVista';
+
+import { cargarMapas } from "@/helpers/mapas";
+import { cargarProcesos } from "@/helpers/procesos";
 
 
 export const MapaPage = () => {
 
-  const [ mapa, setMapa ] = useState( {
-    ok: false,
-    nombre: "",
-    entrada: "",
-    salida: ""
-  } );
-
-
-  const [ es ] = useState(
-    {
-      entrada: "Ciudadanos de bajos, insucientes recursos o alto rendimiento académico con barreras de acceso a la educación superior de calidad.",
-      salida: "Ciudadanos que accedieron a la educación superior de calidad y contribuyen al desarrollo económico y social."
-    }
-  );
-
-  const [ procesos, setProcesos ] = useState( [] );
+  const [ mapas, setMapas ] = useState( null );
+  const [ mapaSeleccionado, setMapaSeleccionado ] = useState( null );
+  const [ procesosSeleccionado, setProcesosSeleccionado ] = useState( null );
   const [ loading, setLoading ] = useState( true );
-  
 
- 
 
-  // Cargar procesos activos
   useEffect( () => {
-    const cargarProcesos = async () => {
-      try {
-        const respuesta = await fetchConToken( "mapa" );
-        console.log( "respuesta", respuesta );
-
-        if ( respuesta.ok === false ) {
-          setLoading( false );
-          return;
-        }
-        setMapa( respuesta.mapa );
-        console.log( "ESTO NO DEBE SALIR si el mapa no existe" );
-
-        const data = await fetchConToken( "procesos/nivel0" );
-        setProcesos( data.procesos || [] );
-        setLoading( false );
-      } catch ( error ) {
-        console.error( "Error al cargar procesos:", error );
-      }
+    const obtenerMapas = async () => {
+      setLoading( true );
+      const mapas = await cargarMapas();
+      setMapas( mapas );
+      setLoading( false );
     };
-    cargarProcesos();
-  }, [ mapa ] );
+    obtenerMapas();
+  }, [ mapaSeleccionado ] );
 
-  // Agrupar procesos por tipo
-  const estrategicos = procesos.filter( p => p.tipo === "Estratégico" );
-  const misionales = procesos.filter( p => p.tipo === "Misional" );
-  const soporte = procesos.filter( p => p.tipo === "Soporte" );
+  useEffect( () => {
+    const obtenerProcesos = async () => {
+      if ( !mapaSeleccionado ) return;
+      const procesos = await cargarProcesos( mapaSeleccionado.id );
+      setProcesosSeleccionado( procesos );
+    };
+    obtenerProcesos();
+  }, [ mapaSeleccionado ] );
+
+  /*   const handleMapaSeleccionado = ( value ) => {
+      const mapa = mapas.find( m => m.id === Number( value ) );
+      setMapaSeleccionado( mapa );
+    }; */
+
 
   return (
-    <div className="flex flex-col gap-5 w-full justify-center items-center shadow-lg">
-      <h1 className="text-xl font-bold text-center ">Mapa de Procesos del PRONABEC</h1>
+    <div className="flex flex-col w-full justify-center items-center shadow-lg">
+      <h1 className="mt-2 text-xl font-bold text-center ">Mapa de Procesos</h1>
       { loading
         ? ( <div className="text-center text-gray-500">Cargando...</div> )
         : (
-          ( !mapa.ok === false )
-            ? (
+          <div>
 
-              <MapaView
-                entrada={ es.entrada }
-                salida={ es.salida }
-                estrategicos={ estrategicos }
-                misionales={ misionales }
-                soporte={ soporte }
-              />
-            )
-            : (
-              < div className="text-center gap-5 text-gray-500 mb-5">
-                <span className="text-gray-500">No hay mapa registrado</span>
-                <br />
-                <Button variant="link">
-                  <Link to="/config/mapa" className="text-blue-500">Ir a registrar Mapa</Link>
-                </Button>
-              
+            { mapas && mapas.length > 0 ? (
+              <div className="flex flex-col gap-2 ">
+
+                {/* <div className="flex flex-row gap-2">
+                  <Label>Selecciona un mapa: </Label>
+                  <Select onValueChange={ handleMapaSeleccionado } >
+                    <SelectTrigger className="w-[180px] ">
+
+                      <SelectValue placeholder="Mapas disponibles" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectGroup>
+
+                        {
+                          mapas.map( ( mapa ) => (
+                            <SelectItem key={ mapa.id } value={ mapa.id }>
+                              { mapa.nombre }
+                            </SelectItem>
+                          ) )
+                        }
+
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
+                </div> */}
+                <ListaMapas mapas={ mapas } setMapaSeleccionado={ setMapaSeleccionado } mapaSeleccionado={ mapaSeleccionado } />
+
+                <div className="flex flex-col  mt-4 bg-red-100 p-4 rounded-lg w-full h-full">
+                  <h2 className="text-center text-lg font-semibold">
+                    { mapaSeleccionado ? mapaSeleccionado.nombre : '-' }
+                  </h2>
+                  <MapaVista
+                    entrada={ mapaSeleccionado ? mapaSeleccionado.entrada : '' }
+                    salida={ mapaSeleccionado ? mapaSeleccionado.salida : '' }
+                    estrategicos={ procesosSeleccionado ? procesosSeleccionado.filter( p => p.tipo === "Estratégico" ) : [] }
+                    misionales={ procesosSeleccionado ? procesosSeleccionado.filter( p => p.tipo === "Misional" ) : [] }
+                    soporte={ procesosSeleccionado ? procesosSeleccionado.filter( p => p.tipo === "Soporte" ) : [] }
+                  />
+
+                </div>
+
 
               </div>
             )
+              : (
+                <div className="text-red-500">No hay mapas disponibles</div>
+              )
+            }
+
+
+          </div>
 
         )
 
       }
+      <FlechaSubir />
+
     </div >
   );
 };

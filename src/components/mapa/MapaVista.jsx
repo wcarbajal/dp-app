@@ -1,5 +1,7 @@
+import { EntradaSalida } from './EntradaSalida';
+import { ProcesosMapa } from './ProcesosMapa';
 
-export const MapaView = (entrada, salida, estrategicos, misionales, soporte) => {
+export const MapaVista = ({ entrada, salida, estrategicos, misionales, soporte} ) => {
   return (
     <div className="flex gap-5 h-[650px] m-2 rounded-2xl w-[900px]">
 

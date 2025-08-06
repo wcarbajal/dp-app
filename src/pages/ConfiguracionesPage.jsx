@@ -17,6 +17,12 @@ const listConfiguracciones = [
     cantidad: 96,
     icono: <FcWorkflow />
   },
+   {
+    ruta: '/config/owners',
+    objeto: 'Dueños de procesos',
+    cantidad: 12,
+    icono: <IconCurrentLocation className="size-4" />
+  },
   {
     ruta: '/config/usuarios',
     objeto: 'Usuarios',

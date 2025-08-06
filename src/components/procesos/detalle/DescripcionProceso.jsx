@@ -20,13 +20,13 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";
-import { actualizarProcesoSchema } from '@/schema/SchemaProcesos';
+import { actualizarProcesoSchema } from '@/schema/ProcesosSchema';
 import { fetchConToken } from '@/helpers/fetch';
 import Swal from 'sweetalert2';
 
 export const DescripcionProceso = ( { proceso, onSubmit: onSubmitProp, ownersOptions } ) => {
 
-  
+
 
   const form = useForm( {
     resolver: zodResolver( actualizarProcesoSchema ),
@@ -41,7 +41,7 @@ export const DescripcionProceso = ( { proceso, onSubmit: onSubmitProp, ownersOpt
       objetivo: proceso?.objetivo || "",
       alcance: proceso?.alcance || "",
       estrategico: proceso?.estrategico || "",
-      owners: proceso?.owners.map( d => d.id.toString() ) || [],
+      owners: proceso?.owners?.map( d => d.id.toString() ) || [],
     },
     mode: "onChange",
   } );
@@ -63,7 +63,7 @@ export const DescripcionProceso = ( { proceso, onSubmit: onSubmitProp, ownersOpt
           title: "Proceso actualizado!",
           text: "El proceso fue actualizado correctamente!",
           icon: "success",
-          confirmButtonText: "Aceptar",          
+          confirmButtonText: "Aceptar",
           customClass: {
             confirmButton: "bg-primary py-2 px-6 rounded-md text-primary-foreground shadow-xs hover:bg-primary/90",
 

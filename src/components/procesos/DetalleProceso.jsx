@@ -8,16 +8,16 @@ import { ProcedimientoProceso } from './detalle/ProcedimientoProceso';
 import { IndicadoresProceso } from './detalle/IndicadoresProceso';
 
 export const DetalleProceso = ( { procesoId } ) => {
-  const [ proceso, setProceso ] = useState( null );
+  const [ detalleProceso, setDetalleProceso ] = useState( null );
   const [ loading, setLoading ] = useState( true );
-  const [ ownersOptions, setOwnersOptions ] = useState( [] );
+  const [ ownersList, setOwnersList ] = useState( [] );
 
   const onActualizarDiagrama = async ( file ) => {
     if ( !file ) return null;
 
     const formData = new FormData();
     formData.append( "diagrama", file );
-    
+
     try {
       const imageResult = await fetchConToken( `procesos/actualizar-diagrama/${ procesoId }`, formData, "POST" );
       return imageResult;
@@ -29,20 +29,16 @@ export const DetalleProceso = ( { procesoId } ) => {
 
   useEffect( () => {
     const cargarDetalle = async () => {
-
-      console.log( "ID del proceso:", procesoId );
       setLoading( true );
       try {
-        // Ajusta la ruta según tu API
         const consulta = await fetchConToken( `procesos/detalle/${ procesoId }` );
-        
-        setProceso( consulta.proceso );
-        
-        const consultaOwners = await fetchConToken( "procesos/owners" );
-        
-         setOwnersOptions( consultaOwners.ownersDb || [] ); 
+        setDetalleProceso( consulta );
+
+        const consultaOwners = await fetchConToken( "owners" );
+        setOwnersList( consultaOwners.owners );
+        console.log( "Owners disponibles:", consultaOwners.owners );
       } catch ( error ) {
-        setProceso( null );
+        setDetalleProceso( null );
         console.log( "Error al cargar el detalle del proceso:", error );
       } finally {
         setLoading( false );
@@ -52,11 +48,11 @@ export const DetalleProceso = ( { procesoId } ) => {
   }, [ procesoId ] );
 
   if ( loading ) return <div className="p-4">Cargando...</div>;
-  if ( !proceso ) return <div className="p-4 text-red-500">No se encontró el detalle del proceso.</div>;
+  if ( !detalleProceso ) return <div className="p-4 text-red-500">No se encontró el detalle del proceso.</div>;
 
   return (
     <div className="flex flex-col gap-4 h-full  ">
-      <h2 className="font-bold">{ proceso?.codigo } - { proceso?.nombre }</h2>
+      <h2 className="font-bold">{ detalleProceso?.codigo } - { detalleProceso?.nombre }</h2>
       <div className="w-full h-full flex flex-col ">
         <Tabs defaultValue="descripcion" className=" flex flex-col h-full w-full ">
           <TabsList className="w-full h-10 bg-gray-200 rounded-t-lg flex items-center justify-around">
@@ -67,19 +63,19 @@ export const DetalleProceso = ( { procesoId } ) => {
             <TabsTrigger value="indicadores">Indicadores</TabsTrigger>
           </TabsList>
           <TabsContent value="descripcion" className="flex-1 w-full h-full ">
-            <DescripcionProceso proceso={ proceso } ownersOptions={ ownersOptions } />
+            <DescripcionProceso proceso={ detalleProceso || [] } ownersOptions={ ownersList || [] } />
           </TabsContent>
           <TabsContent value="diagrama" className=" flex-1 w-full h-full ">
-            <DiagramaProceso proceso={ proceso } onActualizarDiagrama={ onActualizarDiagrama } />
+            <DiagramaProceso proceso={ detalleProceso || [] } onActualizarDiagrama={ onActualizarDiagrama } />
           </TabsContent>
           <TabsContent value="ficha" className="flex-1 w-full h-full">
-            <FichaProceso proceso={ proceso } />
+            <FichaProceso proceso={ detalleProceso || [] } />
           </TabsContent>
           <TabsContent value="procedimiento" className="flex-1 w-full h-full">
-            <ProcedimientoProceso procedimiento={ proceso.detalleProceso?.procedimiento || [] } idProceso={ proceso.id } idDetalleProcesos={ proceso.detalleProcesoId } />
+            <ProcedimientoProceso procedimiento={ detalleProceso.detalleProceso?.procedimiento || [] } idProceso={ detalleProceso.id || '' } idDetalleProcesos={ detalleProceso.detalleProcesoId || '' } />
           </TabsContent>
           <TabsContent value="indicadores" className="flex-1 w-full h-full">
-            <IndicadoresProceso proceso={ proceso } />
+            <IndicadoresProceso proceso={ detalleProceso || [] } />
           </TabsContent>
         </Tabs>
       </div>

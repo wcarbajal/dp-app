@@ -11,6 +11,7 @@ export const nuevoProcesoSchema = z.object( {
   tipo: z.enum( [ "Misional", "Soporte", "Estratégico" ], {
     errorMap: () => ( { message: "Tipo de proceso no válido" } ),
   } ),
+  idMapa: z.string().regex( /^\d+$/, "El ID del mapa debe ser un número entero positivo"),
   parentId: z.string()
     .regex( /^\d+$/, "El ID del padre debe ser un número entero positivo" )
     .optional()

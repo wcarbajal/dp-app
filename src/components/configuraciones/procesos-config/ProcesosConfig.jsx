@@ -1,13 +1,16 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 
 import { fetchConToken } from "@/helpers/fetch";
 
-import { nuevoProcesoSchema } from '@/schema/SchemaProcesos';
+import { nuevoProcesoSchema } from '@/schema/ProcesosSchema';
 import { getProcesosTree, renderProcesoTreeVertical } from '@/utils/procesos';
 import { DialogProcesoConfig } from './DialogProcesoConfig';
 import { FiltroProcesoConfig } from './FiltroProcesoConfig';
+import { ListaMapas } from '@/components/ListaMapas';
+import { cargarMapas } from "@/helpers/mapas";
+import { BotonRegresar } from '@/components/propios/BotonRegresar';
 
 export const ProcesosConfig = () => {
 
@@ -19,49 +22,43 @@ export const ProcesosConfig = () => {
       descripcion: "",
       nivel: "",
       tipo: "",
+      idMapa: undefined,
       parentId: undefined,
     },
   } );
 
+  const [ mapas, setMapas ] = useState( null );
+  const [ mapaSeleccionado, setMapaSeleccionado ] = useState( null );
+  const [ loading, setLoading ] = useState( true );
+  const [ procesosSeleccionado, setProcesosSeleccionado ] = useState( [] );
 
-  const [ procesos, setProcesos ] = useState( [] );
+  //const [ procesos, setProcesos ] = useState( [] );
   const [ tipoFiltro, setTipoFiltro ] = useState( "" );
   const [ openDialog, setOpenDialog ] = useState( false );
   const [ editId, setEditId ] = useState( null );
 
 
-  const cargarProcesos = async () => {
-    try {
-      const data = await fetchConToken( "procesos" );
-      setProcesos( data.procesos || [] );
-    } catch ( error ) {
-      console.error( "Error al cargar procesos:", error );
-    }
-  };
 
-  useEffect( () => {
-    cargarProcesos();
-  }, [] );
 
   // Agregar o modificar proceso
   const handleSubmit = async ( values ) => {
     //e.preventDefault();
     try {
       let respuesta;
-      console.log( "Valores del formulario:", values );
+
       if ( editId ) {
         respuesta = await fetchConToken( `procesos/${ editId }`, values, "PUT" );
       } else {
         respuesta = await fetchConToken( "procesos/registrar", values, "POST" );
       }
       if ( respuesta.ok ) {
-        console.log( "respuesta", respuesta );
+
         cargarProcesos();
         setOpenDialog( false );
         setEditId( null );
         form.reset();
       } else {
-        console.log( "respuesta", respuesta );
+
         alert( "Error al guardar el proceso" );
       }
     } catch ( error ) {
@@ -90,37 +87,84 @@ export const ProcesosConfig = () => {
     form.setValue( "tipo", proceso.tipo );
     form.setValue( "parentId", proceso.parentId || undefined );
 
-    
+
     setEditId( proceso.id );
     setOpenDialog( true );
   };
 
+  useEffect( () => {
+    const obtenerMapas = async () => {
+      setLoading( true );
+      const mapas = await cargarMapas();
+      setMapas( mapas );
+      setLoading( false );
+    };
+    obtenerMapas();
+  }, [ mapaSeleccionado ] );
+
+  const cargarProcesos = useCallback( async () => {
+    if ( !mapaSeleccionado ) return;
+    try {
+      const respuesta = await fetchConToken( `mapa/${ mapaSeleccionado.id }/procesos-lista` );
+      if ( respuesta.ok ) {
+        setProcesosSeleccionado( respuesta.procesos );
+      } else {
+        setProcesosSeleccionado( [] );
+      }
+    } catch ( error ) {
+      setProcesosSeleccionado( [] );
+      console.error( "Error al cargar procesos asociados:", error );
+    }
+  }, [ mapaSeleccionado ] );
+
+  useEffect( () => {
+
+    cargarProcesos();
+  }, [ cargarProcesos ] );
+
   return (
-    <div className="max-w-xl mx-auto my-5 p-4 border rounded-2xl bg-white shadow-xl">
-      <div className="flex justify-between items-center mb-4 ">
 
-        <h2 className="font-bold text-lg w-45">Procesos</h2>
 
-        <DialogProcesoConfig
-          openDialog={ openDialog }
-          setOpenDialog={ setOpenDialog }
-          form={ form }
-          handleSubmit={ handleSubmit }
-          procesos={ procesos }
-          editId={ editId }
-          setEditId={ setEditId }
-        />
-      </div>
-      
-      <FiltroProcesoConfig  tipoFiltro={ tipoFiltro } setTipoFiltro={ setTipoFiltro } />
+    <div className=" flex flex-col gap-4">
+       <BotonRegresar url="/config" nombre="Configuración" />
+      { loading
+        ? ( <div className="text-center text-gray-500">Cargando mapas...</div> )
+        : (
+          <>
+            <ListaMapas mapas={ mapas || [] } setMapaSeleccionado={ setMapaSeleccionado } mapaSeleccionado={ mapaSeleccionado } />
 
-      <div className="space-y-2">
-        { procesos.length === 0
-          ? <span className="text-muted-foreground text-sm ">No hay procesos registrados</span>
-          : getProcesosTree( procesos, tipoFiltro ).map( proceso => renderProcesoTreeVertical( proceso, handleEditar, handleEliminar, true ) )
-        }
+            <div className="max-w-xl mx-auto my-5 p-4 border rounded-2xl bg-white shadow-xl">
 
-      </div>
+
+              <div className="flex justify-between items-center mb-4 ">
+
+                <h2 className="font-bold text-lg w-45">Procesos </h2>
+
+                <DialogProcesoConfig
+                  openDialog={ openDialog }
+                  setOpenDialog={ setOpenDialog }
+                  form={ form }
+                  handleSubmit={ handleSubmit }
+                  procesos={ procesosSeleccionado }
+                  editId={ editId }
+                  setEditId={ setEditId }
+                />
+              </div>
+
+              <FiltroProcesoConfig tipoFiltro={ tipoFiltro } setTipoFiltro={ setTipoFiltro } />
+
+              <div className="space-y-2">
+                { procesosSeleccionado.length === 0
+                  ? <span className="text-muted-foreground text-sm ">No hay procesos registrados</span>
+                  : getProcesosTree( procesosSeleccionado, tipoFiltro ).map( proceso => renderProcesoTreeVertical( proceso, handleEditar, handleEliminar, true ) )
+                }
+
+              </div>
+            </div>
+          </>
+        )
+      }
+
     </div>
   );
 };

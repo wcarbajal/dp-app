@@ -14,7 +14,7 @@ export default defineConfig({
     },
   },
   optimizeDeps: {
-    exclude: ['react-icons/io5']
+    exclude: ['react-icons/io5', 'react-icons/ios', 'react-icons/ci', 'react-icons/hi2', 'react-icons/hi'],
   }
 })
 
