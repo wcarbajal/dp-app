@@ -1,4 +1,4 @@
-import {
+/* import {
   IconCreditCard,
   IconDotsVertical,
   IconLogout,
@@ -98,3 +98,4 @@ export function NavUser({
     </SidebarMenu>)
   );
 }
+ */

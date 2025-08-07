@@ -1,4 +1,4 @@
-"use client"
+/* "use client"
 
 import { IconDots, IconFolder, IconShare3, IconTrash } from "@tabler/icons-react";
 
@@ -75,3 +75,4 @@ export function NavDocuments({
     </SidebarGroup>)
   );
 }
+ */

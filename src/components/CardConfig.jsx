@@ -9,6 +9,8 @@ import { capitalize } from '@/utils/text';
 
 
 export const CardConfig = ({ ruta, objeto, cantidad, icon }) => {
+
+  
   return (
     <Link to={ruta}>
         <Card className="@container/card mt-5">

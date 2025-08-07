@@ -15,6 +15,7 @@ import { ProcesosConfig } from '@/components/configuraciones/procesos-config/Pro
 import { MapaConfig } from '@/components/configuraciones/mapa-config/MapaConfig';
 
 import { OwnersConfig } from '@/components/configuraciones/owners-config/OwnersConfig';
+import { PerfilUser } from '@/pages/PerfilUser';
 
 
 export const PrincipalRouter = () => {
@@ -33,6 +34,8 @@ export const PrincipalRouter = () => {
         <Route path="config/reportes" element={ <ReportesConfig /> } />
         <Route path="config/mapa" element={ <MapaConfig /> } />
         <Route path="config/owners" element={ <OwnersConfig /> } />
+        <Route path="perfil" element={ <PerfilUser /> } />
+
 
 
 

@@ -1,4 +1,4 @@
-import { Button } from "@/components/ui/button"
+/* import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
 import { SidebarTrigger } from "@/components/ui/sidebar"
 
@@ -11,9 +11,10 @@ export function SiteHeader() {
         <Separator orientation="vertical" className="mx-2 data-[orientation=vertical]:h-4" />
         <h1 className="text-base font-medium">Process doc</h1>
         <div className="ml-auto flex items-center gap-2">
-         {/* Para un boton superior */}
+         {/* Para un boton superior 
         </div>
       </div>
     </header>)
   );
 }
+ */

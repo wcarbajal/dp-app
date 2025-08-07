@@ -20,8 +20,6 @@ const initialState = {
 export const AuthProvider = ( { children } ) => {
 
   const [ auth, setAuth ] = useState( initialState );
-
- 
   
 
   const login = async ( correo, password ) => {

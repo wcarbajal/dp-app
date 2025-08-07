@@ -1,4 +1,4 @@
-import { IconCirclePlusFilled, IconMail } from "@tabler/icons-react";
+/* import { IconCirclePlusFilled, IconMail } from "@tabler/icons-react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -43,3 +43,4 @@ export function NavMain( {
       </SidebarGroupContent>
     </SidebarGroup>
 )}
+ */
