@@ -51,8 +51,8 @@ export const DetalleProceso = ( { procesoId } ) => {
   if ( !detalleProceso ) return <div className="p-4 text-red-500">No se encontró el detalle del proceso.</div>;
 
   return (
-    <div className="flex flex-col gap-4 h-full  ">
-      <h2 className="font-bold">{ detalleProceso?.codigo } - { detalleProceso?.nombre }</h2>
+    <article className="flex flex-col gap-4 h-full   ">
+      
       <div className="w-full h-full flex flex-col ">
         <Tabs defaultValue="descripcion" className=" flex flex-col h-full w-full ">
           <TabsList className="w-full h-10 bg-gray-200 rounded-t-lg flex items-center justify-around">
@@ -79,6 +79,6 @@ export const DetalleProceso = ( { procesoId } ) => {
           </TabsContent>
         </Tabs>
       </div>
-    </div>
+    </article>
   );
 };

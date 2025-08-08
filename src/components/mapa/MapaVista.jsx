@@ -3,7 +3,7 @@ import { ProcesosMapa } from './ProcesosMapa';
 
 export const MapaVista = ({ entrada, salida, estrategicos, misionales, soporte} ) => {
   return (
-    <div className="flex gap-5 h-[650px] m-2 rounded-2xl w-[900px]">
+    <div className="flex gap-5 h-[650px] m-2 rounded-2xl w-[900px] bg-white p-5">
 
       {/* entradas */ }
       <EntradaSalida objetivo={ entrada } />

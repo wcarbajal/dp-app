@@ -48,17 +48,6 @@ export const AsideBar = ( { open, items } ) => {
 
         </div>
 
-        {/* <NavMain items={ itemsNav.navMain } /> */ }
-
-        {/*   <NavSecondary items={ itemsNav.navSecondary } className="mt-auto" /> */ }
-
-
-        {/* <NavUser user={ {
-        name: auth.name,
-        email: auth.correo,
-        avatar: "https://github.com/shadcn.png",
-      } } /> */}
-
       </div>
     </aside>
   );

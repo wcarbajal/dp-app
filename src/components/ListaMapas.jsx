@@ -4,13 +4,13 @@ import { Label } from './ui/label';
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from './ui/select';
 
 export const ListaMapas = ({ mapas, setMapaSeleccionado, mapaSeleccionado }) => {
-  const [selected, setSelected] = useState("");
+  const [selected, setSelected] = useState("none");
 
   useEffect(() => {
     if (mapaSeleccionado && mapaSeleccionado.id) {
       setSelected(String(mapaSeleccionado.id));
     } else {
-      setSelected("");
+      setSelected("none");
     }
   }, [mapaSeleccionado]);
 
@@ -21,14 +21,15 @@ export const ListaMapas = ({ mapas, setMapaSeleccionado, mapaSeleccionado }) => 
   };
 
   return (
-    <div className="flex flex-row gap-2 justify-center items-center mt-5">
+    <article className="flex flex-row gap-2 justify-center items-center  py-2 px-6 rounded-lg   ">
       <Label>Selecciona un mapa: </Label>
       <Select value={selected} onValueChange={handleMapaSeleccionado}>
-        <SelectTrigger className="w-[180px]">
+        <SelectTrigger className="min-w-48 bg-white  boderder-gray-300 hover:border-gray-400 focus:border-primary focus:ring-0">
           <SelectValue placeholder="Mapas disponibles" />
         </SelectTrigger>
         <SelectContent>
           <SelectGroup>
+            <SelectItem value="none">No seleccionado</SelectItem>
             {mapas.map(mapa => (
               <SelectItem key={mapa.id} value={String(mapa.id)}>
                 {mapa.nombre}
@@ -37,6 +38,6 @@ export const ListaMapas = ({ mapas, setMapaSeleccionado, mapaSeleccionado }) => 
           </SelectGroup>
         </SelectContent>
       </Select>
-    </div>
+    </article>
   );
 };

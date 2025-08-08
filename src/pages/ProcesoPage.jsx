@@ -40,10 +40,10 @@ export const ProcesoPage = () => {
 
   return (
 
-    <div className="flex flex-col gap-5 w-full justify-center items-center shadow-lg ">
+    <section className="flex flex-col min-h-screen gap-1 w-full  items-center shadow-lg ">
       <h1 className="text-xl font-bold text-center  ">Procesos de la entidad</h1>
       { loading
-        ? ( <div className="text-center text-gray-500">Cargando...</div> )
+        ? ( <span className="text-center text-gray-500">Cargando...</span> )
         : (
           <>
             <ListaMapas mapas={ mapas } setMapaSeleccionado={ setMapaSeleccionado } mapaSeleccionado={ mapaSeleccionado } />
@@ -52,7 +52,7 @@ export const ProcesoPage = () => {
         )
 
       }
-    </div >
+    </section >
 
 
   );

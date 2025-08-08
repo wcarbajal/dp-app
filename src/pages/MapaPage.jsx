@@ -50,45 +50,28 @@ export const MapaPage = () => {
           <div>
 
             { mapas && mapas.length > 0 ? (
-              <div className="flex flex-col gap-2 ">
+              <div className="flex flex-col ">
 
-                {/* <div className="flex flex-row gap-2">
-                  <Label>Selecciona un mapa: </Label>
-                  <Select onValueChange={ handleMapaSeleccionado } >
-                    <SelectTrigger className="w-[180px] ">
 
-                      <SelectValue placeholder="Mapas disponibles" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectGroup>
-
-                        {
-                          mapas.map( ( mapa ) => (
-                            <SelectItem key={ mapa.id } value={ mapa.id }>
-                              { mapa.nombre }
-                            </SelectItem>
-                          ) )
-                        }
-
-                      </SelectGroup>
-                    </SelectContent>
-                  </Select>
-                </div> */}
                 <ListaMapas mapas={ mapas } setMapaSeleccionado={ setMapaSeleccionado } mapaSeleccionado={ mapaSeleccionado } />
 
-                <div className="flex flex-col  mt-4 bg-red-100 p-4 rounded-lg w-full h-full">
-                  <h2 className="text-center text-lg font-semibold">
-                    { mapaSeleccionado ? mapaSeleccionado.nombre : '-' }
-                  </h2>
-                  <MapaVista
-                    entrada={ mapaSeleccionado ? mapaSeleccionado.entrada : '' }
-                    salida={ mapaSeleccionado ? mapaSeleccionado.salida : '' }
-                    estrategicos={ procesosSeleccionado ? procesosSeleccionado.filter( p => p.tipo === "Estratégico" ) : [] }
-                    misionales={ procesosSeleccionado ? procesosSeleccionado.filter( p => p.tipo === "Misional" ) : [] }
-                    soporte={ procesosSeleccionado ? procesosSeleccionado.filter( p => p.tipo === "Soporte" ) : [] }
-                  />
+                { mapaSeleccionado && (
+                  <div className="flex flex-col  bg-red-100 rounded-lg w-full h-full">
+                    <h2 className="text-center text-lg font-semibold">
+                      { mapaSeleccionado ? mapaSeleccionado.nombre : '-' }
+                    </h2>
+                    <MapaVista
+                      entrada={ mapaSeleccionado ? mapaSeleccionado.entrada : '' }
+                      salida={ mapaSeleccionado ? mapaSeleccionado.salida : '' }
+                      estrategicos={ procesosSeleccionado ? procesosSeleccionado.filter( p => p.tipo === "Estratégico" ) : [] }
+                      misionales={ procesosSeleccionado ? procesosSeleccionado.filter( p => p.tipo === "Misional" ) : [] }
+                      soporte={ procesosSeleccionado ? procesosSeleccionado.filter( p => p.tipo === "Soporte" ) : [] }
+                    />
 
-                </div>
+                  </div>
+                )
+
+                }   
 
 
               </div>
