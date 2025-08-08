@@ -24,7 +24,7 @@ import { actualizarProcesoSchema } from '@/schema/ProcesosSchema';
 import { fetchConToken } from '@/helpers/fetch';
 import Swal from 'sweetalert2';
 
-export const DescripcionProceso = ( { proceso, onSubmit: onSubmitProp, ownersOptions } ) => {
+export const DescripcionProceso = ( { proceso, onSubmit: onSubmitProp, ownersOptions, onUpdated } ) => {
 
 
 
@@ -71,7 +71,11 @@ export const DescripcionProceso = ( { proceso, onSubmit: onSubmitProp, ownersOpt
           buttonsStyling: false // Esto es clave para que se apliquen tus clases
         } );
       }
-      form.reset( values );
+      form.reset(actualizarProceso.proceso ?? values);
+       // Llama a la función de recarga si existe
+      if (typeof onUpdated === "function") {
+        onUpdated();
+      }
     }
   };
 

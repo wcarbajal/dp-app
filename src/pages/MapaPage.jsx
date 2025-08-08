@@ -5,7 +5,7 @@ import { ListaMapas } from '@/components/ListaMapas';
 import { MapaVista } from '@/components/mapa/MapaVista';
 
 import { cargarMapas } from "@/helpers/mapas";
-import { cargarProcesos } from "@/helpers/procesos";
+import {  cargarProcesosNivel0 } from "@/helpers/procesos";
 
 
 export const MapaPage = () => {
@@ -29,7 +29,7 @@ export const MapaPage = () => {
   useEffect( () => {
     const obtenerProcesos = async () => {
       if ( !mapaSeleccionado ) return;
-      const procesos = await cargarProcesos( mapaSeleccionado.id );
+      const procesos = await cargarProcesosNivel0( mapaSeleccionado.id );
       setProcesosSeleccionado( procesos );
     };
     obtenerProcesos();
@@ -42,8 +42,8 @@ export const MapaPage = () => {
 
 
   return (
-    <div className="flex flex-col w-full justify-center items-center shadow-lg">
-      <h1 className="mt-2 text-xl font-bold text-center ">Mapa de Procesos</h1>
+    <div className="flex flex-col w-full justify-center items-center  h-full">
+      <h1 className="text-xl font-bold text-center gap-2 ">Mapa de Procesos</h1>
       { loading
         ? ( <div className="text-center text-gray-500">Cargando...</div> )
         : (
@@ -56,8 +56,8 @@ export const MapaPage = () => {
                 <ListaMapas mapas={ mapas } setMapaSeleccionado={ setMapaSeleccionado } mapaSeleccionado={ mapaSeleccionado } />
 
                 { mapaSeleccionado && (
-                  <div className="flex flex-col  bg-red-100 rounded-lg w-full h-full">
-                    <h2 className="text-center text-lg font-semibold">
+                  <div className="flex flex-col   rounded-lg w-full h-full">
+                    <h2 className="text-center text-lg font-semibold bg-white rounded-lg  ">
                       { mapaSeleccionado ? mapaSeleccionado.nombre : '-' }
                     </h2>
                     <MapaVista

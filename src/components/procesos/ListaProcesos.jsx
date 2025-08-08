@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import {  useState } from "react";
 import { Button } from "@/components/ui/button";
 
 import { MdEdit } from "react-icons/md";
@@ -15,16 +15,16 @@ export const ListaProcesos = ( { procesos } ) => {
   const [ procesoSeleccionado, setProcesoSeleccionado ] = useState( null );
   const [ colapsado, setColapsado ] = useState( false );
 
-  const openAccordion = useMemo(() => {
-    if (!procesoSeleccionado) return undefined;
-    return `item-${procesoSeleccionado.tipo?.toLowerCase()}`;
-  }, [procesoSeleccionado]);
+ const [ openAccordion, setOpenAccordion ] = useState("item-estratégico");
 
-
+const handleSeleccionarProceso = (proceso) => {
+    setProcesoSeleccionado(proceso);
+    setOpenAccordion(`item-${proceso.tipo.toLowerCase()}`);
+  };
 
   return (
-    <section className="flex gap-8 m-1 bg-white min-w-5/6 rounded-lg shadow-lg p-4">
-      <div className={ `flex flex-col gap-2 relative transition-all duration-300 ${ colapsado ? "w-0 p-0" : "w-1/3" }` }>
+    <section className="flex gap-7 h-[calc(100vh-200px)] w-full rounded-lg shadow-lg p-4  bg-white">
+      <div className={ `flex flex-col gap-2 h-ull relative transition-all duration-300 ${ colapsado ? "w-0 p-0" : "w-1/3" }` }>
 
         { !colapsado ? (
           <article className=" p-4 border rounded-lg shadow-lg ">
@@ -35,8 +35,9 @@ export const ListaProcesos = ( { procesos } ) => {
               type="single"
               collapsible
               className="w-full"
+              
               value={openAccordion}
-              defaultValue="item-estratégico"
+              onValueChange={setOpenAccordion}
             >
               { [ "Estratégico", "Misional", "Soporte" ].map( ( tipo ) => {
                 const procesosPorTipo = procesos
@@ -57,7 +58,7 @@ export const ListaProcesos = ( { procesos } ) => {
                               ? "bg-gray-200 font-semibold border-primary"
                               : "bg-white"
                               }` }
-                            onClick={ () => setProcesoSeleccionado( proceso ) }
+                            onClick={ () => handleSeleccionarProceso(proceso)  }
                           >
                             <span>
                               <span className="text-xs">{ proceso.codigo }</span> - { proceso.nombre }
@@ -87,7 +88,7 @@ export const ListaProcesos = ( { procesos } ) => {
       </div>
 
       <article
-        className={ `transition-all duration-300 border rounded-lg shadow-lg p-5 h-[calc(100vh-8rem)] -ml-6 pt-2 pl-2 ${ colapsado ? "flex-1 w-full ml-1" : "flex-1"
+        className={ `transition-all duration-300 border h-full rounded-lg shadow-lg p-5  -ml-6 pt-2 pl-2 ${ colapsado ? "flex-1 w-full ml-1" : "flex-1"
           }` }
       >
         { procesoSeleccionado ? (

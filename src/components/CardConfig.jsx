@@ -1,14 +1,14 @@
 import { Link } from 'react-router';
 import { Card, CardAction, CardFooter, CardHeader, CardTitle } from './ui/card';
 import { Badge } from './ui/badge';
-import { MdOutlineNumbers } from 'react-icons/md';
+import { VscSymbolNumeric } from "react-icons/vsc";
 import { IconTrendingUp } from '@tabler/icons-react';
 import { capitalize } from '@/utils/text';
 
 // Función para capitalizar la primera letra
 
 
-export const CardConfig = ({ ruta, objeto, cantidad, icon }) => {
+export const CardConfig = ({ ruta, objeto, cantidad }) => {
 
   
   return (
@@ -18,11 +18,10 @@ export const CardConfig = ({ ruta, objeto, cantidad, icon }) => {
             <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
               {capitalize(objeto)}
             </CardTitle>
-            <CardAction>
-              <Badge variant="outline">
-                {icon ? icon : <MdOutlineNumbers className="size-4" />}
+            <CardAction className="flex items-center gap-2">
+
+                 <VscSymbolNumeric size={16} />
                 {cantidad}
-              </Badge>
 
             </CardAction>
           </CardHeader>

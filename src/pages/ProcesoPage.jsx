@@ -40,14 +40,18 @@ export const ProcesoPage = () => {
 
   return (
 
-    <section className="flex flex-col min-h-screen gap-1 w-full  items-center shadow-lg ">
+    <section className="flex flex-col min-h-[calc(100vh-200px)] gap-1 w-full  items-center ">
       <h1 className="text-xl font-bold text-center  ">Procesos de la entidad</h1>
       { loading
         ? ( <span className="text-center text-gray-500">Cargando...</span> )
         : (
           <>
             <ListaMapas mapas={ mapas } setMapaSeleccionado={ setMapaSeleccionado } mapaSeleccionado={ mapaSeleccionado } />
-            <ListaProcesos procesos={ procesosSeleccionado || [] }/>
+            {
+              mapaSeleccionado && (                
+                <ListaProcesos procesos={ procesosSeleccionado || [] }/>
+              )
+            }
           </>
         )
 

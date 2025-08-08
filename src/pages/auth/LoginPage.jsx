@@ -86,7 +86,7 @@ export const LoginPage = () => {
   }
 
   return (
-    <div className="flex justify-center items-center h-screen">
+    <div className="flex w-full justify-center items-center shadow-neutral-600">
 
       <div className={ cn( "flex flex-col gap-6" ) } >
         <Card>

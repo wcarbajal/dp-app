@@ -71,7 +71,7 @@ console.log("Usuario registrado correctamente");
     return ( form.nombre.length > 0 && form.correo.length > 0 && form.password.length > 0 ) ? true : false;
   };
   return (
-    <div className="flex justify-center items-center h-screen">
+    <div className="flex justify-center items-center h-screen w-full">
 
       <div className={ cn( "flex flex-col gap-6" ) } >
         <Card>
