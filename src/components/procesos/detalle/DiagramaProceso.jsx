@@ -11,8 +11,6 @@ export const DiagramaProceso = ( { proceso } ) => {
   const [ zoom, setZoom ] = useState( 1 );
 
 
-  console.log( { zoom } );
-
   useEffect( () => {
     const baseUrl = proceso?.diagrama?.url;
     seturl( baseUrl ? baseUrl + "?t=" + Date.now() : "" );

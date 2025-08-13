@@ -12,14 +12,22 @@ import { useEffect, useState } from 'react';
 
 export const FormEntradasSalidas = ( { proceso } ) => {
 
-  const [ ioResult, setIoResult ] = useState( undefined );
+  const [ ioResult, setIoResult ] = useState( [] );
   console.log( { ioResult } );
 
 
   useEffect( () => {
     const cargarInputOutput = async () => {
       console.log("inicio del cargar input/output")
+      console.log({ proceso });
+
+      if ( !proceso || !proceso.ficha || !proceso.ficha.id ) {
+        console.log("Proceso o ficha no disponible");
+        setIoResult( [] );
+        return;
+      }
       const response = await fetchConToken( `ficha/${ proceso.ficha.id }/input-output` );
+      console.log("respuesta del cargar input/output", response);
       if ( response.ok ) {
         setIoResult( response.inputOutput );
       } else {
@@ -69,6 +77,9 @@ export const FormEntradasSalidas = ( { proceso } ) => {
 
   const onSubmit = async ( data ) => {
     console.log( {data} );
+
+    //TODO: registrra una ficha de proceso, del resultado del api-rest, se tendrá el ficha.id
+    
     const registrarInputOutput = await fetchConToken(
       `ficha/${ proceso.ficha.id }/input-output`,
       data,
@@ -85,10 +96,10 @@ export const FormEntradasSalidas = ( { proceso } ) => {
       console.error( 'Error al registrar Input/Output' );
     }
   };
-  if ( ioResult === undefined ) {
+/*   if ( ioResult === undefined ) {
     return <div>Cargando...</div>;
   }
-
+ */
 
   return (
     <FormProvider { ...form } >
