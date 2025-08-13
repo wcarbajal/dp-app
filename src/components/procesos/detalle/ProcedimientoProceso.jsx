@@ -9,185 +9,286 @@ import { procedimientoSchema } from '@/schema/ProcesosSchema';
 import { MdKeyboardArrowDown, MdKeyboardArrowUp, MdOutlineDeleteOutline } from 'react-icons/md';
 import { IoAddOutline } from "react-icons/io5";
 import { fetchConToken } from '@/helpers/fetch';
+import Swal from 'sweetalert2';
 
-export const ProcedimientoProceso = ( { procedimiento, idProceso, idDetalleProcesos } ) => {
+//TODO: cambiarlo a un proceso propio
 
+export const ProcedimientoProceso = ( { actividades, idProceso } ) => {
+
+  console.log( { actividades } );
+  console.log( { idProceso } );
+
+
+
+
+  const actividadesOrdenadas = ( actividades || [] ).slice().sort(
+    ( a, b ) => Number( a.numOrden ) - Number( b.numOrden )
+  ).map( ( a, i ) => ( {
+    ...a,
+    numOrden: a.numOrden ?? i + 1, // Si no tiene numOrden, asígnale uno correlativo
+  } ) );
+
+  console.log( { actividadesOrdenadas } );
 
   const form = useForm( {
     resolver: zodResolver( procedimientoSchema ),
     defaultValues: {
       id: idProceso || undefined,
-      iddetalleproceso: idDetalleProcesos || undefined,
-      idprocedimiento: procedimiento.id || undefined,
-      actividades: procedimiento.actividades || [],
+
+      actividades: actividadesOrdenadas,
     },
     mode: "onChange",
   } );
 
 
-  const { fields, append, remove, update } = useFieldArray( {
+  const { fields, append, remove, swap } = useFieldArray( {
     control: form.control,
     name: "actividades",
   } );
+
   const moveUp = ( idx ) => {
-    if ( idx === 0 ) return; // Ya está arriba
-    // Intercambia el actual con el anterior usando update
-    update( idx, fields[ idx - 1 ] );
-    update( idx - 1, fields[ idx ] );
+    if ( idx === 0 ) return;
+    swap( idx, idx - 1 );
+    // Actualiza numOrden después de swap
+    const actividadesActualizadas = form.getValues( "actividades" ).map( ( item, i ) => ( {
+      ...item,
+      numOrden: i + 1,
+    } ) );
+    form.setValue( "actividades", actividadesActualizadas, { shouldDirty: true } );
   };
 
   const moveDown = ( idx ) => {
-    if ( idx === fields.length - 1 ) return; // Ya está abajo
-    // Intercambia el actual con el siguiente usando update
-    update( idx, fields[ idx + 1 ] );
-    update( idx + 1, fields[ idx ] );
+    if ( idx === fields.length - 1 ) return;
+    swap( idx, idx + 1 );
+    // Actualiza numOrden después de swap
+    const actividadesActualizadas = form.getValues( "actividades" ).map( ( item, i ) => ( {
+      ...item,
+      numOrden: i + 1,
+    } ) );
+    form.setValue( "actividades", actividadesActualizadas, { shouldDirty: true } );
   };
   const onSubmit = async ( formulario ) => {
+    // Ordena las actividades por numOrden antes de enviar
+    const actividadesOrdenadas = [ ...formulario.actividades ].sort(
+      ( a, b ) => Number( a.numOrden ) - Number( b.numOrden )
+    );
 
-
-    // Aquí puedes manejar el envío del formulario a fetchConToken
-    const result = await fetchConToken( `procesos/registrar-procedimiento/${ formulario.id }`, {
-      iddetalleproceso: formulario.iddetalleproceso,
-      idprocedimiento: formulario.idprocedimiento,
-      actividades: formulario.actividades,
-    }, "POST" );
-    console.log( { result } );
+    const result = await fetchConToken(
+      `procesos/${ formulario.id }/registrar-actividades`,
+      {
+        id: formulario.id,
+        actividades: actividadesOrdenadas,
+      },
+      "POST"
+    );
+    if ( !result.ok ) console.log( "Error en la respuesta:", result );
+    if ( result.ok && result.proceso && Array.isArray( result.proceso.actividades ) ) {
+      const actividadesOrdenadasResp = result.proceso.actividades.slice().sort(
+        ( a, b ) => Number( a.numOrden ) - Number( b.numOrden )
+      );
+      form.setValue( "actividades", actividadesOrdenadasResp );
+      Swal.fire( {
+        title: "Actividades actualizadas!",
+        text: "Las actividades fueron actualizadas correctamente!",
+        icon: "success",
+        confirmButtonText: "Aceptar",
+        customClass: {
+          confirmButton: "bg-primary py-2 px-6 rounded-md text-primary-foreground shadow-xs hover:bg-primary/90",
+        },
+        buttonsStyling: false
+      } );
+    }
   };
 
   return (
     <Form { ...form }>
       <form onSubmit={ form.handleSubmit( onSubmit ) } className="flex flex-col gap-5">
         <h3 className="text-lg font-bold">Actividades</h3>
-
-        <table className="min-w-full border rounded-md">
-          <thead>
-            <tr className="bg-slate-100">
-              <th className="p-2 border">#</th>
-              <th className="p-2 border">Nombre de actividad</th>
-              <th className="p-2 border">Descripción de la actividad</th>
-              <th className="p-2 border">Unidad Operativa</th>
-              <th className="p-2 border">Responsable de la actividad</th>
-              <th className="p-2 border w-[60px]">Acciones</th>
-            </tr>
-          </thead>
-          <tbody>
-            { fields.length === 0 ? (
-              <tr>
-                <td colSpan={ 6 } className="p-2 border text-center">
-                  <span>sin actividades</span>
-                </td>
+        <div className="w-full border rounded ">
+          {/* Tabla de encabezado fija */ }
+          <table className="min-w-full ">
+            <colgroup>
+              <col style={ { width: "60px" } } />
+              <col style={ { width: "150px" } } />
+              <col style={ { width: "300px" } } />
+              <col style={ { width: "150px" } } />
+              <col style={ { width: "150px" } } />
+              <col style={ { width: "95px" } } />
+            </colgroup>
+            <thead>
+              <tr className="bg-slate-100">
+                <th className="p-2 border">#</th>
+                <th className="p-2 border">Nombre de actividad</th>
+                <th className="p-2 border">Descripción de la actividad</th>
+                <th className="p-2 border">Unidad Operativa</th>
+                <th className="p-2 border">Responsable de la actividad</th>
+                <th className="p-2 border w-[60px]">Acciones</th>
               </tr>
-            ) : (
-              fields.map( ( field, idx ) => (
-                <tr key={ field.id }>
-                  <td className="p-2 border text-center">{ idx + 1 }</td>
-                  <td className="p-2 border">
-                    <FormField
-                      control={ form.control }
-                      name={ `actividades.${ idx }.nombre` }
-                      render={ ( { field } ) => (
-                        <FormItem>
-                          <FormControl>
-                            <Input { ...field } placeholder="Nombre de la actividad" />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      ) }
-                    />
-                  </td>
-                  <td className="p-2 border">
-                    <FormField
-                      control={ form.control }
-                      name={ `actividades.${ idx }.descripcion` }
-                      render={ ( { field } ) => (
-                        <FormItem>
-                          <FormControl>
-                            <Textarea { ...field } placeholder="Descripción" rows={ 3 } />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      ) }
-                    />
-                  </td>
-                  <td className="p-2 border">
-                    <FormField
-                      control={ form.control }
-                      name={ `actividades.${ idx }.unidadOperativa` }
-                      render={ ( { field } ) => (
-                        <FormItem>
-                          <FormControl>
-                            <Input { ...field } placeholder="Unidad Operativa" />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      ) }
-                    />
-                  </td>
-                  <td className="p-2 border">
-                    <FormField
-                      control={ form.control }
-                      name={ `actividades.${ idx }.responsable` }
-                      render={ ( { field } ) => (
-                        <FormItem>
-                          <FormControl>
-                            <Input { ...field } placeholder="Responsable" />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      ) }
-                    />
-                  </td>
-                  <td className=" border w-[60px]">
-                    <div className="flex gap-2 justify-center ">
-                      <Button
-                        type="button"
-                        variant="outline"
-                        className="h-6 w-6 p-1"
-                        onClick={ () => moveUp( idx ) }>
-                        <MdKeyboardArrowUp size={ 10 } />
-                      </Button>
-                      <Button
-                        type="button"
-                        variant="destructive"
-                        className="h-6 w-6 p-1"
-                        onClick={ () => remove( idx ) }>
-                        <MdOutlineDeleteOutline size={ 10 } />
-                      </Button>
-                      <Button
-                        type="button"
-                        variant="outline"
-                        className="h-6 w-6 p-1"
-                        onClick={ () => moveDown( idx ) }>
-                        <MdKeyboardArrowDown size={ 10 } />
-                      </Button>
-                    </div>
-                  </td>
-                </tr>
-              ) )
-            ) }
-          </tbody>
+            </thead>
+          </table>
+          {/* Tabla de cuerpo con scroll */ }
+          <div className="max-h-96 overflow-y-auto w-full -mt-10">
+            <table className="min-w-full">
+              <colgroup>
+                <col style={ { width: "60px" } } />
+                <col style={ { width: "150px" } } />
+                <col style={ { width: "300px" } } />
+                <col style={ { width: "150px" } } />
+                <col style={ { width: "150px" } } />
+                <col style={ { width: "95px" } } />
+              </colgroup>
 
-          <tfoot>
-            <tr>
-              <td colSpan={ 5 } className="bg-transparent p-2"></td>
-              <td className="flex justify-end bg-transparent p-2">
-                <Button
-                  type="button"
-                  variant="outline"
-                  className="mt-2"
-                  onClick={ () => append( { nombre: "", descripcion: "", unidadOperativa: "", responsable: "" } ) }
-                >
-                  <IoAddOutline /> Agregar
-                </Button>
-              </td>
-            </tr>
-          </tfoot>
+              <tbody>
+                { fields.length === 0 ? (
+                  <tr>
+                    <td colSpan={ 6 } className="p-2 border text-center">
+                      <span>sin actividades</span>
+                    </td>
+                  </tr>
+                ) : (
+                  fields.map( ( field, idx ) => (
+                    <tr key={ field.id }>
+                      <td className="border align-top">
+                        <FormField
+                          control={ form.control }
+                          name={ `actividades.${ idx }.numOrden` }
+                          render={ ( { field } ) => (
+                            <FormItem>
+                              <FormControl>
+                                <Input
+                                  { ...field }
+                                  type="number"
+                                  min={ 1 }
+                                  placeholder="Orden"
+                                  value={ field.value ?? idx + 1 }
+                                  onChange={ e => {
+                                    const value = e.target.value === "" ? "" : Number( e.target.value );
+                                    field.onChange( value );
+                                  } }
+                                />
 
-        </table>
-        <div className=" flex justify-center mt-4 " >
-
-
-          <Button type="submit" disabled={ !form.formState.isDirty }>
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          ) }
+                        />
+                      </td>
+                      <td className="p-2 border align-top">
+                        <FormField
+                          control={ form.control }
+                          name={ `actividades.${ idx }.nombre` }
+                          render={ ( { field } ) => (
+                            <FormItem>
+                              <FormControl>
+                                <Textarea
+                                  { ...field }
+                                  placeholder="Nombre de la actividad"
+                                  className="break-words whitespace-pre-line resize-none"
+                                  rows={ 2 }
+                                />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          ) }
+                        />
+                      </td>
+                      <td className="p-2 border">
+                        <FormField
+                          control={ form.control }
+                          name={ `actividades.${ idx }.descripcion` }
+                          render={ ( { field } ) => (
+                            <FormItem>
+                              <FormControl>
+                                <Textarea { ...field } placeholder="Descripción" rows={ 3 } />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          ) }
+                        />
+                      </td>
+                      <td className="p-2 border align-top">
+                        <FormField
+                          control={ form.control }
+                          name={ `actividades.${ idx }.unidadOperativa` }
+                          render={ ( { field } ) => (
+                            <FormItem>
+                              <FormControl>
+                                <Textarea
+                                  { ...field }
+                                  placeholder="Nombre de la actividad"
+                                  className="break-words whitespace-pre-line resize-none"
+                                  rows={ 2 }
+                                />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          ) }
+                        />
+                      </td>
+                      <td className="p-2 border align-top">
+                        <FormField
+                          control={ form.control }
+                          name={ `actividades.${ idx }.responsable` }
+                          render={ ( { field } ) => (
+                            <FormItem>
+                              <FormControl>
+                                <Textarea
+                                  { ...field }
+                                  placeholder="Nombre de la actividad"
+                                  className="break-words whitespace-pre-line resize-none"
+                                  rows={ 2 }
+                                />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          ) }
+                        />
+                      </td>
+                      <td className="border w-[60px]">
+                        <div className="flex gap-2 justify-center ">
+                          <Button
+                            type="button"
+                            variant="outline"
+                            className="h-6 w-6 p-1"
+                            onClick={ () => moveUp( idx ) }>
+                            <MdKeyboardArrowUp size={ 10 } />
+                          </Button>
+                          <Button
+                            type="button"
+                            variant="destructive"
+                            className="h-6 w-6 p-1"
+                            onClick={ () => remove( idx ) }>
+                            <MdOutlineDeleteOutline size={ 10 } />
+                          </Button>
+                          <Button
+                            type="button"
+                            variant="outline"
+                            className="h-6 w-6 p-1"
+                            onClick={ () => moveDown( idx ) }>
+                            <MdKeyboardArrowDown size={ 10 } />
+                          </Button>
+                        </div>
+                      </td>
+                    </tr>
+                  ) )
+                ) }
+              </tbody>
+            </table>
+          </div>
+          {/* Footer de la tabla */ }
+          <div className="flex justify-end bg-transparent p-2">
+            <Button
+              type="button"
+              variant="outline"
+              className="mt-2"
+              onClick={ () => append( { numOrden: undefined, nombre: "", descripcion: "", unidadOperativa: "", responsable: "" } ) }
+            >
+              <IoAddOutline /> Agregar
+            </Button>
+          </div>
+        </div>
+        <div className="flex justify-center mt-4">
+          <Button type="submit"  >
             Guardar Procedimiento
           </Button>
         </div>

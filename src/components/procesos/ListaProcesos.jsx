@@ -23,18 +23,18 @@ const handleSeleccionarProceso = (proceso) => {
   };
 
   return (
-    <section className="flex gap-7 h-[calc(100vh-200px)] w-full rounded-lg shadow-lg p-4  bg-white">
+    <section className="flex gap-7  h-full w-full rounded-lg shadow-lg p-4  bg-white">
       <div className={ `flex flex-col gap-2 h-ull relative transition-all duration-300 ${ colapsado ? "w-0 p-0" : "w-1/3" }` }>
 
         { !colapsado ? (
-          <article className=" p-4 border rounded-lg shadow-lg ">
+          <article className=" p-4 border rounded-lg shadow-lg h-full">
 
             <h2 className="font-bold mb-2 text-center">Procesos activos</h2>
 
             <Accordion
               type="single"
               collapsible
-              className="w-full"
+              className="w-full h-full"
               
               value={openAccordion}
               onValueChange={setOpenAccordion}
@@ -79,7 +79,7 @@ const handleSeleccionarProceso = (proceso) => {
               className="w-9  flex items-end justify-center flex-col  mt-8  h-96"
               style={ { writingMode: "vertical-rl", transform: "rotate(180deg)" } }
             >
-              <span className="text-md font-semibold">{ procesoSeleccionado.codigo } - { procesoSeleccionado.nombre }</span>
+              <span className="text-md font-semibold">{ procesoSeleccionado?.codigo } - { procesoSeleccionado.nombre }</span>
               
             </div>
           )

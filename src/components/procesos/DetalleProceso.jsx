@@ -11,6 +11,7 @@ export const DetalleProceso = ( { procesoId } ) => {
   const [ detalleProceso, setDetalleProceso ] = useState( null );
   const [ loading, setLoading ] = useState( true );
   const [ ownersList, setOwnersList ] = useState( [] );
+  console.log({detalleProceso})
 
 
 
@@ -55,10 +56,10 @@ export const DetalleProceso = ( { procesoId } ) => {
             <DiagramaProceso proceso={ detalleProceso.proceso || [] } onUpdated={cargarDetalle}/>
           </TabsContent>
           <TabsContent value="ficha" className=" ">
-            <FichaProceso proceso={ detalleProceso || [] } />
+            <FichaProceso proceso={ detalleProceso.proceso || [] } />
           </TabsContent>
           <TabsContent value="procedimiento" className=" ">
-            <ProcedimientoProceso procedimiento={ detalleProceso.detalleProceso?.procedimiento || [] } idProceso={ detalleProceso.id || '' } idDetalleProcesos={ detalleProceso.detalleProcesoId || '' } />
+            <ProcedimientoProceso actividades={ detalleProceso.proceso.actividades || [] } idProceso={ detalleProceso.proceso.id || '' }  />
           </TabsContent>
           <TabsContent value="indicadores" className=" ">
             <IndicadoresProceso proceso={ detalleProceso || [] } />
