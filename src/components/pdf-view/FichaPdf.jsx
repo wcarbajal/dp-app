@@ -1,7 +1,10 @@
 
 import { Document, Page, Text, View, StyleSheet, Image } from '@react-pdf/renderer';
 import { Cabecera } from './partes/Cabecera';
-import { Idetificacion } from './partes/Idetificacion';
+import { Identificacion } from './partes/Identificacion';
+import { Descripcion } from './partes/Descripcion';
+import { Indicadores } from './partes/Indicadores';
+
 
 
 const styles = StyleSheet.create( {
@@ -22,14 +25,16 @@ export const FichaPdf = () => {
   return (
     <Document>
       <Page size="A4" style={ styles.page }>
-       <Cabecera
-         imagen="img/MINEDU.png"
-         titulo="Ficha de proceso"
-         codigoFormato="FPE03.02.01"
-         version="2"
-       />
+        <Cabecera
+          imagen="img/MINEDU.png"
+          titulo="Ficha de proceso"
+          codigoFormato="FPE03.02.01"
+          version="2"
+        />
 
-       <Idetificacion />
+        <Identificacion />
+        <Descripcion />
+        <Indicadores />
       </Page>
     </Document>
   );

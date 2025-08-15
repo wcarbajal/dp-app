@@ -1,4 +1,4 @@
-import { ViewPdf } from '@/components/pdf/ViewPdf';
+import { ViewPdf } from '@/components/pdf-view/ViewPdf';
 
 export const IndicadoresProceso = () => {
   return (

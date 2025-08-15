@@ -1,5 +1,6 @@
-import { FichaPdf } from '@/components/pdf/FichaPdf';
+import { FichaPdf } from '@/components/pdf-view/FichaPdf';
 import { PDFViewer } from '@react-pdf/renderer';
+
 
 export const ReportePage = () => {
   return (

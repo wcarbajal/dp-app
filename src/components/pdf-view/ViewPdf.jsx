@@ -1,6 +1,7 @@
-import { PDFDownloadLink, PDFViewer } from '@react-pdf/renderer';
-import { Pdfdocument } from './Pdfdocument';
+import { PDFViewer } from '@react-pdf/renderer';
 import { FichaPdf } from './FichaPdf';
+
+
 
 export const ViewPdf = () => {
 
