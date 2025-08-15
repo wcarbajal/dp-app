@@ -11,7 +11,7 @@ export const DetalleProceso = ( { procesoId } ) => {
   const [ detalleProceso, setDetalleProceso ] = useState( null );
   const [ loading, setLoading ] = useState( true );
   const [ ownersList, setOwnersList ] = useState( [] );
-  console.log({detalleProceso})
+  
 
 
 

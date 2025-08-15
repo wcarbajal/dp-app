@@ -13,21 +13,21 @@ import { useEffect, useState } from 'react';
 export const FormEntradasSalidas = ( { proceso } ) => {
 
   const [ ioResult, setIoResult ] = useState( [] );
-  console.log( { ioResult } );
+
 
 
   useEffect( () => {
+    
     const cargarInputOutput = async () => {
-      console.log("inicio del cargar input/output")
-      console.log({ proceso });
+
 
       if ( !proceso || !proceso.ficha || !proceso.ficha.id ) {
-        console.log("Proceso o ficha no disponible");
+
         setIoResult( [] );
         return;
       }
       const response = await fetchConToken( `ficha/${ proceso.ficha.id }/input-output` );
-      console.log("respuesta del cargar input/output", response);
+
       if ( response.ok ) {
         setIoResult( response.inputOutput );
       } else {
@@ -55,15 +55,7 @@ export const FormEntradasSalidas = ( { proceso } ) => {
             salida: item.salida,
             cliente: item.cliente,
           } ) )
-          : [
-            {
-              id: undefined,
-              proveedor: "",
-              entrada: "",
-              salida: "",
-              cliente: "",
-            },
-          ],
+          : [],
       } );
     }
   }, [ ioResult, form ] );
@@ -76,35 +68,32 @@ export const FormEntradasSalidas = ( { proceso } ) => {
 
 
   const onSubmit = async ( data ) => {
-    console.log( {data} );
 
-    //TODO: registrra una ficha de proceso, del resultado del api-rest, se tendrá el ficha.id
-    
-    const registrarInputOutput = await fetchConToken(
-      `ficha/${ proceso.ficha.id }/input-output`,
-      data,
-      'POST'
-    );
+    let fichaId;
 
-    if ( registrarInputOutput.ok ) {
-      // Recarga los datos después de guardar
-      const response = await fetchConToken( `ficha/${ proceso.ficha.id }/input-output` );
-      if ( response.ok ) {
-        setIoResult( response.inputOutput );
-      }
+    if ( proceso.ficha === null ) {
+
+      const fichaNueva = await fetchConToken( `procesos/${ proceso.id }/registrar-ficha` );
+
+      fichaId = fichaNueva.id;
+    } else {
+      fichaId = proceso.ficha.id;
+    }
+
+    const response = await fetchConToken( `ficha/${ fichaId }/registrar-io`, data, 'POST' );
+
+    if ( response.ok ) {
+      setIoResult( response.inputOutput );
     } else {
       console.error( 'Error al registrar Input/Output' );
     }
   };
-/*   if ( ioResult === undefined ) {
-    return <div>Cargando...</div>;
-  }
- */
+
 
   return (
     <FormProvider { ...form } >
       <Form { ...form } >
-        <form onSubmit={ form.handleSubmit( onSubmit, (errors) => {
+        <form onSubmit={ form.handleSubmit( onSubmit, ( errors ) => {
           console.error( 'Errores en el formulario:', errors );
         } ) } className="px-5 rounded-lg ">
           <table className="border rounded-lg overflow-hidden bg-white w-full">
@@ -185,7 +174,7 @@ export const FormEntradasSalidas = ( { proceso } ) => {
                         type="button"
                         variant="destructive"
                         onClick={ () => remove( idx ) }
-                        disabled={ fields.length === 1 }
+                        /* disabled={ fields.length === 1 } */
                       >
                         <MdOutlineDelete />
                       </Button>

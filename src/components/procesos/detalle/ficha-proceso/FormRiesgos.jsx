@@ -12,9 +12,7 @@ export const FormRiesgos = () => {
   const form = useForm( {
     resolver: zodResolver( riesgosSchema ),
     defaultValues: {
-      riesgos: [ {
-        denominacion: "",
-      } ],
+      riesgos: [],
     },
   } );
 
@@ -65,7 +63,7 @@ export const FormRiesgos = () => {
                         type="button"
                         variant="destructive"
                         onClick={ () => remove( idx ) }
-                        disabled={ fields.length === 1 }
+                        
                       >
                         <MdOutlineDelete />
                       </Button>

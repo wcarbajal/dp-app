@@ -11,10 +11,7 @@ export const FormRegistros = () => {
   const form = useForm( {
     resolver: zodResolver( registrosSchema ),
     defaultValues: {
-      registros: [ {
-        denominacion: "",
-        tipo: "físico"
-      } ],
+      registros: [  ],
     },
   } );
 
@@ -94,7 +91,7 @@ export const FormRegistros = () => {
                         type="button"
                         variant="destructive"
                         onClick={ () => remove( idx ) }
-                        disabled={ fields.length === 1 }
+                        
                       >
                         <MdOutlineDelete />
                       </Button>
