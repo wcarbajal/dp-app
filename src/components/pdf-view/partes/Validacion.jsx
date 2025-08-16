@@ -6,8 +6,9 @@ const styles = StyleSheet.create({
     width: "auto",
     borderStyle: "solid",
     borderWidth: 1,
-    borderBottomWidth: 0,
     borderColor: "black",
+    borderRightWidth: 0,
+    borderBottomWidth: 0, 
     marginVertical: 10,
     fontSize: 10,
     flexDirection: "column",
@@ -18,6 +19,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     borderBottomWidth: 1,
+    borderRightWidth: 1,
     borderColor: "black",
     backgroundColor: "#f0f0f0",
   },
@@ -26,7 +28,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   cellTitulo: {
-    width: "25%",
+    width: "50%",
     padding: 5,
     borderRightWidth: 1,
     borderBottomWidth: 1,
@@ -38,14 +40,14 @@ const styles = StyleSheet.create({
     backgroundColor: "#f0f0f0",
   },
   cellTituloLast: {
-    borderRightWidth: 0,
+    borderRightWidth: 1,
   },
   rowContenido: {
     flexDirection: "row",
     alignItems: "center",
   },
   cellContenido: {
-    width: "25%",
+    width: "50%",
     padding: 5,
     borderRightWidth: 1,
     borderBottomWidth: 1,
@@ -68,53 +70,33 @@ const styles = StyleSheet.create({
   }
 });
 
-const datos = [
-  [ "Proveedor 1", "Insumo 1", "Producto 1", "Usuario 1" ],
-  [ "Proveedor 2", "Insumo 2", "Producto 2", "Usuario 2" ],
-  [ "Proveedor 3", "Insumo 3", "Producto 3", "Usuario 3" ],
-];
 
-export const Descripcion = () => (
+export const Validacion = () => (
 
   <View style={ styles.table }>
 
-    <View style={ styles.cellCabecera }>
-      <Text style={ styles.textoTitulo }>Descripción del proceso</Text>
-    </View>
-
     <View style={ styles.rowTitulo }>
       <View style={ styles.cellTitulo }>
-        <Text>Proveedores</Text>
+        <Text>Revisado por:</Text>
 
-      </View>
-      <View style={ styles.cellTitulo }>
-        <Text>Insumos</Text>
-      </View>
-      <View style={ styles.cellTitulo }>
-        <Text>Productos</Text>
-      </View>
+      </View>      
       <View style={ [ styles.cellTitulo, styles.cellTituloLast ] }>
-        <Text>Usuarios</Text>
+        <Text>Aprobado por: </Text>
       </View>
     </View>
 
 
-    { datos.map( ( fila, idx ) => (
-      <View style={ styles.rowContenido } key={ idx }>
+    
+      <View style={ styles.rowContenido } >
         <View style={ styles.cellContenido }>
-          <Text style={ styles.textoContenido }>{ fila[ 0 ] }</Text>
-        </View>
-        <View style={ styles.cellContenido }>
-          <Text style={ styles.textoContenido }>{ fila[ 1 ] }</Text>
+          <Text style={ styles.textoContenido }>[FIRMA]</Text>
         </View>
         <View style={ styles.cellContenido }>
-          <Text style={ styles.textoContenido }>{ fila[ 2 ] }</Text>
+          <Text style={ styles.textoContenido }>[FIRMA]</Text>
         </View>
-        <View style={ [ styles.cellContenido, styles.cellContenidoLast ] }>
-          <Text style={ styles.textoContenido }>{ fila[ 3 ] }</Text>
-        </View>
+       
       </View>
-    ) ) }
+    
 
 
 

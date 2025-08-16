@@ -7,6 +7,8 @@ const styles = StyleSheet.create({
     borderStyle: "solid",
     borderWidth: 1,
     borderColor: "black",
+    borderRightWidth: 0,
+    borderBottomWidth: 0, 
     marginVertical: 10,
     fontSize: 10,
     flexDirection: "column",
@@ -17,6 +19,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     borderBottomWidth: 1,
+    borderRightWidth: 1,
     borderColor: "black",
     backgroundColor: "#f0f0f0",
   },
@@ -37,7 +40,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#f0f0f0",
   },
   cellTituloLast: {
-    borderRightWidth: 0,
+    borderRightWidth: 1,
   },
   rowContenido: {
     flexDirection: "row",
@@ -73,21 +76,22 @@ const datos = [
   [ "Indicador 3", "Formula 3" ],
 ];
 
+
 export const Indicadores = () => (
 
   <View style={ styles.table }>
 
     <View style={ styles.cellCabecera }>
-      <Text style={ styles.textoTitulo }>Descripción del proceso</Text>
+      <Text style={ styles.textoTitulo }>Indicadores del proceso</Text>
     </View>
 
     <View style={ styles.rowTitulo }>
       <View style={ styles.cellTitulo }>
-        <Text>Proveedores</Text>
+        <Text>Nombre</Text>
 
       </View>      
       <View style={ [ styles.cellTitulo, styles.cellTituloLast ] }>
-        <Text>Usuarios</Text>
+        <Text>Formula</Text>
       </View>
     </View>
 
