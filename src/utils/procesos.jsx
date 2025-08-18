@@ -2,6 +2,7 @@ import { Button } from '@/components/ui/button';
 import { MdDeleteOutline, MdEdit } from 'react-icons/md';
 
 
+
 export const getProcesosTree = ( procesos, tipoFiltro ) => {
   const filtrados = tipoFiltro && tipoFiltro !== "*"
     ? procesos.filter( p => p.tipo === tipoFiltro )

@@ -4,6 +4,7 @@ import { cargarMapas, cargarDataChart } from '@/helpers/mapas';
 
 import { ListaMapas } from './ListaMapas';
 import { DetalleError } from './DetalleError';
+import { BarChartVertical } from './graficos/BarChartVertical';
 
 export const DashboardCards = () => {
 
@@ -49,7 +50,7 @@ export const DashboardCards = () => {
               mapaSeleccionado && (
                 <section className="grid grid-cols-1  lg:grid-cols-2 gap-4 w-full p-2">
                   <DetalleError>
-                    <Ejemplo
+                    <BarChartVertical
                       titulo="Procesos por nivel"
                       subtitulo="Cantidad de procesos por nivel"
                       data={ dataChart?.porNivel }

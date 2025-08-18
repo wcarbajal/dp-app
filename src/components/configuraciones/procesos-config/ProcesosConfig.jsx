@@ -12,6 +12,9 @@ import { ListaMapas } from '@/components/ListaMapas';
 import { cargarMapas } from "@/helpers/mapas";
 import { BotonRegresar } from '@/components/propios/BotonRegresar';
 
+import { DndProvider } from "react-dnd";
+import { HTML5Backend } from "react-dnd-html5-backend";
+
 export const ProcesosConfig = () => {
 
   const form = useForm( {
@@ -156,7 +159,10 @@ export const ProcesosConfig = () => {
               <div className="space-y-2">
                 { procesosSeleccionado.length === 0
                   ? <span className="text-muted-foreground text-sm ">No hay procesos registrados</span>
-                  : getProcesosTree( procesosSeleccionado, tipoFiltro ).map( proceso => renderProcesoTreeVertical( proceso, handleEditar, handleEliminar, true ) )
+                  : getProcesosTree( procesosSeleccionado, tipoFiltro ).map( 
+                    
+                    proceso => renderProcesoTreeVertical( proceso, handleEditar, handleEliminar, true ) 
+                  )
                 }
 
               </div>
