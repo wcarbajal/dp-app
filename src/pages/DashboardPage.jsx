@@ -1,9 +1,11 @@
-import { SectionCards } from '@/components/section-cards';
+import { Ejemplo } from '@/components/graficos/Ejemplo';
+import { DashboardCards } from '@/components/SectionCards';
 
 export const DashboardPage = () => {
   return (
     <>
-      <SectionCards />
+      <DashboardCards />
+
     </>
   );
 

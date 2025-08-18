@@ -12,3 +12,18 @@ export const cargarMapas = async () => {
     return [];
   }
 };
+
+export const cargarDataChart = async (id) => {
+  
+  try {
+    const respuestaChart = await fetchConToken(`mapa/${id}/data-chart`);
+    
+    if (respuestaChart.ok) {
+      return respuestaChart;
+    }
+    return [];
+  } catch (error) {
+    console.error("Error al cargar mapas:", error);
+    return [];
+  }
+};

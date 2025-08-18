@@ -6,15 +6,14 @@ import { DiagramaProceso } from './detalle/DiagramaProceso';
 import { FichaProceso } from './detalle/FichaProceso';
 import { ProcedimientoProceso } from './detalle/ProcedimientoProceso';
 import { IndicadoresProceso } from './detalle/IndicadoresProceso';
+import { DocumentosProceso } from './detalle/DocumentosProceso';
+import { TempDatos } from './detalle/TempDatos';
 
 export const DetalleProceso = ( { procesoId } ) => {
   const [ detalleProceso, setDetalleProceso ] = useState( null );
   const [ loading, setLoading ] = useState( true );
   const [ ownersList, setOwnersList ] = useState( [] );
   
-
-
-
   const cargarDetalle = useCallback(async () => {
     setLoading( true );
     try {
@@ -48,6 +47,8 @@ export const DetalleProceso = ( { procesoId } ) => {
             <TabsTrigger value="ficha">Ficha</TabsTrigger>
             <TabsTrigger value="procedimiento">Procedimiento</TabsTrigger>
             <TabsTrigger value="indicadores">Indicadores</TabsTrigger>
+            <TabsTrigger value="documentos">Documentos</TabsTrigger>
+            <TabsTrigger value="datos">Datos</TabsTrigger>
           </TabsList>
           <TabsContent value="descripcion" className=" ">
             <DescripcionProceso proceso={ detalleProceso.proceso || [] } ownersOptions={ ownersList || [] } onUpdated={cargarDetalle} />
@@ -63,6 +64,12 @@ export const DetalleProceso = ( { procesoId } ) => {
           </TabsContent>
           <TabsContent value="indicadores" className=" ">
             <IndicadoresProceso proceso={ detalleProceso || [] } />
+          </TabsContent>
+          <TabsContent value="documentos" className=" ">
+            <DocumentosProceso proceso={ detalleProceso.proceso || [] } />
+          </TabsContent>
+          <TabsContent value="datos" className=" ">
+            <TempDatos proceso={ detalleProceso.proceso || [] } />
           </TabsContent>
         </Tabs>
       
