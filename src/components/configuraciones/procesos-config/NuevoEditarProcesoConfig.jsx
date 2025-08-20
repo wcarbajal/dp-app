@@ -5,7 +5,7 @@ import { MdOutlineExposurePlus1 } from "react-icons/md";
 
 import { FormProcesoConfig } from './FormProcesoConfig';
 
-export const    DialogProcesoConfig = ({ openDialog, setOpenDialog, form, handleSubmit, procesos, editId, setEditId }) => {
+export const NuevoEditarProcesoConfig = ( { openDialog, setOpenDialog, form, handleSubmit, procesos, editId, setEditId } ) => {
   return (
     <Dialog open={ openDialog } onOpenChange={ setOpenDialog }>
       <DialogTrigger asChild>
@@ -31,7 +31,7 @@ export const    DialogProcesoConfig = ({ openDialog, setOpenDialog, form, handle
           </DialogDescription>
         </DialogHeader>
 
-        <FormProcesoConfig form={ form } handleSubmit={ handleSubmit } procesos={ procesos } editId={ editId } />
+        <FormProcesoConfig  handleSubmit={ handleSubmit } procesos={ procesos } editId={ editId } />
 
       </DialogContent>
     </Dialog>

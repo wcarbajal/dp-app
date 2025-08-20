@@ -24,32 +24,30 @@ export const getProcesosTree = ( procesos, tipoFiltro ) => {
     .sort( ( a, b ) => a.codigo.localeCompare( b.codigo ) );
 };
 
-export const renderProcesoTreeVertical = ( proceso, handleEditar, handleEliminar, isEliminar ) => (
+export const renderProcesoTreeVertical = ( proceso, handleEditar, handleEliminar  ) => (
 
   <div key={ proceso.id } className="relative">
-    <div className="flex items-center justify-between border rounded px-3 py-2 min-w-[400px] bg-white z-10">
-      <div>
-        <span className="font-semibold">{ proceso.codigo }</span> - { proceso.nombre }
-        <div className="text-xs text-muted-foreground">{ proceso.descripcion }</div>
+    <div className="flex items-center justify-between  rounded-xl px-3 py-2 min-w-[400px] z-5  shadow-lg bg-[#E5E8F7] border-1">
+      <div className="flex flex-col pl-2 gap-2">
+        <p className="font-semibold">{ proceso.codigo } - { proceso.nombre }</p>
+        <p className="text-sm text-muted-foreground">{ proceso.descripcion }</p>
       </div>
       <div className="flex gap-2">
         <Button variant="outline" size="icon" onClick={ () => handleEditar( proceso ) }>
           <MdEdit />
         </Button>
+        <Button variant="destructive" size="icon" onClick={ () => handleEliminar( proceso.id ) }>
+          <MdDeleteOutline />
+        </Button>
 
-        { isEliminar && (
-          <Button variant="destructive" size="icon" onClick={ () => handleEliminar( proceso.id ) }>
-            <MdDeleteOutline />
-          </Button>
-        ) }
       </div>
     </div>
     { proceso.hijos.length > 0 && (
-      <div className="ml-6 border-l-2 border-gray-300 pl-4">
+      <div className="ml-6 border-l-2 border-gray-300 pl-4 my-2 ">
         { proceso.hijos.map( hijo => (
-          <div key={ hijo.id } className="relative">
+          <div key={ hijo.id } className="relative my-2">
 
-            <div className="absolute -left-6 top-0 h-full border-l-2 border-gray-300"></div>
+            <div className="absolute -left-6 top-0 h-full border-l-2 border-gray-300 m-1.5 "></div>
             { renderProcesoTreeVertical( hijo, handleEditar, handleEliminar ) }
           </div>
         ) ) }

@@ -3,10 +3,10 @@ import { DashboardCards } from '@/components/SectionCards';
 
 export const DashboardPage = () => {
   return (
-    <>
+    
       <DashboardCards />
 
-    </>
+    
   );
 
 };

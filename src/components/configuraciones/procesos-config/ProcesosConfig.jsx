@@ -6,7 +6,7 @@ import { fetchConToken } from "@/helpers/fetch";
 
 import { nuevoProcesoSchema } from '@/schema/ProcesosSchema';
 import { getProcesosTree, renderProcesoTreeVertical } from '@/utils/procesos';
-import { DialogProcesoConfig } from './DialogProcesoConfig';
+import { NuevoEditarProcesoConfig } from './NuevoEditarProcesoConfig';
 import { FiltroProcesoConfig } from './FiltroProcesoConfig';
 import { ListaMapas } from '@/components/ListaMapas';
 import { cargarMapas } from "@/helpers/mapas";
@@ -44,8 +44,9 @@ export const ProcesosConfig = () => {
 
 
   // Agregar o modificar proceso
-  const handleSubmit = async ( values ) => {
+  const handleSubmit = async ( values, editId ) => {
     //e.preventDefault();
+    console.log("inico del hansubmit")
     try {
       let respuesta;
 
@@ -128,22 +129,22 @@ export const ProcesosConfig = () => {
   return (
 
 
-    <div className=" flex flex-col gap-4">
-       <BotonRegresar url="/config" nombre="Configuración" />
+    <div className=" flex flex-col gap-4  items-center">
+      <BotonRegresar url="/config" nombre="Configuración" />
       { loading
         ? ( <div className="text-center text-gray-500">Cargando mapas...</div> )
         : (
           <>
             <ListaMapas mapas={ mapas || [] } setMapaSeleccionado={ setMapaSeleccionado } mapaSeleccionado={ mapaSeleccionado } />
 
-            <div className="max-w-xl mx-auto my-5 p-4 border rounded-2xl bg-white shadow-xl">
+            <div className="max-w-xl mx-auto my-0 p-4 border  rounded-2xl min-w-[700px] shadow-xl bg-white">
 
 
               <div className="flex justify-between items-center mb-4 ">
 
-                <h2 className="font-bold text-lg w-45">Procesos </h2>
+                <h2 className="font-bold text-lg w-45">Listado de Procesos </h2>
 
-                <DialogProcesoConfig
+                <NuevoEditarProcesoConfig
                   openDialog={ openDialog }
                   setOpenDialog={ setOpenDialog }
                   form={ form }
@@ -156,12 +157,12 @@ export const ProcesosConfig = () => {
 
               <FiltroProcesoConfig tipoFiltro={ tipoFiltro } setTipoFiltro={ setTipoFiltro } />
 
-              <div className="space-y-2">
+              <div className="space-y-2  ">
                 { procesosSeleccionado.length === 0
                   ? <span className="text-muted-foreground text-sm ">No hay procesos registrados</span>
-                  : getProcesosTree( procesosSeleccionado, tipoFiltro ).map( 
-                    
-                    proceso => renderProcesoTreeVertical( proceso, handleEditar, handleEliminar, true ) 
+                  : getProcesosTree( procesosSeleccionado, tipoFiltro ).map(
+
+                    proceso => renderProcesoTreeVertical( proceso, handleEditar, handleEliminar, true )
                   )
                 }
 

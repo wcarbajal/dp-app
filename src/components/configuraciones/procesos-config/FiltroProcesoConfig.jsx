@@ -2,13 +2,13 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '.
 
 export const FiltroProcesoConfig = ( {tipoFiltro, setTipoFiltro} ) => {
   return (
-    <div className="flex gap-4 justify-end mb-4"  >
+    <div className="flex gap-4 justify-start mb-4  "  >
       <Select
         value={ tipoFiltro }
         onValueChange={ setTipoFiltro }
 
       >
-        <SelectTrigger className="w-48">
+        <SelectTrigger className="border-slate-300 w-64">
           <SelectValue placeholder="Filtrar tipo" />
         </SelectTrigger>
         <SelectContent className="col-span-2">

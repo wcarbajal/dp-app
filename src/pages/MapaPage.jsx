@@ -5,7 +5,7 @@ import { ListaMapas } from '@/components/ListaMapas';
 import { MapaVista } from '@/components/mapa/MapaVista';
 
 import { cargarMapas } from "@/helpers/mapas";
-import {  cargarProcesosNivel0 } from "@/helpers/procesos";
+import { cargarProcesosNivel0 } from "@/helpers/procesos";
 
 
 export const MapaPage = () => {
@@ -25,6 +25,8 @@ export const MapaPage = () => {
     };
     obtenerMapas();
   }, [ mapaSeleccionado ] );
+  
+  
 
   useEffect( () => {
     const obtenerProcesos = async () => {
@@ -42,17 +44,15 @@ export const MapaPage = () => {
 
 
   return (
-    <div className="flex flex-col w-full justify-center items-center  h-full">
+    <div className="flex flex-col items-center">
       <h1 className="text-xl font-bold text-center gap-2 ">Mapa de Procesos</h1>
       { loading
         ? ( <div className="text-center text-gray-500">Cargando...</div> )
         : (
-          <div>
-
-            { mapas && mapas.length > 0 ? (
-              <div className="flex flex-col ">
-
-
+          !mapas
+            ? ( <div className="text-red-500">No hay mapas disponibles</div> )
+            : (
+              <>
                 <ListaMapas mapas={ mapas } setMapaSeleccionado={ setMapaSeleccionado } mapaSeleccionado={ mapaSeleccionado } />
 
                 { mapaSeleccionado && (
@@ -71,19 +71,11 @@ export const MapaPage = () => {
                   </div>
                 )
 
-                }   
+                }
 
+              </>
 
-              </div>
             )
-              : (
-                <div className="text-red-500">No hay mapas disponibles</div>
-              )
-            }
-
-
-          </div>
-
         )
 
       }

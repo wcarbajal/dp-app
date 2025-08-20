@@ -1,7 +1,7 @@
 "use client";
 
 import { TrendingUp } from "lucide-react";
-import { Bar, BarChart, CartesianGrid, LabelList, XAxis, Tooltip, YAxis, ResponsiveContainer } from "recharts";
+import { Bar, BarChart, CartesianGrid, LabelList, XAxis, Tooltip, YAxis, ResponsiveContainer, Legend } from "recharts";
 
 import {
   Card,
@@ -19,7 +19,7 @@ import {
 
 //export const description = "A bar chart with a custom label";
 
-export const BarChartVertical = ( { titulo = "", subtitulo = "", data, variables } ) => {
+export const BarChartHorizontal = ( { titulo = "", subtitulo = "", data, variables } ) => {
 
   if ( !data || data.length === 0 ) {
     return (
@@ -57,6 +57,7 @@ export const BarChartVertical = ( { titulo = "", subtitulo = "", data, variables
             margin={ { right: 16 } }
           >
             <CartesianGrid horizontal={ false } />
+            <Legend />
             <YAxis
               dataKey={ xKey }
               type="category"
@@ -88,13 +89,13 @@ export const BarChartVertical = ( { titulo = "", subtitulo = "", data, variables
                 position="right"
                 offset={ 8 }
                 className="fill-(--color-label)"
-                fontSize={ 12 }                
+                fontSize={ 12 }
               />
-             
+
             </Bar>
           </BarChart>
         </ResponsiveContainer>
       </CardContent>
     </Card>
   );
-}
+};

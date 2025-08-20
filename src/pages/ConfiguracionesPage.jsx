@@ -17,35 +17,36 @@ export const ConfiguracionesPage = () => {
   } );
 
   const listConfiguracciones = [
-    {
+
+       {
       ruta: '/config/mapa',
       objeto: 'Mapa',
       cantidad: cantidades.mapas,
-      /* icono: <FcWorkflow /> */
+
     },
     {
       ruta: '/config/procesos',
       objeto: 'Procesos',
       cantidad: cantidades.procesos,
-      
+
     },
     {
       ruta: '/config/owners',
       objeto: 'Dueños de procesos',
       cantidad: cantidades.owners,
-      
+
     },
     {
       ruta: '/config/usuarios',
       objeto: 'Usuarios',
       cantidad: cantidades.usuarios,
-      
+
     },
     {
       ruta: '/config/reportes',
       objeto: 'Reportes',
       cantidad: cantidades.reportes,
-      
+
     }
   ];
 
