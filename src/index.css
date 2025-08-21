@@ -116,6 +116,7 @@
   }
   body {
     @apply bg-background text-foreground;
+    @apply overflow-auto;
   }
   table {
     @apply border border-gray-300 w-full mb-10;

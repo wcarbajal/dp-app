@@ -8,8 +8,8 @@ import { ProcedimientoProceso } from './detalle/ProcedimientoProceso';
 import { IndicadoresProceso } from './detalle/IndicadoresProceso';
 import { DocumentosProceso } from './detalle/DocumentosProceso';
 import { TempDatos } from './detalle/TempDatos';
-import BpmnModeler from '../bpmn/BpmnModeler';
-import BpmnModelerComponent from '../bpmn/BpmnModelerComponent';
+
+import {BpmnModelerComponent} from '../bpmn/BpmnModelerComponent';
 
 export const DetalleProceso = ( { procesoId } ) => {
   const [ detalleProceso, setDetalleProceso ] = useState( null );
@@ -57,13 +57,13 @@ export const DetalleProceso = ( { procesoId } ) => {
           </TabsContent>
           <TabsContent value="diagrama" className="  ">
             {/* <DiagramaProceso proceso={ detalleProceso.proceso || [] } onUpdated={cargarDetalle}/> */}
-            <BpmnModelerComponent procesoId={ detalleProceso.proceso.id } />
+            <BpmnModelerComponent xmlInicial={ detalleProceso?.proceso?.diagrama?.xml || undefined } procesoId={ detalleProceso.proceso.id } codigo={ detalleProceso.proceso.codigo } nombre={ detalleProceso.proceso.nombre } />
           </TabsContent>
           <TabsContent value="ficha" className=" ">
             <FichaProceso proceso={ detalleProceso.proceso || [] } />
           </TabsContent>
           <TabsContent value="procedimiento" className=" ">
-            <ProcedimientoProceso actividades={ detalleProceso.proceso.actividades || [] } idProceso={ detalleProceso.proceso.id || '' }  />
+            <ProcedimientoProceso actividades={ detalleProceso?.proceso?.actividades || [] } idProceso={ detalleProceso.proceso.id || '' }  />
           </TabsContent>
           <TabsContent value="indicadores" className=" ">
             <IndicadoresProceso proceso={ detalleProceso || [] } />
