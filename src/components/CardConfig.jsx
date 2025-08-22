@@ -13,7 +13,7 @@ export const CardConfig = ({ ruta, objeto, cantidad }) => {
   
   return (
     <Link to={ruta}>
-        <Card className="@container/card mt-5">
+        <Card className="h-auto w-auto">
           <CardHeader>
             <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
               {capitalize(objeto)}

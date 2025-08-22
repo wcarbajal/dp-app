@@ -90,7 +90,7 @@ export const MapaConfig = () => {
 
 
   return (
-    <div className="flex flex-col gap-5 w-full justify-center items-center shadow-lg">
+    <div className="flex flex-col gap-5 w-full shadow-lg ">
       <BotonRegresar url="/config" nombre="Configuración" />
       
       <h1 className="text-xl font-bold text-center ">Mapa de Procesos del PRONABEC</h1>
@@ -98,7 +98,7 @@ export const MapaConfig = () => {
         ? ( <div className="text-center text-gray-500">Cargando...</div> )
         :
         (
-          <div>
+          <div className=" w-[89vw]">
             <div className="flex justify-end mb-4">
               <Dialog open={ open } onOpenChange={ setOpen } className="">
                 <DialogTrigger asChild className="z-2">
@@ -123,7 +123,7 @@ export const MapaConfig = () => {
                 </DialogFooter>
               </Dialog>
             </div>
-            <div className="flex flex-col gap-2">
+            <div className="w-">
               {
                 mapas && mapas.length > 0 ? (
                   <MapasLista mapas={ mapas } cargarMapas={ cargarMapas } />

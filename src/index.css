@@ -42,6 +42,9 @@
 }
 
 :root {
+  height: 100%;
+  margin: 0;
+  padding: 0;
   --radius: 0.625rem;
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);
@@ -128,7 +131,7 @@
     @apply bg-slate-400 border font-bold text-center hover:bg-slate-400;
   }
 
-/*   :root {
+  /*   :root {
     
     --chart-1: oklch(0.646 0.222 41.116);
     --chart-2: oklch(0.6 0.118 184.704);

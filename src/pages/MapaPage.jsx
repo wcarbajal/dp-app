@@ -44,7 +44,7 @@ export const MapaPage = () => {
 
 
   return (
-    <div className="flex flex-col items-center">
+    <div className="flex flex-col  w-full items-center">
       <h1 className="text-xl font-bold text-center gap-2 ">Mapa de Procesos</h1>
       { loading
         ? ( <div className="text-center text-gray-500">Cargando...</div> )

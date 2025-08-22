@@ -42,7 +42,7 @@ export const ListaMapas = ( { mapas, setMapaSeleccionado, mapaSeleccionado } ) =
   };
 
   return (
-    <Card className="flex flex-row gap-2 justify-center items-center my-2  py-2 px-6 rounded-lg  h-full  max-w-[800px]">
+    <Card className="flex flex-row gap-2 br-red-600 justify-center items-center my-2  py-2 px-6 rounded-lg  h-auto  max-w-[800px]">
       <Label>Seleccione una entidad: </Label>
       <Select value={ defaultEntidad } onValueChange={ handleMapaSeleccionado }>
         <SelectTrigger className="min-w-48 bg-white  boderder-gray-300 hover:border-gray-400 focus:border-primary focus:ring-0">

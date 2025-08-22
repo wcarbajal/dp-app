@@ -64,7 +64,7 @@ export const ConfiguracionesPage = () => {
 
 
   return (
-    <div className="grid grid-cols-3 gap-4 px-4 lg:px-6 @xl/main:grid-cols-2 @5xl/main:grid-cols-3">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 p-5 w-full h-96">
       {
         listConfiguracciones.map( ( { ruta, objeto, cantidad, icono } ) => (
           <CardConfig key={ ruta } ruta={ ruta } objeto={ objeto } cantidad={ cantidad } icon={ icono } />

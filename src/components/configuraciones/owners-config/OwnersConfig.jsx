@@ -77,10 +77,10 @@ export const OwnersConfig = () => {
   };
 
   return (
-    <div className="flex flex-col gap-5 w-full justify-center items-center shadow-lg">
+    <div className="flex flex-col ml-30  items-center shadow-lg">
        <BotonRegresar url="/config" nombre="Configuración" />
       <h1 className="text-xl font-bold text-center">Configuración de Owners</h1>
-      <div className="flex justify-end mb-4">
+      <div className="flex justify-end ">
         <Dialog open={ open } onOpenChange={ ( value ) => {
           setOpen( value );
           if ( !value ) {
@@ -112,11 +112,11 @@ export const OwnersConfig = () => {
           </DialogContent>
         </Dialog>
       </div>
-      <div className="flex flex-col gap-2 w-full max-w-2xl">
+      <div className="flex flex-col gap-2 w-full">
         { loading ? (
           <div className="text-center text-gray-500">Cargando...</div>
         ) : owners.length > 0 ? (
-          <Table>
+          <Table className="rounded-lg overflow-hidden bg-white">
             <TableHeader>
               <TableRow >
                 <TableHead className="border-r border-gray-300 ">#</TableHead>

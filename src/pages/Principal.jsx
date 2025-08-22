@@ -9,7 +9,7 @@ import { HeaderPrincipal } from '@/components/HeaderPrincipal';
 
 
 
-export const PrincipalPage = ({ children }) => {
+export const PrincipalPage = ( { children } ) => {
 
 
   const { asidebarOpen } = useContext( AsidebarContext );
@@ -20,16 +20,16 @@ export const PrincipalPage = ({ children }) => {
   const itemsSecundarios = itemsNav.navSecondary;
 
   return (
-    <>
+    <div className="flex">
       {/* Header superior izquierdo */ }
-     <HeaderPrincipal />
+      <HeaderPrincipal />
 
       {/* Barra de navegación derecha */ }
       <AsideBar open={ asidebarOpen } items={ items } itemsSecundarios={ itemsSecundarios } />
 
       {/* Espacio para el contenido principal */ }
       <main
-        className={ `flex-1 overflow-y-auto pt-20 px-8 bg-slate-200 transition-all duration-300 ${ asidebarOpen ? "ml-50" : "ml-0"
+        className={ `flex w-full overflow-y-auto pt-20  bg-slate-200 transition-all duration-300 ${ asidebarOpen ? "ml-50" : "ml-0"
           }` }
       >
         {/* Aquí va el contenido principal */ }
@@ -38,9 +38,13 @@ export const PrincipalPage = ({ children }) => {
 
         <Outlet />
 
-        {children}
+        
+
+          { children }
+        
+
 
       </main>
-    </>
+    </div>
   );
 };
