@@ -19,7 +19,7 @@ export const nuevoProcesoSchema = z.object( {
 
 } );
 
-export const actualizarProcesoSchema = z.object( {
+export const actualizarProcesoSchema  = z.object( {
   codigo: z.string().min( 2, "El código es obligatorio" ).optional(),//ok
   nombre: z.string().min( 5, "El nombre es obligatorio" ).optional(),// ok
   descripcion: z.string().min( 5, "La descripción es obligatoria" ).optional(),//ok

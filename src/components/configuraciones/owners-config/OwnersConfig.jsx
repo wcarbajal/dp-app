@@ -18,6 +18,7 @@ import OwnerFormRegister from "./OwnerFormRegister";
 import { CiEdit } from 'react-icons/ci';
 import { MdOutlineDeleteForever } from 'react-icons/md';
 import { BotonRegresar } from '@/components/propios/BotonRegresar';
+import { Card } from '@/components/ui/card';
 
 
 export const OwnersConfig = () => {
@@ -77,7 +78,7 @@ export const OwnersConfig = () => {
   };
 
   return (
-    <div className="flex flex-col gap-5 w-full justify-center items-center shadow-lg">
+    <div className="flex flex-col  w-full justify-center items-center shadow-lg p-5">
        <BotonRegresar url="/config" nombre="Configuración" />
       <h1 className="text-xl font-bold text-center">Configuración de Owners</h1>
       <div className="flex justify-end mb-4">
@@ -112,11 +113,11 @@ export const OwnersConfig = () => {
           </DialogContent>
         </Dialog>
       </div>
-      <div className="flex flex-col gap-2 w-full max-w-2xl">
+      <div className="flex flex-col gap-2 w-full  p-5">
         { loading ? (
           <div className="text-center text-gray-500">Cargando...</div>
         ) : owners.length > 0 ? (
-          <Table>
+          <Table  className=" rounded-5 bg-white rounded-lg overflow-hidden border border-gray-400">
             <TableHeader>
               <TableRow >
                 <TableHead className="border-r border-gray-300 ">#</TableHead>
@@ -131,9 +132,9 @@ export const OwnersConfig = () => {
               { owners.map( ( owner, index ) => (
                 <TableRow key={ owner.id }  className="hover:bg-gray-200">
                   <TableCell>{ index + 1 }</TableCell>
-                  <TableCell>{ owner.oficina }</TableCell>
+                  <TableCell  className="whitespace-normal break-words">{ owner.oficina }</TableCell>
                   <TableCell>{ owner.siglas }</TableCell>
-                  <TableCell>{ owner.director }</TableCell>
+                  <TableCell className="whitespace-normal break-words">{ owner.director }</TableCell>
                   <TableCell>{ owner.correo }</TableCell>
                   <TableCell>
                     <div className="flex gap-2 justify-center">
