@@ -1,4 +1,4 @@
-import {  useState } from "react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 
 import { MdEdit } from "react-icons/md";
@@ -15,11 +15,11 @@ export const ListaProcesos = ( { procesos } ) => {
   const [ procesoSeleccionado, setProcesoSeleccionado ] = useState( null );
   const [ colapsado, setColapsado ] = useState( false );
 
- const [ openAccordion, setOpenAccordion ] = useState("item-estratégico");
+  const [ openAccordion, setOpenAccordion ] = useState( "item-estratégico" );
 
-const handleSeleccionarProceso = (proceso) => {
-    setProcesoSeleccionado(proceso);
-    setOpenAccordion(`item-${proceso.tipo.toLowerCase()}`);
+  const handleSeleccionarProceso = ( proceso ) => {
+    setProcesoSeleccionado( proceso );
+    setOpenAccordion( `item-${ proceso.tipo.toLowerCase() }` );
   };
 
   return (
@@ -35,9 +35,9 @@ const handleSeleccionarProceso = (proceso) => {
               type="single"
               collapsible
               className="w-full h-full"
-              
-              value={openAccordion}
-              onValueChange={setOpenAccordion}
+
+              value={ openAccordion }
+              onValueChange={ setOpenAccordion }
             >
               { [ "Estratégico", "Misional", "Soporte" ].map( ( tipo ) => {
                 const procesosPorTipo = procesos
@@ -58,7 +58,7 @@ const handleSeleccionarProceso = (proceso) => {
                               ? "bg-gray-200 font-semibold border-primary"
                               : "bg-white"
                               }` }
-                            onClick={ () => handleSeleccionarProceso(proceso)  }
+                            onClick={ () => handleSeleccionarProceso( proceso ) }
                           >
                             <span>
                               <span className="text-xs">{ proceso.codigo }</span> - { proceso.nombre }
@@ -76,11 +76,13 @@ const handleSeleccionarProceso = (proceso) => {
         )
           : (
             <div
-              className="w-9  flex items-end justify-center flex-col  mt-8  h-96"
+              className="w-9 flex justify-center flex-col mt-8 bg-white/90 max-h-96 rounded-lg px-3 cursor-pointer hover:text-blue-400 shadow-2xl z-30 backdrop-blur-sm border border-gray-300 transition-all"
               style={ { writingMode: "vertical-rl", transform: "rotate(180deg)" } }
+              onClick={ () => setColapsado( ( v ) => !v ) }
             >
-              <span className="text-md font-semibold">{ procesoSeleccionado?.codigo } - { procesoSeleccionado.nombre }</span>
-              
+              <span className="text-sm font-semibold">
+                { procesoSeleccionado?.codigo } - { procesoSeleccionado.nombre }
+              </span>
             </div>
           )
         }

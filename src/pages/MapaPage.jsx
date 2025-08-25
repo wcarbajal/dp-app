@@ -44,7 +44,7 @@ export const MapaPage = () => {
 
 
   return (
-    <div className="flex flex-col items-center">
+    <article className="flex flex-col items-center">
       <h1 className="text-xl font-bold text-center gap-2 ">Mapa de Procesos</h1>
       { loading
         ? ( <div className="text-center text-gray-500">Cargando...</div> )
@@ -52,12 +52,12 @@ export const MapaPage = () => {
           !mapas
             ? ( <div className="text-red-500">No hay mapas disponibles</div> )
             : (
-              <>
+              <section className="flex flex-col items-center w-full  px-4 md:px-8 lg:px-16 py-4">
                 <ListaMapas mapas={ mapas } setMapaSeleccionado={ setMapaSeleccionado } mapaSeleccionado={ mapaSeleccionado } />
 
                 { mapaSeleccionado && (
-                  <div className="flex flex-col   rounded-lg w-full h-full">
-                    <h2 className="text-center text-lg font-semibold bg-white rounded-lg  ">
+                  <div className="flex flex-col  items-center rounded-lg w-full h-full">
+                    <h2 className="px-10 py-2 text-center text-lg font-semibold bg-white rounded-lg  ">
                       { mapaSeleccionado ? mapaSeleccionado.nombre : '-' }
                     </h2>
                     <MapaVista
@@ -73,7 +73,7 @@ export const MapaPage = () => {
 
                 }
 
-              </>
+              </section>
 
             )
         )
@@ -81,6 +81,6 @@ export const MapaPage = () => {
       }
       <FlechaSubir />
 
-    </div >
+    </article >
   );
 };

@@ -9,7 +9,7 @@ export const AsideBar = ( { open, items } ) => {
 
   return (
     <aside
-      className={ `fixed top-16 h-[calc(100vh-4rem)] w-50 shadow-lg transition-all duration-300 ${ open ? "left-0" : "-left-54"
+      className={ `fixed top-16 h-[calc(100vh-4rem)] -left-54 w-50 shadow-lg transition-all duration-300 ${ open ? "left-0" : "-left-54"
         } flex flex-col items-center z-10` }
     >
       <div className="flex flex-col w-full h-full  ">

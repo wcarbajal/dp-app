@@ -9,14 +9,14 @@ import { IndicadoresProceso } from './detalle/IndicadoresProceso';
 import { DocumentosProceso } from './detalle/DocumentosProceso';
 import { TempDatos } from './detalle/TempDatos';
 
-import {BpmnModelerComponent} from '../bpmn/BpmnModelerComponent';
+import { BpmnModelerComponent } from '../bpmn/BpmnModelerComponent';
 
 export const DetalleProceso = ( { procesoId } ) => {
   const [ detalleProceso, setDetalleProceso ] = useState( null );
   const [ loading, setLoading ] = useState( true );
   const [ ownersList, setOwnersList ] = useState( [] );
-  
-  const cargarDetalle = useCallback(async () => {
+
+  const cargarDetalle = useCallback( async () => {
     setLoading( true );
     try {
       const consulta = await fetchConToken( `procesos/detalle/${ procesoId }` );
@@ -24,7 +24,7 @@ export const DetalleProceso = ( { procesoId } ) => {
 
       const consultaOwners = await fetchConToken( "owners" );
       setOwnersList( consultaOwners.owners );
-      
+
     } catch ( error ) {
       setDetalleProceso( null );
       console.log( "Error al cargar el detalle del proceso:", error );
@@ -41,42 +41,43 @@ export const DetalleProceso = ( { procesoId } ) => {
   if ( !detalleProceso ) return <div className="p-4 text-red-500">No se encontró el detalle del proceso.</div>;
 
   return (
-              
-        <Tabs defaultValue="descripcion" className=" flex flex-col ">
-          <TabsList className="w-full h-10 bg-gray-200 rounded-t-lg flex items-center justify-around">
-            <TabsTrigger value="descripcion">Descripción</TabsTrigger>
-            <TabsTrigger value="diagrama">Diagrama</TabsTrigger>
-            <TabsTrigger value="ficha">Ficha</TabsTrigger>
-            <TabsTrigger value="procedimiento">Procedimiento</TabsTrigger>
-            <TabsTrigger value="indicadores">Indicadores</TabsTrigger>
-            <TabsTrigger value="documentos">Documentos</TabsTrigger>
-            <TabsTrigger value="datos">Datos</TabsTrigger>
-          </TabsList>
-          <TabsContent value="descripcion" className=" ">
-            <DescripcionProceso proceso={ detalleProceso.proceso || [] } ownersOptions={ ownersList || [] } onUpdated={cargarDetalle} />
-          </TabsContent>
-          <TabsContent value="diagrama" className="  ">
-            {/* <DiagramaProceso proceso={ detalleProceso.proceso || [] } onUpdated={cargarDetalle}/> */}
-            <BpmnModelerComponent xmlInicial={ detalleProceso?.proceso?.diagrama?.xml || undefined } procesoId={ detalleProceso.proceso.id } codigo={ detalleProceso.proceso.codigo } nombre={ detalleProceso.proceso.nombre } />
-          </TabsContent>
-          <TabsContent value="ficha" className=" ">
-            <FichaProceso proceso={ detalleProceso.proceso || [] } />
-          </TabsContent>
-          <TabsContent value="procedimiento" className=" ">
-            <ProcedimientoProceso actividades={ detalleProceso?.proceso?.actividades || [] } idProceso={ detalleProceso.proceso.id || '' }  />
-          </TabsContent>
-          <TabsContent value="indicadores" className=" ">
-            <IndicadoresProceso proceso={ detalleProceso || [] } />
-          </TabsContent>
-          <TabsContent value="documentos" className=" ">
-            <DocumentosProceso proceso={ detalleProceso.proceso || [] } />
-          </TabsContent>
-          <TabsContent value="datos" className=" ">
-            <TempDatos proceso={ detalleProceso.proceso || [] } /> 
-            
-          </TabsContent>
-        </Tabs>
-      
-    
+
+    <Tabs defaultValue="descripcion" className=" flex flex-col ">
+      <TabsList className="w-full h-10 bg-gray-200 rounded-t-lg flex items-center justify-around">
+        <TabsTrigger value="descripcion">Descripción</TabsTrigger>
+        <TabsTrigger value="diagrama">Diagrama</TabsTrigger>
+        <TabsTrigger value="ficha">Ficha</TabsTrigger>
+        <TabsTrigger value="procedimiento">Procedimiento</TabsTrigger>
+        <TabsTrigger value="indicadores">Indicadores</TabsTrigger>
+        <TabsTrigger value="documentos">Documentos</TabsTrigger>
+        <TabsTrigger value="datos">Datos</TabsTrigger>
+      </TabsList>
+      <TabsContent value="descripcion" className=" ">
+        <DescripcionProceso proceso={ detalleProceso.proceso || [] } ownersOptions={ ownersList || [] } onUpdated={ cargarDetalle } />
+      </TabsContent>
+      <TabsContent value="diagrama" className="  ">
+        {/* <DiagramaProceso proceso={ detalleProceso.proceso || [] } onUpdated={cargarDetalle}/> */ }
+        <BpmnModelerComponent xmlInicial={ detalleProceso?.proceso?.diagrama?.xml || undefined } procesoId={ detalleProceso.proceso.id } codigo={ detalleProceso.proceso.codigo } nombre={ detalleProceso.proceso.nombre } />
+      </TabsContent>
+      <TabsContent value="ficha" className=" ">
+        <FichaProceso proceso={ detalleProceso.proceso || [] } />
+      </TabsContent>
+      <TabsContent value="procedimiento" className=" ">
+        <ProcedimientoProceso actividades={ detalleProceso?.proceso?.actividades || [] } idProceso={ detalleProceso.proceso.id || '' } />
+      </TabsContent>
+      <TabsContent value="indicadores" className=" ">
+        <IndicadoresProceso proceso={ detalleProceso || [] } />
+      </TabsContent>
+      <TabsContent value="documentos" className=" ">
+        <DocumentosProceso proceso={ detalleProceso.proceso || [] } />
+      </TabsContent>
+      <TabsContent value="datos" className="w-full max-w-4xl mx-auto overflow-x-auto ">
+        <TempDatos proceso={ detalleProceso.proceso || [] } />
+
+
+      </TabsContent>
+    </Tabs>
+
+
   );
 };

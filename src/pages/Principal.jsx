@@ -3,13 +3,13 @@ import { AsideBar } from '@/components/AsideBar';
 import { itemsNav } from '@/components/listNav';
 import { Outlet } from 'react-router';
 import { AsidebarContext } from '@/context/AsidebarContext';
-import { useContext } from 'react';
+import { useContext, useEffect } from 'react';
 import { HeaderPrincipal } from '@/components/HeaderPrincipal';
 
 
 
 
-export const PrincipalPage = ({ children }) => {
+export const PrincipalPage = ( { children } ) => {
 
 
   const { asidebarOpen } = useContext( AsidebarContext );
@@ -19,18 +19,25 @@ export const PrincipalPage = ({ children }) => {
   const items = itemsNav.navMain;
   const itemsSecundarios = itemsNav.navSecondary;
 
+  useEffect(() => {
+    
+  }, )
+  
+
   return (
-    <>
+    <section className="flex-1 ">
       {/* Header superior izquierdo */ }
-     <HeaderPrincipal />
+      <HeaderPrincipal />
 
       {/* Barra de navegación derecha */ }
       <AsideBar open={ asidebarOpen } items={ items } itemsSecundarios={ itemsSecundarios } />
 
       {/* Espacio para el contenido principal */ }
       <main
-        className={ `flex-1 overflow-y-auto pt-18  bg-slate-200 transition-all duration-300 ${ asidebarOpen ? "ml-50" : "ml-0"
-          }` }
+        className={ `
+          flex-1 overflow-y-auto pt-18  bg-slate-200 transition-all duration-300 ml-0      
+          ${ asidebarOpen ? "ml-50" : "ml-0" }`
+        }
       >
         {/* Aquí va el contenido principal */ }
 
@@ -38,9 +45,9 @@ export const PrincipalPage = ({ children }) => {
 
         <Outlet />
 
-        {children}
+        { children }
 
       </main>
-    </>
+    </section>
   );
 };
