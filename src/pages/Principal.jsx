@@ -20,7 +20,7 @@ export const PrincipalPage = ( { children } ) => {
   const itemsSecundarios = itemsNav.navSecondary;
 
   return (
-    <div className="flex">
+    <div className="flex bg-red-300">
       {/* Header superior izquierdo */ }
       <HeaderPrincipal />
 
