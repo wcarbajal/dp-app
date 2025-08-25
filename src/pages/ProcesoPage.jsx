@@ -40,7 +40,7 @@ export const ProcesoPage = () => {
 
   return (
 
-    <section className="flex flex-col min-h-[calc(100vh-200px)] gap-1 w-full  items-center ">
+    <section className="flex flex-col min-h-[calc(100vh-5rem)] gap-1 items-center p-5   rounded-lg shadow-lg ">
       <h1 className="text-xl font-bold text-center  ">Procesos de la entidad</h1>
       { loading
         ? ( <span className="text-center text-gray-500">Cargando...</span> )

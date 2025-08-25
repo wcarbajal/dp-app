@@ -1,9 +1,12 @@
-export const TempDatos = ({proceso}) => {
+export const TempDatos = ( { proceso } ) => {
   return (
-    <pre>
-      {
-        JSON.stringify( proceso, null, 2 )
-      }
-    </pre>
+    <div className="overflow-auto">
+
+      <pre>
+        {
+          JSON.stringify( proceso, null, 2 )
+        }
+      </pre>
+    </div>
   );
 };
