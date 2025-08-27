@@ -1,5 +1,6 @@
 import { Route, Routes } from 'react-router';
 
+import { ProcesosPage } from '@/pages/ProcesosPage';
 import { ProcesoPage } from '@/pages/ProcesoPage';
 import { PrincipalPage } from '@/pages/Principal';
 import { DashboardCards } from '@/components/SectionCards';
@@ -25,7 +26,8 @@ export const PrincipalRouter = () => {
     <Routes >
       <Route path="/" element={ <PrincipalPage /> } >
         <Route index element={ <DashboardCards /> } />
-        <Route path="procesos" element={ <ProcesoPage /> } />
+        <Route path="procesos" element={ <ProcesosPage /> } />
+        <Route path="proceso/:id" element={ <ProcesoPage /> } />
         <Route path="mapa" element={ <MapaPage /> } />
         <Route path="reportes" element={ <ReportePage /> } />
         <Route path="equipo" element={ <EquipoPage /> } />
@@ -36,7 +38,7 @@ export const PrincipalRouter = () => {
         <Route path="config/mapa" element={ <MapaConfig /> } />
         <Route path="config/owners" element={ <OwnersConfig /> } />
         <Route path="perfil" element={ <PerfilUser /> } />
-        
+
 
 
 

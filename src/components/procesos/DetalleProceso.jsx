@@ -13,13 +13,17 @@ import { BpmnModelerComponent } from '../bpmn/BpmnModelerComponent';
 
 export const DetalleProceso = ( { procesoId } ) => {
   const [ detalleProceso, setDetalleProceso ] = useState( null );
-  const [ loading, setLoading ] = useState( true );
+  const [ loading, setLoading ] = useState( false );
   const [ ownersList, setOwnersList ] = useState( [] );
 
   const cargarDetalle = useCallback( async () => {
     setLoading( true );
+
     try {
       const consulta = await fetchConToken( `procesos/detalle/${ procesoId }` );
+
+      console.log("consulta", consulta)
+
       setDetalleProceso( consulta );
 
       const consultaOwners = await fetchConToken( "owners" );

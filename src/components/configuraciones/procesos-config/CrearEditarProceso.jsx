@@ -18,7 +18,7 @@ import Swal from 'sweetalert2';
 export const CreateEditProceso = ( { idMapa, listadoProcesos, proceso, cargarProcesos } ) => {
 
   const [ openDialog, setOpenDialog ] = useState( false );
-  
+
 
   const form = useForm( {
     resolver: zodResolver( nuevoProcesoSchema ),
@@ -34,7 +34,7 @@ export const CreateEditProceso = ( { idMapa, listadoProcesos, proceso, cargarPro
   } );
 
   const onSubmit = async ( values ) => {
-    
+
     try {
       let respuesta;
 
@@ -49,7 +49,7 @@ export const CreateEditProceso = ( { idMapa, listadoProcesos, proceso, cargarPro
       } else {
         respuesta = await fetchConToken( `procesos/${ idMapa }/registrar`, valuesToSend, "POST" );
       }
-      
+
       if ( respuesta.ok ) {
 
 
@@ -74,7 +74,7 @@ export const CreateEditProceso = ( { idMapa, listadoProcesos, proceso, cargarPro
     }
   };
 
-  
+
 
 
   return (
@@ -99,7 +99,7 @@ export const CreateEditProceso = ( { idMapa, listadoProcesos, proceso, cargarPro
           }
         </Button>
       </DialogTrigger>
-      <DialogContent aria-describedby="dialog-description">
+      <DialogContent aria-describedby="dialog-description" className="  ">
         <DialogHeader>
           <DialogTitle className="text-lg font-boldt text-center">{ ( proceso && proceso.id ) ? "Editar Proceso" : "Nuevo Proceso" }</DialogTitle>
         </DialogHeader>
@@ -107,141 +107,141 @@ export const CreateEditProceso = ( { idMapa, listadoProcesos, proceso, cargarPro
           Complete los datos para crear o editar un proceso.
         </DialogDescription>
 
-
-        <Form { ...form }>
-          <form onSubmit={ form.handleSubmit( onSubmit ) } className="space-y-8">
-            <FormField
-              control={ form.control }
-              name="tipo"
-              render={ ( { field } ) => (
-                <FormItem className="mb-4">
-                  <FormLabel >Tipo de proceso</FormLabel>
-                  <Select onValueChange={ field.onChange } defaultValue={ field.value }>
-                    <FormControl className="w-full">
-                      <SelectTrigger>
-                        <SelectValue placeholder="Seleccione un tipo" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      <SelectItem value="Estratégico">Estratégico</SelectItem>
-                      <SelectItem value="Misional">Misional</SelectItem>
-                      <SelectItem value="Soporte">Soporte</SelectItem>
-                    </SelectContent>
-                  </Select>
-
-                  <FormMessage />
-                </FormItem>
-              ) }
-            />
-            <div className="grid grid-cols-3 gap-4 m-0">
+        <div className="flex max-w-[500px] w-full ">
+          <Form { ...form }>
+            <form onSubmit={ form.handleSubmit( onSubmit ) } className="space-y-8 w-full">
+              {/* ...otros campos... */ }
               <FormField
                 control={ form.control }
-                name="codigo"
+                name="tipo"
                 render={ ( { field } ) => (
-                  <FormItem className="mb-4 col-span-2">
-                    <FormLabel>Código</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Código del proceso" { ...field } />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                ) }
-              />
-              <FormField
-                control={ form.control }
-                name="nivel"
-                render={ ( { field } ) => (
-                  <FormItem className="mb-4">
-                    <FormLabel >Nivel de proceso</FormLabel>
+                  <FormItem className="mb-4 w-full">
+                    <FormLabel>Tipo de proceso</FormLabel>
                     <Select onValueChange={ field.onChange } defaultValue={ field.value }>
                       <FormControl className="w-full">
-                        <SelectTrigger>
-                          <SelectValue placeholder="Seleccione un nivel" />
+                        <SelectTrigger className="w-full">
+                          <SelectValue placeholder="Seleccione un tipo" />
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        <SelectItem value="0">0</SelectItem>
-                        <SelectItem value="1">1</SelectItem>
-                        <SelectItem value="2">2</SelectItem>
-                        <SelectItem value="3">3</SelectItem>
-                        <SelectItem value="4">4</SelectItem>
-                        <SelectItem value="5">5</SelectItem>
-                        <SelectItem value="6">6</SelectItem>
-                        <SelectItem value="7">7</SelectItem>
-                        <SelectItem value="8">8</SelectItem>
-                        <SelectItem value="9">9</SelectItem>
+                        <SelectItem value="Estratégico">Estratégico</SelectItem>
+                        <SelectItem value="Misional">Misional</SelectItem>
+                        <SelectItem value="Soporte">Soporte</SelectItem>
                       </SelectContent>
                     </Select>
-
                     <FormMessage />
                   </FormItem>
                 ) }
               />
-
-            </div>
-            <FormField
-              control={ form.control }
-              name="nombre"
-              render={ ( { field } ) => (
-                <FormItem className="mb-4">
-                  <FormLabel>Nombre</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Nombre del proceso" { ...field } />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              ) }
-            />
-
-
-            <FormField
-              control={ form.control }
-              name="descripcion"
-              render={ ( { field } ) => (
-                <FormItem className="mb-4">
-                  <FormLabel>Descripción</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Descripción del proceso" { ...field } />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              ) }
-            />
-
-            <FormField
-              control={ form.control }
-              name="parentId"
-              render={ ( { field } ) => (
-                <FormItem className="mb-4">
-                  <FormLabel >Proceso padre (opcional)</FormLabel>
-                  <Select onValueChange={ field.onChange } defaultValue={ field.value }>
-                    <FormControl className="w-full">
-                      <SelectTrigger>
-                        <SelectValue placeholder="Seleccione un tipo" />
-                      </SelectTrigger>
+              <div className="grid grid-cols-3 gap-4 m-0 w-full">
+                <FormField
+                  control={ form.control }
+                  name="codigo"
+                  render={ ( { field } ) => (
+                    <FormItem className="mb-4 col-span-2 w-full">
+                      <FormLabel>Código</FormLabel>
+                      <FormControl>
+                        <Input placeholder="Código del proceso" { ...field } className="w-full" />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  ) }
+                />
+                <FormField
+                  control={ form.control }
+                  name="nivel"
+                  render={ ( { field } ) => (
+                    <FormItem className="mb-4 w-full">
+                      <FormLabel>Nivel de proceso</FormLabel>
+                      <Select onValueChange={ field.onChange } defaultValue={ field.value }>
+                        <FormControl className="w-full">
+                          <SelectTrigger className="w-full">
+                            <SelectValue placeholder="Seleccione un nivel" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          <SelectItem value="0">0</SelectItem>
+                          <SelectItem value="1">1</SelectItem>
+                          <SelectItem value="2">2</SelectItem>
+                          <SelectItem value="3">3</SelectItem>
+                          <SelectItem value="4">4</SelectItem>
+                          <SelectItem value="5">5</SelectItem>
+                          <SelectItem value="6">6</SelectItem>
+                          <SelectItem value="7">7</SelectItem>
+                          <SelectItem value="8">8</SelectItem>
+                          <SelectItem value="9">9</SelectItem>
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  ) }
+                />
+              </div>
+              <FormField
+                control={ form.control }
+                name="nombre"
+                render={ ( { field } ) => (
+                  <FormItem className="mb-4 w-full">
+                    <FormLabel>Nombre</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Nombre del proceso" { ...field } className="w-full" />
                     </FormControl>
-                    <SelectContent>
-                      {
-                        listadoProcesos && listadoProcesos.length > 0 &&
-                        [ ...listadoProcesos ]
-                          .sort( ( a, b ) => a.codigo.localeCompare( b.codigo ) )
-                          .map( proceso => (
-                            <SelectItem key={ proceso.id } value={ proceso.id.toString() }>
-                              { proceso.codigo } - { proceso.nombre }
-                            </SelectItem>
-                          ) )
-                      }
-                    </SelectContent>
-                  </Select>
-
-                  <FormMessage />
-                </FormItem>
-              ) }
-            />
-            <Button type="submit" className="flex justify-self-end ">{ ( proceso && proceso.id ) ? "Actualizar Proceso" : "Registrar Proceso" }</Button>
-          </form>
-        </Form>
-
+                    <FormMessage />
+                  </FormItem>
+                ) }
+              />
+              <FormField
+                control={ form.control }
+                name="descripcion"
+                render={ ( { field } ) => (
+                  <FormItem className="mb-4 w-full">
+                    <FormLabel>Descripción</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Descripción del proceso" { ...field } className="w-full" />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                ) }
+              />
+              <FormField
+                control={ form.control }
+                name="parentId"
+                render={ ( { field } ) => (
+                  <FormItem className="mb-4 w-full">
+                    <FormLabel>Proceso padre (opcional)</FormLabel>
+                    <Select onValueChange={ field.onChange } defaultValue={ field.value }>
+                      <FormControl className="w-full">
+                        <SelectTrigger className="w-full">
+                          <SelectValue placeholder="Seleccione un tipo" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent className="w-full max-w-[500px]">
+                        {
+                          listadoProcesos && listadoProcesos.length > 0 &&
+                          [ ...listadoProcesos ]
+                            .sort( ( a, b ) => a.codigo.localeCompare( b.codigo ) )
+                            .map( proceso => (
+                              <SelectItem
+                                key={ proceso.id }
+                                value={ proceso.id.toString() }
+                                className="break-words truncate max-w-[480px]"
+                              >
+                                { proceso.codigo } - { proceso.nombre }
+                              </SelectItem>
+                            ) )
+                        }
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                ) }
+              />
+              <Button type="submit" className="flex justify-self-end w-full">
+                { ( proceso && proceso.id ) ? "Actualizar Proceso" : "Registrar Proceso" }
+              </Button>
+            </form>
+          </Form>
+        </div>
 
       </DialogContent>
     </Dialog>

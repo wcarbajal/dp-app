@@ -1,62 +1,86 @@
-
-import { ListaMapas } from '@/components/ListaMapas';
-import { ListaProcesos } from '@/components/procesos/ListaProcesos';
-
-
-import { cargarMapas } from '@/helpers/mapas';
-import { cargarProcesos } from '@/helpers/procesos';
-import { useEffect, useState } from 'react';
-
-
-//import { useState } from 'react';
+import { BpmnModelerComponent } from '@/components/bpmn/BpmnModelerComponent';
+import { DescripcionProceso } from '@/components/procesos/detalle/DescripcionProceso';
+import { DocumentosProceso } from '@/components/procesos/detalle/DocumentosProceso';
+import { FichaProceso } from '@/components/procesos/detalle/FichaProceso';
+import { IndicadoresProceso } from '@/components/procesos/detalle/IndicadoresProceso';
+import { ProcedimientoProceso } from '@/components/procesos/detalle/ProcedimientoProceso';
+import { TempDatos } from '@/components/procesos/detalle/TempDatos';
+import { Tabs, TabsList, TabsContent, TabsTrigger } from '@/components/ui/tabs';
+import { fetchConToken } from '@/helpers/fetch';
+import React, { useCallback, useEffect, useState } from 'react';
+import { useParams } from 'react-router';
 
 export const ProcesoPage = () => {
 
-  const [ loading, setLoading ] = useState( true );
-  const [ mapas, setMapas ] = useState( null );
-  const [ mapaSeleccionado, setMapaSeleccionado ] = useState( null );
-  const [ procesosSeleccionado, setProcesosSeleccionado ] = useState( null );
+  const { id } = useParams();
+  console.log( 'ID del proceso:', id );
 
-  useEffect( () => {
-    const obtenerMapas = async () => {
-      setLoading( true );
-      const mapas = await cargarMapas();
-      setMapas( mapas );
+  const [ detalleProceso, setDetalleProceso ] = useState( null );
+  const [ loading, setLoading ] = useState( false );
+  const [ ownersList, setOwnersList ] = useState( [] );
+
+  const cargarDetalle = useCallback( async () => {
+    setLoading( true );
+    try {
+      const consulta = await fetchConToken( `procesos/detalle/${ id }` );
+      console.log( 'Respuesta del backend:', consulta );
+      setDetalleProceso( consulta );
+
+      const consultaOwners = await fetchConToken( "owners" );
+      setOwnersList( consultaOwners.owners );
+
+    } catch ( error ) {
+      setDetalleProceso( null );
+      console.log( "Error al cargar el detalle del proceso:", error );
+    } finally {
       setLoading( false );
-    };
-    obtenerMapas();
-  }, [ mapaSeleccionado ] );
+    }
+  }, [ id ] );
 
   useEffect( () => {
-    const obtenerProcesos = async () => {
-      if ( !mapaSeleccionado ) return;
-      const procesos = await cargarProcesos( mapaSeleccionado.id );
-      setProcesosSeleccionado( procesos );
-    };
-    obtenerProcesos();
-  }, [ mapaSeleccionado ] );
+    if ( id ) cargarDetalle();
+  }, [ cargarDetalle, id ] );
 
-
+  if ( loading ) return <div className="p-4">Cargando...</div>;
+  if ( !detalleProceso ) return <div className="p-4 text-red-500">No se encontró el detalle del proceso.</div>;
 
   return (
 
-    <section className="flex flex-col min-h-[calc(100vh-5rem)] gap-1 items-center p-5   rounded-lg shadow-lg ">
-      <h1 className="text-xl font-bold text-center  ">Procesos de la entidad</h1>
-      { loading
-        ? ( <span className="text-center text-gray-500">Cargando...</span> )
-        : (
-          <>
-            <ListaMapas mapas={ mapas } setMapaSeleccionado={ setMapaSeleccionado } mapaSeleccionado={ mapaSeleccionado } />
-            {
-              mapaSeleccionado && (                
-                <ListaProcesos procesos={ procesosSeleccionado || [] }/>
-              )
-            }
-          </>
-        )
+    <Tabs defaultValue="descripcion" className=" flex flex-col ">
+      <TabsList className="w-full h-10 bg-gray-200 rounded-t-lg flex items-center justify-around">
+        <TabsTrigger value="descripcion">Descripción</TabsTrigger>
+        <TabsTrigger value="diagrama">Diagrama</TabsTrigger>
+        <TabsTrigger value="ficha">Ficha</TabsTrigger>
+        <TabsTrigger value="procedimiento">Procedimiento</TabsTrigger>
+        <TabsTrigger value="indicadores">Indicadores</TabsTrigger>
+        <TabsTrigger value="documentos">Documentos</TabsTrigger>
+        <TabsTrigger value="datos">Datos</TabsTrigger>
+      </TabsList>
+      <TabsContent value="descripcion" className=" ">
+        <DescripcionProceso proceso={ detalleProceso.proceso || [] } ownersOptions={ ownersList || [] } onUpdated={ cargarDetalle } />
+      </TabsContent>
+      <TabsContent value="diagrama" className="  ">
+        {/* <DiagramaProceso proceso={ detalleProceso.proceso || [] } onUpdated={cargarDetalle}/> */ }
+        <BpmnModelerComponent xmlInicial={ detalleProceso?.proceso?.diagrama?.xml || undefined } procesoId={ detalleProceso.proceso.id } codigo={ detalleProceso.proceso.codigo } nombre={ detalleProceso.proceso.nombre } />
+      </TabsContent>
+      <TabsContent value="ficha" className=" ">
+        <FichaProceso proceso={ detalleProceso.proceso || [] } />
+      </TabsContent>
+      <TabsContent value="procedimiento" className=" ">
+        <ProcedimientoProceso actividades={ detalleProceso?.proceso?.actividades || [] } idProceso={ detalleProceso.proceso.id || '' } />
+      </TabsContent>
+      <TabsContent value="indicadores" className=" ">
+        <IndicadoresProceso proceso={ detalleProceso || [] } />
+      </TabsContent>
+      <TabsContent value="documentos" className=" ">
+        <DocumentosProceso proceso={ detalleProceso.proceso || [] } />
+      </TabsContent>
+      <TabsContent value="datos" className="w-full max-w-4xl mx-auto overflow-x-auto ">
+        <TempDatos proceso={ detalleProceso.proceso || [] } />
 
-      }
-    </section >
+
+      </TabsContent>
+    </Tabs>
 
 
   );
