@@ -16,8 +16,6 @@ export const ProcesosConfig = () => {
   const [ loading, setLoading ] = useState( true );
   const [ listadoProcesos, setListadoProcesos ] = useState( [] );
   
-
-
   const [ tipoFiltro, setTipoFiltro ] = useState( "" );
   
 
@@ -53,33 +51,7 @@ export const ProcesosConfig = () => {
     cargarProcesos();
   }, [ cargarProcesos ] );
 
-  // Agregar o modificar proceso
-  /*   const handleSubmit = async ( values ) => {
-      //e.preventDefault();
-      console.log( "inico del hansubmit" );
-      console.log( { values } );
-      try {
-        let respuesta;
-  
-        if ( editId ) {
-          respuesta = await fetchConToken( `procesos/${ editId }`, values, "PUT" );
-        } else {
-          respuesta = await fetchConToken( "procesos/registrar", values, "POST" );
-        }
-        if ( respuesta.ok ) {
-  
-          cargarProcesos();
-          setOpenDialog( false );
-          setEditId( null );
-          form.reset();
-        } else {
-  
-          alert( "Error al guardar el proceso" );
-        }
-      } catch ( error ) {
-        console.error( "Error al guardar proceso:", error );
-      }
-    }; */
+
 
   // Eliminar proceso
   const handleEliminar = async ( id ) => {

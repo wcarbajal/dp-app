@@ -4,7 +4,7 @@ import 'bpmn-js/dist/assets/bpmn-font/css/bpmn.css';
 import TokenSimulationModule from 'bpmn-js-token-simulation';
 import 'bpmn-js-token-simulation/assets/css/bpmn-js-token-simulation.css';
 
-import BpmnModeler from 'bpmn-js/lib/Modeler';
+import BpmnModel from 'bpmn-js/lib/Modeler';
 
 import { BpmnPropertiesPanelModule, BpmnPropertiesProviderModule } from 'bpmn-js-properties-panel';
 import '@bpmn-io/properties-panel/dist/assets/properties-panel.css';
@@ -23,7 +23,7 @@ import { fetchConToken } from '@/helpers/fetch';
 import Swal from 'sweetalert2';
 
 
-export const BpmnModelerComponent = ( { xmlInicial, procesoId, codigo, nombre } ) => {
+export const BpmnModeler = ( { xmlInicial, procesoId, codigo, nombre } ) => {
 
 
 
@@ -110,7 +110,7 @@ export const BpmnModelerComponent = ( { xmlInicial, procesoId, codigo, nombre } 
 
 
   useEffect( () => {
-    modelerRef.current = new BpmnModeler( {
+    modelerRef.current = new BpmnModel( {
       container: containerRef.current,
       propertiesPanel: {
         parent: '#properties-panel',
@@ -140,10 +140,10 @@ export const BpmnModelerComponent = ( { xmlInicial, procesoId, codigo, nombre } 
       } catch ( e ) {
         // Si falla el parseo, asume que es XML plano
         xml = xmlInicial;
-        console.log(e)
+        console.log( e );
       }
     }
- 
+
 
     if ( xml && xml.trim() !== '' ) {
       // Si xmlInicial tiene contenido, impórtalo
@@ -304,7 +304,7 @@ export const BpmnModelerComponent = ( { xmlInicial, procesoId, codigo, nombre } 
   };
 
   return (
-    <article className="overflow-hidden bg-slate-400 space-y-2 p-2  ">
+    <article className="overflow-hidden bg-slate-400 space-y-2  ">
       <Card className="flex flex-row items-center justify-between  p-2 ">
 
         <div className="flex items-center gap-2">

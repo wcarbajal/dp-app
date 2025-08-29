@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { MdOutlineExposurePlus1 } from "react-icons/md";
 
-import { FormProcesoConfig } from './FormProcesoConfig';
+
 import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form";
 import { nuevoProcesoSchema } from '@/schema/ProcesosSchema';
 import { useForm } from "react-hook-form";

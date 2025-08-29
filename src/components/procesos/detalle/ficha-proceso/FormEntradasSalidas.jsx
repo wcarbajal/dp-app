@@ -8,34 +8,32 @@ import { Textarea } from '@/components/ui/textarea';
 
 import { MdOutlineDelete, MdOutlineEdit, MdOutlineAdd, MdOutlineSave } from 'react-icons/md';
 import { fetchConToken } from '@/helpers/fetch';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
+import Swal from 'sweetalert2';
 
 export const FormEntradasSalidas = ( { proceso } ) => {
 
   const [ ioResult, setIoResult ] = useState( [] );
 
+  const cargarInputOutput = useCallback( async () => {
 
+    if ( !proceso || !proceso.ficha || !proceso.ficha.id ) {
+
+      setIoResult( [] );
+      return;
+    }
+    const response = await fetchConToken( `ficha/${ proceso.ficha.id }/input-output` );
+
+    if ( response.ok ) {
+      setIoResult( response.inputOutput );
+    } else {
+      setIoResult( [] ); // Para evitar undefined
+    }
+  }, [ proceso ] );
 
   useEffect( () => {
-    
-    const cargarInputOutput = async () => {
-
-
-      if ( !proceso || !proceso.ficha || !proceso.ficha.id ) {
-
-        setIoResult( [] );
-        return;
-      }
-      const response = await fetchConToken( `ficha/${ proceso.ficha.id }/input-output` );
-
-      if ( response.ok ) {
-        setIoResult( response.inputOutput );
-      } else {
-        setIoResult( [] ); // Para evitar undefined
-      }
-    };
     cargarInputOutput();
-  }, [ proceso ] );
+  }, [ proceso, cargarInputOutput ] );
 
   const form = useForm( {
     resolver: zodResolver( entradaSalidaSchema ),
@@ -69,21 +67,34 @@ export const FormEntradasSalidas = ( { proceso } ) => {
 
   const onSubmit = async ( data ) => {
 
+
     let fichaId;
 
-    if ( proceso.ficha === null ) {
+
+    if ( proceso?.ficha === null ) {
+
 
       const fichaNueva = await fetchConToken( `procesos/${ proceso.id }/registrar-ficha` );
+
 
       fichaId = fichaNueva.id;
     } else {
       fichaId = proceso.ficha.id;
     }
 
+
     const response = await fetchConToken( `ficha/${ fichaId }/registrar-io`, data, 'POST' );
 
     if ( response.ok ) {
       setIoResult( response.inputOutput );
+      cargarInputOutput();
+      Swal.fire( {
+        title: 'Éxito',
+        text: 'SIPOC  registrado correctamente',
+        icon: 'success',
+        confirmButtonText: 'Aceptar'
+      } );
+
     } else {
       console.error( 'Error al registrar Input/Output' );
     }
@@ -174,7 +185,7 @@ export const FormEntradasSalidas = ( { proceso } ) => {
                         type="button"
                         variant="destructive"
                         onClick={ () => remove( idx ) }
-                        /* disabled={ fields.length === 1 } */
+                      /* disabled={ fields.length === 1 } */
                       >
                         <MdOutlineDelete />
                       </Button>

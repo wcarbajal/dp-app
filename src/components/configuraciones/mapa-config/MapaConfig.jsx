@@ -123,7 +123,7 @@ export const MapaConfig = () => {
                 </DialogFooter>
               </Dialog>
             </div>
-            <div className="flex flex-col gap-2">
+            <div className="flex flex-col gap-2 m-5">
               {
                 mapas && mapas.length > 0 ? (
                   <MapasLista mapas={ mapas } cargarMapas={ cargarMapas } />

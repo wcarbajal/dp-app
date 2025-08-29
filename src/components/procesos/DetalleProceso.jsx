@@ -8,8 +8,8 @@ import { ProcedimientoProceso } from './detalle/ProcedimientoProceso';
 import { IndicadoresProceso } from './detalle/IndicadoresProceso';
 import { DocumentosProceso } from './detalle/DocumentosProceso';
 import { TempDatos } from './detalle/TempDatos';
-
-import { BpmnModelerComponent } from '../bpmn/BpmnModelerComponent';
+  
+import { BpmnModeler } from '../bpmn/BpmnModeler';
 
 export const DetalleProceso = ( { procesoId } ) => {
   const [ detalleProceso, setDetalleProceso ] = useState( null );
@@ -22,7 +22,7 @@ export const DetalleProceso = ( { procesoId } ) => {
     try {
       const consulta = await fetchConToken( `procesos/detalle/${ procesoId }` );
 
-      console.log("consulta", consulta)
+      console.log( "consulta", consulta );
 
       setDetalleProceso( consulta );
 
@@ -61,7 +61,7 @@ export const DetalleProceso = ( { procesoId } ) => {
       </TabsContent>
       <TabsContent value="diagrama" className="  ">
         {/* <DiagramaProceso proceso={ detalleProceso.proceso || [] } onUpdated={cargarDetalle}/> */ }
-        <BpmnModelerComponent xmlInicial={ detalleProceso?.proceso?.diagrama?.xml || undefined } procesoId={ detalleProceso.proceso.id } codigo={ detalleProceso.proceso.codigo } nombre={ detalleProceso.proceso.nombre } />
+        <BpmnModeler xmlInicial={ detalleProceso?.proceso?.diagrama?.xml || undefined } procesoId={ detalleProceso.proceso.id } codigo={ detalleProceso.proceso.codigo } nombre={ detalleProceso.proceso.nombre } />
       </TabsContent>
       <TabsContent value="ficha" className=" ">
         <FichaProceso proceso={ detalleProceso.proceso || [] } />
