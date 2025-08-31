@@ -38,16 +38,18 @@ export const actualizarProcesoSchema  = z.object( {
 
 
 export const procedimientoSchema = z.object( {
-  id: z.number().optional(), // Solo si lo usas en edición
+  procesoId: z.number().optional(), // Solo si lo usas en edición
   //idproceso: z.number().min( 1, "El ID del detalle de proceso es obligatorio" ).optional(),
   //idprocedimiento: z.number().min( 1, "El ID del procedimiento es obligatorio" ).optional(),
   actividades: z.array(
     z.object( {
       id: z.number().optional(),
       nombre: z.string().min( 3, "El nombre de la actividad es obligatorio" ),
+      numOrden: z.number().min( 1, "El número de orden es obligatorio" ).optional(),
       descripcion: z.string().min( 5, "La descripción es obligatoria" ).optional(),
       unidadOperativa: z.string().min( 3, "La unidad operativa es obligatoria" ).optional(),
-      responsable: z.string().min( 3, "El responsable es obligatorio" ).optional()
+      responsable: z.string().min( 3, "El responsable es obligatorio" ).optional(),
+      registro: z.string().min( 3, "El registro es obligatorio" ).optional(),
     } )
   ).optional()
  

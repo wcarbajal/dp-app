@@ -7,9 +7,7 @@ import { Badge } from '@/components/ui/badge';
 
 export const FichaProceso = ( { proceso } ) => {
 
-  console.log( { proceso } );
-
-
+  
   return (
     <section className="flex flex-col w-full h-full bg-gray-400 rounded-lg  m-0 gap-2">
       <h3 className="text-lg text-center my-4 ">
@@ -19,9 +17,9 @@ export const FichaProceso = ( { proceso } ) => {
       {/* Primera tabla */ }
       <FormEntradasSalidas proceso={ proceso } />
       {/* Tabla de riesgos */ }
-      <FormRiesgos procesoId={ proceso.id } />
+      <FormRiesgos proceso={ proceso } />
       {/* Tabla de registros */ }
-      <FormRegistros procesoId={ proceso.id } />
+      <FormRegistros proceso={ proceso } />
 
 
     </section>

@@ -8,8 +8,10 @@ import { Button } from "@/components/ui/button";
 import { procedimientoSchema } from '@/schema/ProcesosSchema';
 import { MdKeyboardArrowDown, MdKeyboardArrowUp, MdOutlineDeleteOutline } from 'react-icons/md';
 import { IoAddOutline } from "react-icons/io5";
-import { fetchConToken } from '@/helpers/fetch';
+
 import Swal from 'sweetalert2';
+import { Table } from '@/components/ui/table';
+import { FaRegSave } from 'react-icons/fa';
 
 //TODO: cambiarlo a un proceso propio
 
@@ -18,24 +20,11 @@ export const ProcedimientoProceso = ( { actividades, idProceso } ) => {
   console.log( { actividades } );
   console.log( { idProceso } );
 
-
-
-
-  const actividadesOrdenadas = ( actividades || [] ).slice().sort(
-    ( a, b ) => Number( a.numOrden ) - Number( b.numOrden )
-  ).map( ( a, i ) => ( {
-    ...a,
-    numOrden: a.numOrden ?? i + 1, // Si no tiene numOrden, asígnale uno correlativo
-  } ) );
-
-  console.log( { actividadesOrdenadas } );
-
   const form = useForm( {
     resolver: zodResolver( procedimientoSchema ),
     defaultValues: {
-      id: idProceso || undefined,
-
-      actividades: actividadesOrdenadas,
+      procesoId: idProceso || undefined,
+      actividades: actividades || [],
     },
     mode: "onChange",
   } );
@@ -47,6 +36,8 @@ export const ProcedimientoProceso = ( { actividades, idProceso } ) => {
   } );
 
   const moveUp = ( idx ) => {
+
+    console.log(" posicion actual:", idx + 1)
     if ( idx === 0 ) return;
     swap( idx, idx - 1 );
     // Actualiza numOrden después de swap
@@ -55,6 +46,7 @@ export const ProcedimientoProceso = ( { actividades, idProceso } ) => {
       numOrden: i + 1,
     } ) );
     form.setValue( "actividades", actividadesActualizadas, { shouldDirty: true } );
+    console.log(" posicion final:", idx  )
   };
 
   const moveDown = ( idx ) => {
@@ -67,50 +59,34 @@ export const ProcedimientoProceso = ( { actividades, idProceso } ) => {
     } ) );
     form.setValue( "actividades", actividadesActualizadas, { shouldDirty: true } );
   };
-  const onSubmit = async ( formulario ) => {
-    // Ordena las actividades por numOrden antes de enviar
-    const actividadesOrdenadas = [ ...formulario.actividades ].sort(
-      ( a, b ) => Number( a.numOrden ) - Number( b.numOrden )
-    );
 
-    const result = await fetchConToken(
-      `procesos/${ formulario.id }/registrar-actividades`,
-      {
-        id: formulario.id,
-        actividades: actividadesOrdenadas,
-      },
-      "POST"
-    );
-    if ( !result.ok ) console.log( "Error en la respuesta:", result );
-    if ( result.ok && result.proceso && Array.isArray( result.proceso.actividades ) ) {
-      const actividadesOrdenadasResp = result.proceso.actividades.slice().sort(
-        ( a, b ) => Number( a.numOrden ) - Number( b.numOrden )
-      );
-      form.setValue( "actividades", actividadesOrdenadasResp );
-      Swal.fire( {
-        title: "Actividades actualizadas!",
-        text: "Las actividades fueron actualizadas correctamente!",
-        icon: "success",
-        confirmButtonText: "Aceptar",
-        customClass: {
-          confirmButton: "bg-primary py-2 px-6 rounded-md text-primary-foreground shadow-xs hover:bg-primary/90",
-        },
-        buttonsStyling: false
-      } );
-    }
+  const agregarRegistro = () => {
+    append( {
+      nombre: "",
+      descripcion: "",
+      unidadOperativa: "",
+      responsable: "",
+      registro: "",
+      numOrden: fields.length + 1,
+    } );
+  };
+
+  const onSubmit = async ( formulario ) => {
+    console.log( formulario );
   };
 
   return (
     <Form { ...form }>
       <form onSubmit={ form.handleSubmit( onSubmit ) } className="flex flex-col gap-5">
         <h3 className="text-lg font-bold">Actividades</h3>
-        <div className="w-full border rounded ">
+        <div className="w-full border rounded bg-white">
           {/* Tabla de encabezado fija */ }
-          <table className="min-w-full ">
+          <table className="min-w-full rounded-lg overflow-hidden ">
             <colgroup>
               <col style={ { width: "60px" } } />
               <col style={ { width: "150px" } } />
               <col style={ { width: "300px" } } />
+              <col style={ { width: "150px" } } />
               <col style={ { width: "150px" } } />
               <col style={ { width: "150px" } } />
               <col style={ { width: "95px" } } />
@@ -122,6 +98,7 @@ export const ProcedimientoProceso = ( { actividades, idProceso } ) => {
                 <th className="p-2 border">Descripción de la actividad</th>
                 <th className="p-2 border">Unidad Operativa</th>
                 <th className="p-2 border">Responsable de la actividad</th>
+                <th className="p-2 border">Registro de la actividad</th>
                 <th className="p-2 border w-[60px]">Acciones</th>
               </tr>
             </thead>
@@ -133,6 +110,7 @@ export const ProcedimientoProceso = ( { actividades, idProceso } ) => {
                 <col style={ { width: "60px" } } />
                 <col style={ { width: "150px" } } />
                 <col style={ { width: "300px" } } />
+                <col style={ { width: "150px" } } />
                 <col style={ { width: "150px" } } />
                 <col style={ { width: "150px" } } />
                 <col style={ { width: "95px" } } />
@@ -148,30 +126,10 @@ export const ProcedimientoProceso = ( { actividades, idProceso } ) => {
                 ) : (
                   fields.map( ( field, idx ) => (
                     <tr key={ field.id }>
-                      <td className="border align-top">
-                        <FormField
-                          control={ form.control }
-                          name={ `actividades.${ idx }.numOrden` }
-                          render={ ( { field } ) => (
-                            <FormItem>
-                              <FormControl>
-                                <Input
-                                  { ...field }
-                                  type="number"
-                                  min={ 1 }
-                                  placeholder="Orden"
-                                  value={ field.value ?? idx + 1 }
-                                  onChange={ e => {
-                                    const value = e.target.value === "" ? "" : Number( e.target.value );
-                                    field.onChange( value );
-                                  } }
-                                />
-
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          ) }
-                        />
+                      <td className="border align-middle text-center">
+                        <span>
+                          { idx + 1 }
+                        </span>
                       </td>
                       <td className="p-2 border align-top">
                         <FormField
@@ -244,6 +202,25 @@ export const ProcedimientoProceso = ( { actividades, idProceso } ) => {
                           ) }
                         />
                       </td>
+                       <td className="p-2 border align-top">
+                        <FormField
+                          control={ form.control }
+                          name={ `actividades.${ idx }.registro` }
+                          render={ ( { field } ) => (
+                            <FormItem>
+                              <FormControl>
+                                <Textarea
+                                  { ...field }
+                                  placeholder="Registro de la actividad"
+                                  className="break-words whitespace-pre-line resize-none"
+                                  rows={ 2 }
+                                />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          ) }
+                        />
+                      </td>
                       <td className="border w-[60px]">
                         <div className="flex gap-2 justify-center ">
                           <Button
@@ -276,22 +253,21 @@ export const ProcedimientoProceso = ( { actividades, idProceso } ) => {
             </table>
           </div>
           {/* Footer de la tabla */ }
-          <div className="flex justify-end bg-transparent p-2">
+          <div className="flex justify-center items-center  gap-5 p-2 ">
             <Button
               type="button"
               variant="outline"
-              className="mt-2"
-              onClick={ () => append( { numOrden: undefined, nombre: "", descripcion: "", unidadOperativa: "", responsable: "" } ) }
+              className=""
+              onClick={ agregarRegistro }
             >
               <IoAddOutline /> Agregar
             </Button>
+            <Button type="submit" disabled={ !form.formState.isDirty || !form.formState.isValid } >
+              <FaRegSave /> Guardar
+            </Button>
           </div>
         </div>
-        <div className="flex justify-center mt-4">
-          <Button type="submit"  >
-            Guardar Procedimiento
-          </Button>
-        </div>
+       
       </form>
     </Form>
   );

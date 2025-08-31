@@ -131,16 +131,22 @@ export const BpmnModeler = ( { xmlInicial, procesoId, codigo, nombre } ) => {
     const afterImport = () => {
       aplicarEstilosPorDefecto();
     };
+
     let xml = '';
     if ( xmlInicial && xmlInicial !== 'undefined' ) {
-      try {
-        // Si es JSON, extrae el campo xml
-        const xmlObj = JSON.parse( xmlInicial );
-        xml = xmlObj.xml;
-      } catch ( e ) {
-        // Si falla el parseo, asume que es XML plano
+      if ( xmlInicial.trim().startsWith( '<' ) ) {
+        // Es XML plano
         xml = xmlInicial;
-        console.log( e );
+      } else {
+        try {
+          // Si es JSON, extrae el campo xml
+          const xmlObj = JSON.parse( xmlInicial );
+          xml = xmlObj.xml;
+        } catch ( e ) {
+          // Si falla el parseo, asume que es XML plano
+          console.log("Error al parsear XML:", e);
+          xml = xmlInicial;
+        }
       }
     }
 

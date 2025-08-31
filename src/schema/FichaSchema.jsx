@@ -30,7 +30,7 @@ export const registrosSchema = z.object( {
   registros: z.array(
     z.object( {
       denominacion: z.string().min( 1, "Campo requerido" ),
-      tipo: z.enum( ["físico", "digital"], { required_error: "Campo requerido" } ).optional()
+      tipoRegistro: z.enum( ["físico", "digital"], { required_error: "Campo requerido" } ).optional()
     } )
   ),
 

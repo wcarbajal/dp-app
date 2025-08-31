@@ -6,23 +6,96 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { MdOutlineAdd, MdOutlineDelete, MdOutlineSave } from 'react-icons/md';
+import { useCallback, useEffect, useState } from 'react';
+import { fetchConToken } from '@/helpers/fetch';
+import Swal from 'sweetalert2';
 
-export const FormRegistros = () => {
+export const FormRegistros = ( { proceso } ) => {
+
+
+
+  const [ registros, setRegistros ] = useState( [] );
+
+  const cargarRegistros = useCallback( async () => {
+
+    if ( !proceso || !proceso.ficha || !proceso.ficha.id ) {
+
+      setRegistros( [] );
+      return;
+    }
+    const response = await fetchConToken( `ficha/${ proceso.ficha.id }/registros` );
+
+    if ( response.ok ) {
+      setRegistros( response.registros );
+    } else {
+      setRegistros( [] ); // Para evitar undefined
+    }
+  }, [ proceso ] );
+
+  useEffect( () => {
+    cargarRegistros();
+  }, [ proceso, cargarRegistros ] );
+
+
+
   const form = useForm( {
     resolver: zodResolver( registrosSchema ),
     defaultValues: {
-      registros: [  ],
+      registros: [],
     },
   } );
+
+  useEffect( () => {
+    
+    if ( registros !== undefined ) {
+      form.reset( {
+        registros: registros.length
+          ? registros.map( item => ( {
+            id: item.id,
+            denominacion: item.denominacion,
+            tipoRegistro: item.tipoRegistro,
+          } ) )
+          : [],
+      } );
+    }
+  }, [ registros, form ] );
 
   const { fields, append, remove } = useFieldArray( {
     control: form.control,
     name: "registros",
   } );
 
-  const onSubmit = ( data ) => {
-    console.log( data );
+  const onSubmit = async ( data ) => {
+
+    
+
+    let fichaId;
+
+    if ( proceso?.ficha === null ) {
+
+      const fichaNueva = await fetchConToken( `procesos/${ proceso.id }/registrar-ficha` );
+      fichaId = fichaNueva.id;
+    } else {
+      fichaId = proceso.ficha.id;
+    }
+
+    const response = await fetchConToken( `ficha/${ fichaId }/registrar-registros`, data, 'POST' );
+
+    if ( response.ok ) {
+      setRegistros( response.registros );
+      cargarRegistros();
+      Swal.fire( {
+        title: 'Éxito',
+        text: 'Registros registrados correctamente',
+        icon: 'success',
+        confirmButtonText: 'Aceptar'
+      } );
+
+    } else {
+      console.error( 'Error al registrar Input/Output' );
+    }
   };
+
 
   return (
     <FormProvider { ...form }>
@@ -61,15 +134,13 @@ export const FormRegistros = () => {
 
                     <FormField
                       control={ form.control }
-                      name={ `registros.${ idx }.tipo` }
+                      name={ `registros.${ idx }.tipoRegistro` }
                       render={ ( { field } ) => (
                         <FormItem>
-                          <FormControl>
-                            {/* <Textarea {...field} placeholder={`Tipo ${idx + 1}`} rows={2} /> */ }
+                          <FormControl>                            
                             <Select
-                              { ...field }
-                              placeholder={ `Tipo ${ idx + 1 }` }
                               value={ field.value }
+                              onValueChange={field.onChange}
                             >
                               <SelectTrigger className="w-full">
                                 <SelectValue placeholder="Seleccione un tipo" />
@@ -91,7 +162,7 @@ export const FormRegistros = () => {
                         type="button"
                         variant="destructive"
                         onClick={ () => remove( idx ) }
-                        
+
                       >
                         <MdOutlineDelete />
                       </Button>
@@ -104,10 +175,10 @@ export const FormRegistros = () => {
               <tr className="p-2 border">
                 <td colSpan={ 4 } className="text-right">
                   <div className="flex flex-row justify-center items-center gap-2 my-2">
-                    <Button variant="outline" type="button" onClick={ () => append( { denominacion: "", tipo: "" } ) }>
+                    <Button variant="outline" type="button" onClick={ () => append( { denominacion: "", tipoRegistro: "físico" } ) }>
                       <MdOutlineAdd /> Agregar registro
                     </Button>
-                    <Button type="submit">
+                    <Button type="submit" disabled={!form.formState.isDirty}>
 
                       <MdOutlineSave /> Guardar registros
                     </Button>

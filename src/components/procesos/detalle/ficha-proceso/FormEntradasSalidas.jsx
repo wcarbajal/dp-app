@@ -12,6 +12,7 @@ import { useCallback, useEffect, useState } from 'react';
 import Swal from 'sweetalert2';
 
 export const FormEntradasSalidas = ( { proceso } ) => {
+  
 
   const [ ioResult, setIoResult ] = useState( [] );
 
@@ -214,7 +215,7 @@ export const FormEntradasSalidas = ( { proceso } ) => {
                     >
                       <MdOutlineAdd />  Agregar
                     </Button>
-                    <Button type="submit">
+                    <Button type="submit" disabled={!form.formState.isDirty}>
                       <MdOutlineSave /> Guardar
                     </Button>
                   </div>
