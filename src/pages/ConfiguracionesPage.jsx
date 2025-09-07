@@ -13,20 +13,21 @@ export const ConfiguracionesPage = () => {
     procesos: 0,
     owners: 0,
     usuarios: 0,
-    reportes: 0
+    reportes: 0,
+    unidadesFuncionales: 0
   } );
 
   const listConfiguracciones = [
 
        {
       ruta: '/config/mapa',
-      objeto: 'Mapa',
+      objeto: 'Mapa de procesos',
       cantidad: cantidades.mapas,
 
     },
     {
       ruta: '/config/procesos',
-      objeto: 'Procesos',
+      objeto: 'Procesos institucionales',
       cantidad: cantidades.procesos,
 
     },
@@ -34,6 +35,12 @@ export const ConfiguracionesPage = () => {
       ruta: '/config/owners',
       objeto: 'Dueños de procesos',
       cantidad: cantidades.owners,
+
+    },
+    {
+      ruta: '/config/unidades-funcionales',
+      objeto: 'Unidades funcionales',
+      cantidad: cantidades.unidadesFuncionales,
 
     },
     {
@@ -64,7 +71,7 @@ export const ConfiguracionesPage = () => {
 
 
   return (
-    <div className="grid grid-cols-3 gap-4 px-4 lg:px-6 @xl/main:grid-cols-2 @5xl/main:grid-cols-3">
+    <div className="grid grid-cols-1 mb-5 gap-4 px-4   md:grid-cols-2 lg:grid-cols-3   xl:grid-cols-4">
       {
         listConfiguracciones.map( ( { ruta, objeto, cantidad, icono } ) => (
           <CardConfig key={ ruta } ruta={ ruta } objeto={ objeto } cantidad={ cantidad } icon={ icono } />

@@ -1,0 +1,298 @@
+import { useCallback, useEffect, useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogTrigger, DialogDescription } from "@/components/ui/dialog";
+import { IoIosAddCircleOutline, IoIosClose, IoIosSearch } from "react-icons/io";
+import { fetchConToken } from "@/helpers/fetch";
+import {
+  Table,
+  TableHeader,
+  TableRow,
+  TableHead,
+  TableBody,
+  TableCell,
+} from "@/components/ui/table";
+
+
+// Suponiendo que tienes un formulario OwnerForm similar a MapaFormRegistro
+
+import { CiEdit } from 'react-icons/ci';
+import { MdKeyboardArrowLeft, MdKeyboardArrowRight, MdOutlineDeleteForever } from 'react-icons/md';
+import { BotonRegresar } from '@/components/propios/BotonRegresar';
+import { Card } from '@/components/ui/card';
+import { ListaMapas } from '@/components/ListaMapas';
+import { cargarMapas } from '@/helpers/mapas';
+import Swal from 'sweetalert2';
+import { Input } from '@/components/ui/input';
+
+import { Label } from '@/components/ui/label';
+import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Paginacion } from '@/components/paginacion/Paginacion';
+import { UnidadFuncionalRegister } from './UnidadFuncionalRegister';
+
+
+
+export const UnidadFuncionalConfig = () => {
+
+  const [ mapas, setMapas ] = useState( null );
+  const [ mapaSeleccionado, setMapaSeleccionado ] = useState( null );
+  const [ unidadesFuncionales, setUnidadesFuncionales ] = useState( [] );
+  const [ open, setOpen ] = useState( false );
+  const [ editUnidadFuncional, setEditUnidadFuncional ] = useState( null );
+  const [ loading, setLoading ] = useState( true );
+  const [ error, setError ] = useState( "" );
+
+  const [ filtro, setFiltro ] = useState( "" );
+
+
+  const [ paginaActual, setPaginaActual ] = useState( 1 );
+  const [ itemsPorPagina, setItemsPorPagina ] = useState( 10 );
+
+
+
+
+  useEffect( () => {
+    const obtenerMapas = async () => {
+      setLoading( true );
+      const mapas = await cargarMapas();
+      setMapas( mapas );
+      setLoading( false );
+    };
+    obtenerMapas();
+  }, [ mapaSeleccionado ] );
+
+  const cargarUnidadesOperativas = useCallback( async () => {
+
+    if ( !mapaSeleccionado ) return;
+    try {
+      const respuesta = await fetchConToken( `unidad-operativa/${ mapaSeleccionado.id }` );
+
+      if ( respuesta.ok ) {
+        setUnidadesFuncionales( respuesta.unidades );
+
+      } else {
+        setUnidadesFuncionales( [] );
+      }
+    } catch ( error ) {
+      setUnidadesFuncionales( [] );
+      console.error( "Error al cargar las unidades operativas: ", error );
+    }
+  }, [ mapaSeleccionado ] );
+
+  // Cargar owners al montar
+  useEffect( () => {
+    cargarUnidadesOperativas();
+  }, [ cargarUnidadesOperativas ] );
+
+  // Crear o editar owner
+  const handleSubmit = async ( data ) => {
+
+
+    try {
+      let respuesta;
+      if ( editUnidadFuncional ) {
+        respuesta = await fetchConToken( `unidad-operativa/${ editUnidadFuncional.id }`, data, "PUT" );
+
+
+      } else {
+        respuesta = await fetchConToken( "unidad-operativa", data, "POST" );
+
+      }
+      if ( respuesta.ok ) {
+        setOpen( false );
+        setError( "" );
+        setEditUnidadFuncional( null );
+        // Recargar lista
+        const nuevaLista = await fetchConToken( `unidad-operativa/${ mapaSeleccionado.id }` );
+        setUnidadesFuncionales( nuevaLista.unidadesFuncionales || [] );
+
+      } else {
+        setError( respuesta.msg || "Error al cargar unidades funcionales" );
+      }
+    } catch ( error ) {
+      console.log( error );
+      setError( "Error de red" );
+    }
+  };
+
+  // Eliminar unidad funcional
+  const eliminarUnidadFuncional = async ( unidadFuncional ) => {
+
+
+    const result = await Swal.fire( {
+      title: '¿Seguro que deseas eliminar esta unidad funcional?',
+      text: "Esta acción no se puede deshacer.",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#2A2A2A',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Sí, eliminar',
+      cancelButtonText: 'Cancelar',
+      customClass: {
+        confirmButton: 'bg-primary text-primary-foreground shadow-xs hover:bg-primary/90',
+      }
+    } );
+
+    if ( !result.isConfirmed ) return;
+
+    //eliminacion
+    const respuesta = await fetchConToken( `unidad-operativa/eliminar/${ unidadFuncional.id }`, {}, "PUT" );
+
+    if ( respuesta.ok ) {
+      setUnidadesFuncionales( unidadesFuncionales?.filter( o => o.id !== unidadFuncional.id ) );
+      // Recargar lista
+     /*  const nuevaLista = await fetchConToken( `unidad-operativa/${ mapaSeleccionado.id }` );
+      setUnidadesFuncionales( nuevaLista.unidadesFuncionales || [] );
+ */
+      Swal.fire( {
+        title: 'Confirmación de eliminación',
+        text: "La unidad funcional ha sido eliminada.",
+        icon: 'success',
+        confirmButtonColor: '#2A2A2A',
+        confirmButtonText: 'Aceptar',
+        customClass: {
+          confirmButton: 'bg-primary text-primary-foreground shadow-xs hover:bg-primary/90',
+        }
+      } );
+
+
+      //setUnidadesFuncionales( nuevaLista.unidadesFuncionales || [] );
+
+    } else {
+      setError( respuesta.msg || "Error al eliminar unidad funcional" );
+    }
+  };
+
+  const unidadesFuncionalesFiltradas = unidadesFuncionales?.filter( unidadFuncional =>
+    unidadFuncional.nombre.toLowerCase().includes( filtro.toLowerCase() ) ||
+    unidadFuncional.siglas.toLowerCase().includes( filtro.toLowerCase() )
+
+  );
+
+  const totalItems = unidadesFuncionalesFiltradas.length;
+
+  const mostrarTodos = itemsPorPagina === 0;
+
+  const unidadesPaginadas = mostrarTodos
+    ? unidadesFuncionalesFiltradas
+    : unidadesFuncionalesFiltradas.slice(
+      ( paginaActual - 1 ) * itemsPorPagina,
+      paginaActual * itemsPorPagina
+    );
+
+    
+  // mostrar en consola, los errores
+  useEffect( () => {
+    if ( error ) {
+      console.error( "Error en UnidadFuncionalConfig: ", error );
+    }
+  }, [ error ] );
+
+
+  return (
+    <div className="flex flex-col  w-full justify-center items-center shadow-lg p-4">
+      <BotonRegresar url="/config" nombre="Configuración" />
+      <h1 className="text-xl font-bold text-center">Configuración de Unidades Funcionales</h1>
+      <div className="flex justify-end mb-4">
+        <ListaMapas mapas={ mapas || [] } setMapaSeleccionado={ setMapaSeleccionado } mapaSeleccionado={ mapaSeleccionado } />
+
+      </div>
+      <div className="flex flex-col  w-full  ">
+        { loading
+          ? ( <div className="text-center text-gray-500">Cargando...</div> )
+          : (
+            <div className="flex flex-col   items-center ">
+
+              <div className="flex items-center justify-between gap-2 w-full bg-white p-2 rounded-lg">
+                <div className="relative w-1/2">
+                  <span className="absolute left-2 top-1/2 -translate-y-1/2 text-gray-400">
+                    <IoIosSearch />
+                  </span>
+                  <Input
+                    placeholder="Buscar ..."
+                    value={ filtro }
+                    onChange={ e => setFiltro( e.target.value ) }
+                    className="pl-8" // Deja espacio para el ícono
+                  />
+                  <span className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400">
+                    <IoIosClose size={ 25 } onClick={ () => setFiltro( "" ) } />
+                  </span>
+                </div>
+                <Dialog open={ open } onOpenChange={ ( value ) => {
+                  setOpen( value );
+                  if ( !value ) {
+                    setError( "" );
+                    setEditUnidadFuncional( null );
+                  }
+                } }>
+                  <DialogTrigger asChild>
+                    <Button className="" onClick={ () => { setOpen( true ); setEditUnidadFuncional( null ); } }>
+                      <IoIosAddCircleOutline />
+                      Agregar unidad operativa
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent  >
+                    <DialogHeader>
+                      <DialogTitle>{ editUnidadFuncional ? "Editar unidad operativa" : "Nueva unidad operativa" }</DialogTitle>
+                      { error && <span className="text-red-500">{ `Error: ${ error }` }</span> }
+                    </DialogHeader>
+                    <DialogDescription>
+                      Completa los campos para registrar una unidad operativa.
+                    </DialogDescription>
+                    <UnidadFuncionalRegister
+                      onSubmit={ handleSubmit }
+                      initialValues={ editUnidadFuncional ? editUnidadFuncional : { mapaId: mapaSeleccionado?.id } }
+                    />
+                    <DialogFooter>
+                      <Button onClick={ () => { setOpen( false ), setError( "" ); } }>Cancelar</Button>
+                    </DialogFooter>
+                  </DialogContent>
+                </Dialog>
+
+
+              </div>
+
+              <Table className=" rounded-5 bg-white rounded-lg overflow-hidden border border-gray-400">
+                <TableHeader>
+                  <TableRow >
+                    <TableHead className="border-r border-gray-300 ">#</TableHead>
+                    <TableHead className="border-r border-gray-300 ">Unidad funcional</TableHead>
+                    <TableHead className="border-r border-gray-300 ">Siglas</TableHead>
+                    <TableHead>Acciones</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  { unidadesPaginadas.map( ( unidad, index ) => (
+                    <TableRow key={ unidad.id } className="hover:bg-gray-200">
+                      <TableCell>{ ( paginaActual - 1 ) * itemsPorPagina + index + 1 }</TableCell>
+                      <TableCell className="whitespace-normal break-words">{ unidad.nombre }</TableCell>
+                      <TableCell>{ unidad.siglas }</TableCell>
+                      <TableCell>
+                        <div className="flex gap-2 justify-center">
+                          <Button variant="" onClick={ () => { setEditUnidadFuncional( unidad ); setOpen( true ); } }>
+                            <CiEdit />
+                          </Button>
+                          <Button variant="destructive" onClick={ () => eliminarUnidadFuncional( unidad ) }>
+                            <MdOutlineDeleteForever />
+                          </Button>
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  ) ) }
+                </TableBody>
+              </Table>
+
+               <Paginacion
+                 totalItems={ totalItems }
+                 itemsPorPagina={ itemsPorPagina }
+                 paginaActual={ paginaActual }
+                 setPaginaActual={ setPaginaActual }
+                 setItemsPorPagina={ setItemsPorPagina }
+               />
+
+            </div>
+          )
+        }
+      </div>
+    </div>
+  );
+};
