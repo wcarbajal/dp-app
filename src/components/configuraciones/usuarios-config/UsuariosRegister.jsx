@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
@@ -12,25 +12,56 @@ import {
   FormDescription,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { OwnerSchema } from '@/schema/OwnerSchema';
-
-//import { cargarUnidadesOperativas } from '@/helpers/cargarUnidadesOperativas';
-import { UnidadFuncionalSchema } from '@/schema/UnidadFuncionalSchema';
+import { usuarioSchema } from '@/schema/UsuarioSchema';
+import { fetchConToken } from '@/helpers/fetch';
+import { Select } from '@radix-ui/react-select';
+import { SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 
 
 export const UsuariosRegister = ( { onSubmit, initialValues } ) => {
 
-  const containerRef = useRef( null );
+  const [ roles, setRoles ] = useState( [] );
+  
+
+
+  const cargarRoles = useCallback( async () => {
+
+    try {
+      const respuesta = await fetchConToken( "rol" );
+
+      console.log( { respuesta } );
+
+      if ( respuesta.ok ) {
+        setRoles( respuesta.roles );
+
+      } else {
+        setRoles( [] );
+      }
+    } catch ( error ) {
+      setRoles( [] );
+      console.error( "Error al cargar las unidades operativas: ", error );
+    }
+  }, [] );
+
+  // Cargar owners al montar
+  useEffect( () => {
+    cargarRoles();
+  }, [ cargarRoles ] );
+
 
 
   const form = useForm( {
-    resolver: zodResolver( UnidadFuncionalSchema ),
+    resolver: zodResolver( usuarioSchema ),
     defaultValues: {
       mapaId: initialValues?.mapaId || 0,
       nombre: initialValues?.nombre || "",
-      siglas: initialValues?.siglas || "",
-      
+      apellidoPaterno: initialValues?.apellidoPaterno || "",
+      apellidoMaterno: initialValues?.apellidoMaterno || "",
+      correo: initialValues?.correo || "",
+      rol: initialValues?.rol || 0,
+      password: "",
+      img: initialValues?.img || "",
     },
   } );
 
@@ -39,20 +70,30 @@ export const UsuariosRegister = ( { onSubmit, initialValues } ) => {
       form.reset( {
         mapaId: initialValues.mapaId || 0,
         nombre: initialValues?.nombre || "",
-        siglas: initialValues?.siglas || "",
-        
+        apellidoPaterno: initialValues?.apellidoPaterno || "",
+        apellidoMaterno: initialValues?.apellidoMaterno || "",
+        correo: initialValues?.correo || "",
+        rol: initialValues?.rol || 0,
+        password: "",
+        img: initialValues?.img || "",
+
       } );
     } else {
       form.reset( {
         mapaId: initialValues.mapaId || 0,
-        oficina: "",
-        siglas: "",
-        
+        nombre: "",
+        apellidoPaterno: "",
+        apellidoMaterno: "",
+        correo: "",
+        rol: 0,
+        password: "",
+        img: "",
+
       } );
     }
   }, [ initialValues, form ] );
 
-  
+
 
 
   return (
@@ -66,13 +107,13 @@ export const UsuariosRegister = ( { onSubmit, initialValues } ) => {
           name="nombre"
 
           render={ ( { field } ) => (
-            <FormItem style={ { position: "relative" } } ref={containerRef}>
-              <FormLabel>Unidad operativa</FormLabel>
+            <FormItem style={ { position: "relative" } }>
+              <FormLabel>Nombres</FormLabel>
               <Input
-                placeholder="Registre  el nombre de la unidad operativa..." 
-                 { ...field }
+                placeholder="Registre los nombres del usuario..."
+                { ...field }
               />
-             
+
               <FormMessage />
             </FormItem>
           ) }
@@ -80,23 +121,89 @@ export const UsuariosRegister = ( { onSubmit, initialValues } ) => {
 
         <FormField
           control={ form.control }
-          name="siglas"
+          name="apellidoPaterno"
           render={ ( { field } ) => (
             <FormItem>
-              <FormLabel>Siglas</FormLabel>
+              <FormLabel>Apellido Paterno</FormLabel>
               <FormControl>
-                <Input placeholder="Siglas de la unidad operativa" { ...field } />
+                <Input placeholder="Registre el apellido paterno" { ...field } />
               </FormControl>
               <FormMessage />
             </FormItem>
           ) }
         />
-      
-      
+
+        <FormField
+          control={ form.control }
+          name="apellidoMaterno"
+          render={ ( { field } ) => (
+            <FormItem>
+              <FormLabel>Apellido Materno</FormLabel>
+              <FormControl>
+                <Input placeholder="Registre el apellido materno" { ...field } />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          ) }
+        />
+        <FormField
+          control={ form.control }
+          name="correo"
+          render={ ( { field } ) => (
+            <FormItem>
+              <FormLabel>Correo Electrónico</FormLabel>
+              <FormControl>
+                <Input placeholder="Registre el correo electrónico" { ...field } type="email" />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          ) }
+        />
+        <FormField
+          control={ form.control }
+          name="password"
+          render={ ( { field } ) => (
+            <FormItem>
+              <FormLabel>Contraseña</FormLabel>
+              <FormControl>
+                <Input placeholder="Ingrese contraseña" { ...field } type="password" />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          ) }
+        />
+        <FormField
+          control={ form.control }
+          name="email"
+          render={ ( { field } ) => (
+            <FormItem>
+              <FormLabel>Email</FormLabel>
+              <Select onValueChange={ field.onChange } defaultValue={ field.value }>
+                <FormControl>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select a verified email to display" />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  <SelectItem value={0}> No Seleccionado</SelectItem>
+                  {
+                    roles.map( rol => (
+                      <SelectItem key={ rol.id } value={ rol.id.toString() }>{ rol.rol }</SelectItem>
+                    ) )
+                  }
+                 
+                </SelectContent>
+              </Select>              
+              <FormMessage />
+            </FormItem>
+          ) }
+        />
+
+
         <Button type="submit" disabled={ form.formState.isSubmitting }>
           Guardar
         </Button>
       </form>
     </Form>
   );
-}
+};

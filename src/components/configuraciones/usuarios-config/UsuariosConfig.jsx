@@ -12,12 +12,6 @@ import {
   TableCell,
 } from "@/components/ui/table";
 
-
-
-
-// Suponiendo que tienes un formulario OwnerForm similar a MapaFormRegistro
-
-import { CiEdit, CiViewBoard, CiViewColumn } from 'react-icons/ci';
 import { MdOutlineDeleteForever } from 'react-icons/md';
 import { BotonRegresar } from '@/components/propios/BotonRegresar';
 
@@ -29,7 +23,8 @@ import { Input } from '@/components/ui/input';
 import { Paginacion } from '@/components/paginacion/Paginacion';
 import { UsuariosRegister } from './UsuariosRegister';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { IoEyeOffOutline, IoEyeOutline, IoEyeSharp } from 'react-icons/io5';
+import { IoEyeOutline } from 'react-icons/io5';
+import { capitalizarTexto } from '@/helpers/string';
 
 
 
@@ -274,15 +269,15 @@ export const UsuarioConfig = () => {
                       <TableCell className="whitespace-normal break-words">
                         <Avatar  >
                           <AvatarImage src="https://github.com/shadcn.png"  />
-                          <AvatarFallback>{ usuario.nombre.charAt( 0 ) + usuario.apellidoPaterno.charAt( 0 ) }</AvatarFallback>
+                          <AvatarFallback>{ usuario?.nombre?.charAt( 0 ) + usuario?.apellidoPaterno?.charAt( 0 ) }</AvatarFallback>
                         </Avatar>
                       </TableCell>
-                      <TableCell className="whitespace-normal break-words">{ usuario.nombre }</TableCell>
-                      <TableCell className="whitespace-normal break-words">{ usuario.apellidoPaterno }</TableCell>
-                      <TableCell className="whitespace-normal break-words">{ usuario.apellidoMaterno }</TableCell>
-                      <TableCell className="whitespace-normal break-words">{ usuario.correo }</TableCell>
-                      <TableCell className="whitespace-normal break-words">{ usuario.rol.rol.toLowerCase() }</TableCell>
-                      
+                      <TableCell className="whitespace-normal break-words">{ usuario?.nombre }</TableCell>
+                      <TableCell className="whitespace-normal break-words">{ usuario?.apellidoPaterno }</TableCell>
+                      <TableCell className="whitespace-normal break-words">{ usuario?.apellidoMaterno }</TableCell>
+                      <TableCell className="whitespace-normal break-words">{ usuario?.correo }</TableCell>
+                      <TableCell className="whitespace-normal break-words">{ capitalizarTexto( usuario?.rol?.rol) }</TableCell>
+
                       <TableCell>
                         <div className="flex gap-2 justify-center">
                           <Button variant="outline" onClick={ () => { setEditUsuario( usuario ); setOpen( true ); } }>
