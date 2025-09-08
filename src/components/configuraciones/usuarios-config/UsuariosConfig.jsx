@@ -17,7 +17,7 @@ import {
 
 // Suponiendo que tienes un formulario OwnerForm similar a MapaFormRegistro
 
-import { CiEdit } from 'react-icons/ci';
+import { CiEdit, CiViewBoard, CiViewColumn } from 'react-icons/ci';
 import { MdOutlineDeleteForever } from 'react-icons/md';
 import { BotonRegresar } from '@/components/propios/BotonRegresar';
 
@@ -28,6 +28,8 @@ import { Input } from '@/components/ui/input';
 
 import { Paginacion } from '@/components/paginacion/Paginacion';
 import { UsuariosRegister } from './UsuariosRegister';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { IoEyeOffOutline, IoEyeOutline, IoEyeSharp } from 'react-icons/io5';
 
 
 
@@ -66,8 +68,10 @@ export const UsuarioConfig = () => {
     try {
       const respuesta = await fetchConToken( `usuario/${ mapaSeleccionado.id }` );
 
+      console.log( { respuesta } );
+
       if ( respuesta.ok ) {
-        setUsuarios( respuesta.unidades );
+        setUsuarios( respuesta.usuarios );
 
       } else {
         setUsuarios( [] );
@@ -115,7 +119,7 @@ export const UsuarioConfig = () => {
   };
 
   // Eliminar unidad funcional
-  const eliminarUnidadFuncional = async ( unidadFuncional ) => {
+  const eliminarUsuario = async ( unidadFuncional ) => {
 
 
     const result = await Swal.fire( {
@@ -140,9 +144,9 @@ export const UsuarioConfig = () => {
     if ( respuesta.ok ) {
       setUsuarios( usuarios?.filter( o => o.id !== unidadFuncional.id ) );
       // Recargar lista
-     /*  const nuevaLista = await fetchConToken( `unidad-operativa/${ mapaSeleccionado.id }` );
-      setUnidadesFuncionales( nuevaLista.unidadesFuncionales || [] );
- */
+      /*  const nuevaLista = await fetchConToken( `unidad-operativa/${ mapaSeleccionado.id }` );
+       setUnidadesFuncionales( nuevaLista.unidadesFuncionales || [] );
+  */
       Swal.fire( {
         title: 'Confirmación de eliminación',
         text: "La unidad funcional ha sido eliminada.",
@@ -162,24 +166,24 @@ export const UsuarioConfig = () => {
     }
   };
 
-  const unidadesFuncionalesFiltradas = usuarios?.filter( unidadFuncional =>
+  const usuariosFiltrados = usuarios?.filter( unidadFuncional =>
     unidadFuncional.nombre.toLowerCase().includes( filtro.toLowerCase() ) ||
     unidadFuncional.siglas.toLowerCase().includes( filtro.toLowerCase() )
 
   );
 
-  const totalItems = unidadesFuncionalesFiltradas.length;
+  const totalItems = usuariosFiltrados.length;
 
   const mostrarTodos = itemsPorPagina === 0;
 
-  const unidadesPaginadas = mostrarTodos
-    ? unidadesFuncionalesFiltradas
-    : unidadesFuncionalesFiltradas.slice(
+  const usuariosPaginados = mostrarTodos
+    ? usuariosFiltrados
+    : usuariosFiltrados.slice(
       ( paginaActual - 1 ) * itemsPorPagina,
       paginaActual * itemsPorPagina
     );
 
-    
+
   // mostrar en consola, los errores
   useEffect( () => {
     if ( error ) {
@@ -227,7 +231,7 @@ export const UsuarioConfig = () => {
                   <DialogTrigger asChild>
                     <Button className="" onClick={ () => { setOpen( true ); setEditUsuario( null ); } }>
                       <IoIosAddCircleOutline />
-                      Agregar unidad operativa
+                      Agregar usuario
                     </Button>
                   </DialogTrigger>
                   <DialogContent  >
@@ -236,7 +240,7 @@ export const UsuarioConfig = () => {
                       { error && <span className="text-red-500">{ `Error: ${ error }` }</span> }
                     </DialogHeader>
                     <DialogDescription>
-                      Completa los campos para registrar una unidad operativa.
+                      Completa los campos para registrar un usuario.
                     </DialogDescription>
                     <UsuariosRegister
                       onSubmit={ handleSubmit }
@@ -247,31 +251,44 @@ export const UsuarioConfig = () => {
                     </DialogFooter>
                   </DialogContent>
                 </Dialog>
-
-
               </div>
 
               <Table className=" rounded-5 bg-white rounded-lg overflow-hidden border border-gray-400">
                 <TableHeader>
                   <TableRow >
                     <TableHead className="border-r border-gray-300 ">#</TableHead>
-                    <TableHead className="border-r border-gray-300 ">Unidad funcional</TableHead>
-                    <TableHead className="border-r border-gray-300 ">Siglas</TableHead>
+                    <TableHead className="border-r border-gray-300 ">Imagen</TableHead>
+                    <TableHead className="border-r border-gray-300 ">Nombres</TableHead>
+                    <TableHead className="border-r border-gray-300 ">Apellido paterno</TableHead>
+                    <TableHead className="border-r border-gray-300 ">Apellido materno</TableHead>
+                    <TableHead className="border-r border-gray-300 ">Correo</TableHead>
+                    <TableHead className="border-r border-gray-300 ">Rol</TableHead>
+                    
                     <TableHead>Acciones</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  { unidadesPaginadas.map( ( unidad, index ) => (
-                    <TableRow key={ unidad.id } className="hover:bg-gray-200">
+                  { usuariosPaginados.map( ( usuario, index ) => (
+                    <TableRow key={ usuario.id } className="hover:bg-gray-200">
                       <TableCell>{ ( paginaActual - 1 ) * itemsPorPagina + index + 1 }</TableCell>
-                      <TableCell className="whitespace-normal break-words">{ unidad.nombre }</TableCell>
-                      <TableCell>{ unidad.siglas }</TableCell>
+                      <TableCell className="whitespace-normal break-words">
+                        <Avatar  >
+                          <AvatarImage src="https://github.com/shadcn.png"  />
+                          <AvatarFallback>{ usuario.nombre.charAt( 0 ) + usuario.apellidoPaterno.charAt( 0 ) }</AvatarFallback>
+                        </Avatar>
+                      </TableCell>
+                      <TableCell className="whitespace-normal break-words">{ usuario.nombre }</TableCell>
+                      <TableCell className="whitespace-normal break-words">{ usuario.apellidoPaterno }</TableCell>
+                      <TableCell className="whitespace-normal break-words">{ usuario.apellidoMaterno }</TableCell>
+                      <TableCell className="whitespace-normal break-words">{ usuario.correo }</TableCell>
+                      <TableCell className="whitespace-normal break-words">{ usuario.rol.rol.toLowerCase() }</TableCell>
+                      
                       <TableCell>
                         <div className="flex gap-2 justify-center">
-                          <Button variant="" onClick={ () => { setEditUsuario( unidad ); setOpen( true ); } }>
-                            <CiEdit />
-                          </Button>
-                          <Button variant="destructive" onClick={ () => eliminarUnidadFuncional( unidad ) }>
+                          <Button variant="outline" onClick={ () => { setEditUsuario( usuario ); setOpen( true ); } }>
+                            <IoEyeOutline />
+                          </Button>                         
+                          <Button variant="destructive" onClick={ () => eliminarUsuario( usuario ) }>
                             <MdOutlineDeleteForever />
                           </Button>
                         </div>
@@ -281,13 +298,13 @@ export const UsuarioConfig = () => {
                 </TableBody>
               </Table>
 
-               <Paginacion
-                 totalItems={ totalItems }
-                 itemsPorPagina={ itemsPorPagina }
-                 paginaActual={ paginaActual }
-                 setPaginaActual={ setPaginaActual }
-                 setItemsPorPagina={ setItemsPorPagina }
-               />
+              <Paginacion
+                totalItems={ totalItems }
+                itemsPorPagina={ itemsPorPagina }
+                paginaActual={ paginaActual }
+                setPaginaActual={ setPaginaActual }
+                setItemsPorPagina={ setItemsPorPagina }
+              />
 
             </div>
           )
