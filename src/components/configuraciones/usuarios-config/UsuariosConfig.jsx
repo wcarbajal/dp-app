@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogTrigger, DialogDescription } from "@/components/ui/dialog";
 import { IoIosAddCircleOutline, IoIosClose, IoIosSearch } from "react-icons/io";
@@ -25,10 +25,13 @@ import { UsuariosRegister } from './UsuariosRegister';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { IoEyeOutline } from 'react-icons/io5';
 import { capitalizarTexto } from '@/helpers/string';
+import { AuthContext } from '@/auth/AuthContext';
 
 
 
 export const UsuarioConfig = () => {
+   const { auth } = useContext( AuthContext );
+   
 
   const [ mapas, setMapas ] = useState( null );
   const [ mapaSeleccionado, setMapaSeleccionado ] = useState( null );
@@ -62,11 +65,18 @@ export const UsuarioConfig = () => {
     if ( !mapaSeleccionado ) return;
     try {
       const respuesta = await fetchConToken( `usuario/${ mapaSeleccionado.id }` );
+      
+      let usuariosPermitidos = [];
 
-      console.log( { respuesta } );
+      if ( auth.rol !== 'ADMIN' ) {
+         usuariosPermitidos = respuesta.usuarios.filter( usuario => usuario.rol.rol !== 'ADMIN' );
+        
+      }else{
+          usuariosPermitidos = respuesta.usuarios;
+      }
 
       if ( respuesta.ok ) {
-        setUsuarios( respuesta.usuarios );
+        setUsuarios( usuariosPermitidos );
 
       } else {
         setUsuarios( [] );
@@ -75,7 +85,7 @@ export const UsuarioConfig = () => {
       setUsuarios( [] );
       console.error( "Error al cargar las unidades operativas: ", error );
     }
-  }, [ mapaSeleccionado ] );
+  }, [ mapaSeleccionado, auth ] );
 
   // Cargar owners al montar
   useEffect( () => {

@@ -79,7 +79,7 @@ export const OwnersConfig = () => {
       let respuesta;
       if ( editOwner ) {
         respuesta = await fetchConToken( `owners/actualizar/${ editOwner.id }`, data, "PUT" );
-        console.log( { respuesta } );
+        
 
       } else {
         respuesta = await fetchConToken( "owners/registrar", data, "POST" );

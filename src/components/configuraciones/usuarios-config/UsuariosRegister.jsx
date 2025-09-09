@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback,  useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
@@ -16,14 +16,16 @@ import { usuarioSchema } from '@/schema/UsuarioSchema';
 import { fetchConToken } from '@/helpers/fetch';
 import { Select } from '@radix-ui/react-select';
 import { SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { AuthContext } from '@/auth/AuthContext';
 
 
 
 export const UsuariosRegister = ( { onSubmit, initialValues } ) => {
 
-  const [ roles, setRoles ] = useState( [] );
+ 
   
 
+  const [ roles, setRoles ] = useState( [] );
 
   const cargarRoles = useCallback( async () => {
 
@@ -31,6 +33,8 @@ export const UsuariosRegister = ( { onSubmit, initialValues } ) => {
       const respuesta = await fetchConToken( "rol" );
 
       console.log( { respuesta } );
+
+      
 
       if ( respuesta.ok ) {
         setRoles( respuesta.roles );
@@ -177,11 +181,11 @@ export const UsuariosRegister = ( { onSubmit, initialValues } ) => {
           name="email"
           render={ ( { field } ) => (
             <FormItem>
-              <FormLabel>Email</FormLabel>
+              <FormLabel>Rol</FormLabel>
               <Select onValueChange={ field.onChange } defaultValue={ field.value }>
                 <FormControl>
                   <SelectTrigger>
-                    <SelectValue placeholder="Select a verified email to display" />
+                    <SelectValue placeholder="Selecione un rol" />
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>

@@ -13,8 +13,12 @@ const initialState = {
   id: null,
   checking: true,
   logged: false,
-  name: null,
-  correo: null
+  nombre: null,
+  apellidoPaterno: null,
+  apellidoMaterno: null,
+  correo: null,
+  img: null,
+  rol: null
 };
 
 export const AuthProvider = ( { children } ) => {
@@ -25,6 +29,7 @@ export const AuthProvider = ( { children } ) => {
   const login = async ( correo, password ) => {
 
     const respuesta = await fetchSinToken( 'login', { correo, password }, 'POST' );
+    
 
     if ( respuesta.ok ) {
 
@@ -35,24 +40,31 @@ export const AuthProvider = ( { children } ) => {
         id: usuario.id,
         checking: false,
         logged: true,
-        name: usuario.nombre,
-        correo: usuario.correo
+        nombre: usuario.nombre,
+        apellidoPaterno: usuario.apellidoPaterno,
+        apellidoMaterno: usuario.apellidoMaterno,
+        rol: usuario.rol.rol,
+        correo: usuario.correo,
+
       } );
-      
+      console.log( "Autenticado!", usuario );
+
     }
     return respuesta.ok;
 
 
   };
 
-  const register = async ( nombre, correo, password, rol  ) => {
+  const register = async ( nombre, correo, password, rol, apellidoMaterno, apellidoPaterno ) => {
 
     const respuesta = await fetchSinToken( 'login/registrar',
       {
         nombre,
         correo,
         password,
-        rol: rol || 'USER'
+        apellidoMaterno,
+        apellidoPaterno,
+        rol
       },
       'POST' );
 
@@ -65,7 +77,10 @@ export const AuthProvider = ( { children } ) => {
         uid: usuario.id,
         checking: false,
         logged: true,
-        name: usuario.nombre,
+        nombre: usuario.nombre,
+        apellidoPaterno: usuario.apellidoPaterno,
+        apellidoMaterno: usuario.apellidoMaterno,
+        rol: usuario.rol.rol,
         correo: usuario.email
       } );
       console.log( "Autenticado!" );
@@ -86,7 +101,7 @@ export const AuthProvider = ( { children } ) => {
         id: null,
         checking: false,
         logged: false,
-        name: null,
+        nombre: null,
         correo: null
       } );
       return false;
@@ -101,7 +116,10 @@ export const AuthProvider = ( { children } ) => {
         id: usuario.id,
         checking: false,
         logged: true,
-        name: usuario.nombre,
+        nombre: usuario.nombre,
+        apellidoPaterno: usuario.apellidoPaterno,
+        apellidoMaterno: usuario.apellidoMaterno,
+        rol: usuario.rol?.rol,
         correo: usuario.correo
       } );
       console.log( "Autenticado con token renovado!" );
@@ -111,7 +129,7 @@ export const AuthProvider = ( { children } ) => {
         id: null,
         checking: false,
         logged: false,
-        name: null,
+        nombre: null,
         correo: null
       } );
     }
@@ -124,7 +142,7 @@ export const AuthProvider = ( { children } ) => {
       id: null,
       checking: false,
       logged: false,
-      name: null,
+      nombre: null,
       correo: null
 
     } );

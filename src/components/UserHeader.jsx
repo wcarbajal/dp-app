@@ -27,7 +27,7 @@ export const UserHeader = () => {
       </Avatar>
 
       <div className="ml-4">
-        <h2 className="text-sm font-semibold">{ auth?.name }</h2>
+        <h2 className="text-sm font-semibold">{ auth?.nombre }</h2>
         <p className="text-xs text-gray-500">{ auth?.correo }</p>
       </div>
 
