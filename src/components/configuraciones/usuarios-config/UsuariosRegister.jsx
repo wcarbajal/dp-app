@@ -97,7 +97,12 @@ export const UsuariosRegister = ( { onSubmit, initialValues } ) => {
     }
   }, [ initialValues, form ] );
 
-
+// mostrar los erores del formulario en consola
+  useEffect( () => {
+    if ( form.formState.errors ) {
+      console.log( form.formState.errors );
+    }
+  }, [ form.formState.errors ] );
 
 
   return (
@@ -178,11 +183,11 @@ export const UsuariosRegister = ( { onSubmit, initialValues } ) => {
         />
         <FormField
           control={ form.control }
-          name="email"
+          name="rol"
           render={ ( { field } ) => (
             <FormItem>
               <FormLabel>Rol</FormLabel>
-              <Select onValueChange={ field.onChange } defaultValue={ field.value }>
+              <Select onValueChange={value => field.onChange(Number(value))} defaultValue={ field.value?.toString() }>
                 <FormControl>
                   <SelectTrigger>
                     <SelectValue placeholder="Selecione un rol" />
@@ -192,7 +197,7 @@ export const UsuariosRegister = ( { onSubmit, initialValues } ) => {
                   <SelectItem value={0}> No Seleccionado</SelectItem>
                   {
                     roles.map( rol => (
-                      <SelectItem key={ rol.id } value={ rol.id.toString() }>{ rol.rol }</SelectItem>
+                      <SelectItem key={ rol.id } value={ (rol.id).toString() }>{ rol.rol }</SelectItem>
                     ) )
                   }
                  

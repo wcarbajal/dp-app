@@ -92,8 +92,12 @@ export const UsuarioConfig = () => {
     cargarUsuarios();
   }, [ cargarUsuarios ] );
 
+  // mostra
+
   // Crear o editar owner
   const handleSubmit = async ( data ) => {
+
+    console.log( { data } );
 
 
     try {
