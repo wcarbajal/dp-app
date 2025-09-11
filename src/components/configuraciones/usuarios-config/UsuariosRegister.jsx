@@ -1,4 +1,4 @@
-import { useCallback,  useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
@@ -12,18 +12,21 @@ import {
   FormDescription,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { usuarioSchema } from '@/schema/UsuarioSchema';
+
 import { fetchConToken } from '@/helpers/fetch';
 import { Select } from '@radix-ui/react-select';
 import { SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { AuthContext } from '@/auth/AuthContext';
+import { usuarioSchema } from '@/schema/UsuarioSchema';
 
 
 
 export const UsuariosRegister = ( { onSubmit, initialValues } ) => {
 
- 
-  
+  console.log( { initialValues } );
+
+
+
 
   const [ roles, setRoles ] = useState( [] );
 
@@ -34,7 +37,7 @@ export const UsuariosRegister = ( { onSubmit, initialValues } ) => {
 
       console.log( { respuesta } );
 
-      
+
 
       if ( respuesta.ok ) {
         setRoles( respuesta.roles );
@@ -56,48 +59,50 @@ export const UsuariosRegister = ( { onSubmit, initialValues } ) => {
 
 
   const form = useForm( {
-    resolver: zodResolver( usuarioSchema ),
+    resolver: zodResolver( usuarioSchema  ),
     defaultValues: {
-      mapaId: initialValues?.mapaId || 0,
+      mapaId: initialValues.mapaId,
       nombre: initialValues?.nombre || "",
       apellidoPaterno: initialValues?.apellidoPaterno || "",
       apellidoMaterno: initialValues?.apellidoMaterno || "",
       correo: initialValues?.correo || "",
-      rol: initialValues?.rol || 0,
+      rol: initialValues?.rol?.id || 0,
       password: "",
       img: initialValues?.img || "",
     },
   } );
 
+  console.log( " Form values", form.getValues() );
+
   useEffect( () => {
-    if ( initialValues ) {
+    if ( initialValues.mapaId ) {
       form.reset( {
-        mapaId: initialValues.mapaId || 0,
+        mapaId: initialValues.mapaId,
         nombre: initialValues?.nombre || "",
         apellidoPaterno: initialValues?.apellidoPaterno || "",
         apellidoMaterno: initialValues?.apellidoMaterno || "",
         correo: initialValues?.correo || "",
-        rol: initialValues?.rol || 0,
+        rol: initialValues?.rol?.id.toString() || "0",
         password: "",
         img: initialValues?.img || "",
 
       } );
     } else {
       form.reset( {
-        mapaId: initialValues.mapaId || 0,
-        nombre: "",
-        apellidoPaterno: "",
-        apellidoMaterno: "",
-        correo: "",
-        rol: 0,
+        mapaId: initialValues.mapas[ 0 ]?.id || 0,
+        nombre: initialValues?.nombre || "",
+        apellidoPaterno: initialValues?.apellidoPaterno || "",
+        apellidoMaterno: initialValues?.apellidoMaterno || "",
+        correo: initialValues?.correo || "",
+        rol: initialValues?.rol?.id.toString() || "0",
         password: "",
-        img: "",
+        img: initialValues?.img || "",
 
       } );
     }
   }, [ initialValues, form ] );
 
-// mostrar los erores del formulario en consola
+  // mostrar los erores del formulario en consola
   useEffect( () => {
     if ( form.formState.errors ) {
       console.log( form.formState.errors );
@@ -187,22 +192,24 @@ export const UsuariosRegister = ( { onSubmit, initialValues } ) => {
           render={ ( { field } ) => (
             <FormItem>
               <FormLabel>Rol</FormLabel>
-              <Select onValueChange={value => field.onChange(Number(value))} defaultValue={ field.value?.toString() }>
+              <Select
+                onValueChange={ value => field.onChange( Number( value ) ) }
+                value={ field.value?.toString() }
+              >
                 <FormControl>
                   <SelectTrigger>
-                    <SelectValue placeholder="Selecione un rol" />
+                    <SelectValue placeholder="Seleccione un rol" />
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  <SelectItem value={0}> No Seleccionado</SelectItem>
-                  {
-                    roles.map( rol => (
-                      <SelectItem key={ rol.id } value={ (rol.id).toString() }>{ rol.rol }</SelectItem>
-                    ) )
-                  }
-                 
+                  <SelectItem value="0">No Seleccionado</SelectItem>
+                  { roles.map( rol => (
+                    <SelectItem key={ rol.id } value={ rol.id.toString() }>
+                      { rol.rol }
+                    </SelectItem>
+                  ) ) }
                 </SelectContent>
-              </Select>              
+              </Select>
               <FormMessage />
             </FormItem>
           ) }

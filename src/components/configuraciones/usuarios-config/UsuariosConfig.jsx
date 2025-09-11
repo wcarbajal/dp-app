@@ -102,24 +102,27 @@ export const UsuarioConfig = () => {
 
     try {
       let respuesta;
+
       if ( editUsuario ) {
-        respuesta = await fetchConToken( `unidad-operativa/${ editUsuario.id }`, data, "PUT" );
+        respuesta = await fetchConToken( `usuario/${ editUsuario.id }`, data, "PUT" );
 
 
       } else {
-        respuesta = await fetchConToken( "unidad-operativa", data, "POST" );
+        respuesta = await fetchConToken( `usuario/${ mapaSeleccionado.id }`, data, "POST" );
 
       }
+      console.log("Respuesta:", respuesta);
       if ( respuesta.ok ) {
+
         setOpen( false );
         setError( "" );
         setEditUsuario( null );
         // Recargar lista
-        const nuevaLista = await fetchConToken( `unidad-operativa/${ mapaSeleccionado.id }` );
+        const nuevaLista = await fetchConToken( `usuario/${ mapaSeleccionado.id }` );
         setUsuarios( nuevaLista.unidadesFuncionales || [] );
 
       } else {
-        setError( respuesta.msg || "Error al cargar unidades funcionales" );
+        setError( respuesta.msg || "Error al usuarios unidades funcionales" );
       }
     } catch ( error ) {
       console.log( error );
