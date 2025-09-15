@@ -597,6 +597,14 @@
     style-mod "^4.1.0"
     w3c-keyname "^2.2.4"
 
+"@cortex-js/compute-engine@0.29.1":
+  version "0.29.1"
+  resolved "https://registry.yarnpkg.com/@cortex-js/compute-engine/-/compute-engine-0.29.1.tgz#c7032750bf59673a0cbc7d10645bd8095c30d3b0"
+  integrity sha512-bCpaGW+Th+6lrTEDom3mNInfu3hu2N79FpUuqdVyvhE1Np4O447O/1gsgqLAFqVjg58cGN0FCAxf8gXkQNF4CQ==
+  dependencies:
+    complex-esm "^2.1.1-esm1"
+    decimal.js "^10.4.3"
+
 "@dnd-kit/accessibility@^3.1.1":
   version "3.1.1"
   resolved "https://registry.yarnpkg.com/@dnd-kit/accessibility/-/accessibility-3.1.1.tgz#3b4202bd6bb370a0730f6734867785919beac6af"
@@ -2827,6 +2835,11 @@ commander@^14.0.0:
   resolved "https://registry.yarnpkg.com/commander/-/commander-14.0.0.tgz#f244fc74a92343514e56229f16ef5c5e22ced5e9"
   integrity sha512-2uM9rYjPvyq39NwLRqaiLtWHyDC1FvryJDa2ATTVims5YAS4PupsEQsDvP14FqhFr0P49CYDugi59xaxJlTXRA==
 
+complex-esm@^2.1.1-esm1:
+  version "2.1.1-esm1"
+  resolved "https://registry.yarnpkg.com/complex-esm/-/complex-esm-2.1.1-esm1.tgz#06cc84fe6e1fec299bf8b7a8e759030efe808b0a"
+  integrity sha512-IShBEWHILB9s7MnfyevqNGxV0A1cfcSnewL/4uPFiSxkcQL4Mm3FxJ0pXMtCXuWLjYz3lRRyk6OfkeDZcjD6nw==
+
 component-event@^0.2.1:
   version "0.2.1"
   resolved "https://registry.yarnpkg.com/component-event/-/component-event-0.2.1.tgz#8262d2be886c999ad4b85ed3e0dfb3b3e98ca9d3"
@@ -3066,6 +3079,11 @@ decimal.js-light@^2.4.1:
   version "2.5.1"
   resolved "https://registry.yarnpkg.com/decimal.js-light/-/decimal.js-light-2.5.1.tgz#134fd32508f19e208f4fb2f8dac0d2626a867934"
   integrity sha512-qIMFpTMZmny+MMIitAB6D7iVPEorVw6YQRWkvarTkT4tBeSLLiHzcwj6q0MmYSFCiVpiqPJTJEYIrpcPzVEIvg==
+
+decimal.js@^10.4.3:
+  version "10.6.0"
+  resolved "https://registry.yarnpkg.com/decimal.js/-/decimal.js-10.6.0.tgz#e649a43e3ab953a72192ff5983865e509f37ed9a"
+  integrity sha512-YpgQiITW3JXGntzdUmyUR1V812Hn8T1YVXhCu+wO3OpS4eU9l4YdD3qjyiKdV6mvV29zapkMeD390UVEf2lkUg==
 
 dedent@^1.6.0:
   version "1.6.0"
@@ -4773,6 +4791,13 @@ math-intrinsics@^1.1.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/math-intrinsics/-/math-intrinsics-1.1.0.tgz#a0dd74be81e2aa5c2f27e65ce283605ee4e2b7f9"
   integrity sha512-/IXtbwEk5HTPyEwyKX6hGkYXxM9nbj64B+ilVJnC/R6B0pH5G4V3b0pVbL7DBj4tkhBAppbQUlf6F6Xl9LHu1g==
+
+mathlive@^0.107.0:
+  version "0.107.0"
+  resolved "https://registry.yarnpkg.com/mathlive/-/mathlive-0.107.0.tgz#1f3fa2ae688d58f87b7e8484225ebb8167c12424"
+  integrity sha512-mi6iwBZc/2hi3ui5MedGu/L3XU1dwKWhdwMRZ2CtdSsxwVbRm1WDHKQssczjwxBb7Ae59kL5AMrZnF1XNPY67Q==
+  dependencies:
+    "@cortex-js/compute-engine" "0.29.1"
 
 media-engine@^1.0.3:
   version "1.0.3"

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -7,6 +7,8 @@ import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from "
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+//import "mathlive/dist/mathlive.min.css";
+import { MathfieldElement } from "mathlive";
 
 
 // Datos de muestra basados en el modelo Prisma
@@ -71,6 +73,14 @@ const resultadoSchema = z.object( {
 } );
 
 export function IndicadorConfig() {
+
+  const mathFieldRef = useRef( null );
+
+  // Para guardar el valor de la fórmula
+  const handleFormulaChange = ( evt ) => {
+    const latex = evt.target.value; // LaTeX string
+    form.setValue( "formula", latex );
+  };
 
   const form = useForm( {
     resolver: zodResolver( indicadorSchema ),
@@ -287,8 +297,14 @@ export function IndicadorConfig() {
                   <FormItem>
                     <FormLabel>Fórmula</FormLabel>
                     <FormControl>
-                      <Input { ...field } />
+                      <math-field
+                        ref={ mathFieldRef }
+                        value={ field.value }
+                        onInput={ handleFormulaChange }
+                        style={ { width: "100%", minHeight: "40px", border: "1px solid #ccc", borderRadius: "6px", padding: "8px" } }
+                      />
                     </FormControl>
+                    <FormMessage />
                   </FormItem>
                 ) }
               />
