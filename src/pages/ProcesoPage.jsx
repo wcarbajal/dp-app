@@ -21,13 +21,17 @@ export const ProcesoPage = () => {
   const [ ownersList, setOwnersList ] = useState( [] );
 
   const cargarDetalle = useCallback( async () => {
+    console.log("Cargando detalle del proceso con ID:", id);
     setLoading( true );
     try {
-      const consulta = await fetchConToken( `procesos/detalle/${ id }` );
-      console.log( 'Respuesta del backend:', consulta );
+      const consulta = await fetchConToken( `procesos/detalle/${ id }` ); 
+      console.log( 'Respuesta del backend de los procesos:', consulta );
       setDetalleProceso( consulta );
 
-      const consultaOwners = await fetchConToken( "owners" );
+      console.log( 'Detalle del proceso cargado:', detalleProceso?.mapaId );
+
+      const consultaOwners = await fetchConToken( `owners/${ 1 }`, {}, 'GET' );
+      console.log( 'Respuesta del backend de los dueños:', consultaOwners );
       setOwnersList( consultaOwners.owners );
 
     } catch ( error ) {
@@ -36,7 +40,7 @@ export const ProcesoPage = () => {
     } finally {
       setLoading( false );
     }
-  }, [ id ] );
+  }, [detalleProceso?.mapaId, id] );
 
   useEffect( () => {
     if ( id ) cargarDetalle();

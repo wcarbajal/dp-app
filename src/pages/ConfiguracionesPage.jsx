@@ -49,6 +49,13 @@ export const ConfiguracionesPage = () => {
       cantidad: cantidades.usuarios,
 
     },
+    
+    {
+      ruta: '/config/indicadores',
+      objeto: 'Indicadores',
+      cantidad: cantidades.reportes,
+
+    },
     {
       ruta: '/config/reportes',
       objeto: 'Reportes',

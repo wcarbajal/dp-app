@@ -19,6 +19,9 @@ import { OwnersConfig } from '@/components/configuraciones/owners-config/OwnersC
 import { PerfilUser } from '@/pages/PerfilUser';
 import { UnidadFuncionalConfig } from '@/components/configuraciones/unidad-funcional/UnidadFuncionalConfig';
 import { UsuarioConfig } from '@/components/configuraciones/usuarios-config/UsuariosConfig';
+import { IndicadoresConfig } from '@/components/configuraciones/indicadores-config/IndicadoresConfig';
+import { IndicadorConfig } from '@/components/configuraciones/indicadores-config/IndicadorConfig';
+
 
 
 
@@ -38,12 +41,14 @@ export const PrincipalRouter = () => {
         <Route path="config" element={ <ConfiguracionesPage /> } />
         <Route path="config/procesos" element={ <ProcesosConfig /> } />
         <Route path="config/usuarios" element={ <UsuarioConfig /> } />
-       {/*  <Route path="config/reportes" element={ <ReportesConfig /> } /> */}
+        {/*  <Route path="config/reportes" element={ <ReportesConfig /> } /> */ }
         <Route path="config/mapa" element={ <MapaConfig /> } />
         <Route path="config/owners" element={ <OwnersConfig /> } />
         <Route path="perfil" element={ <PerfilUser /> } />
         <Route path="config/unidades-funcionales" element={ <UnidadFuncionalConfig /> } />
-        
+        <Route path="config/indicadores" element={ <IndicadoresConfig /> } />
+        <Route path="config/indicador/:id" element={ <IndicadorConfig /> } />
+
 
 
 

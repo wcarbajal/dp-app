@@ -26,6 +26,8 @@ import Swal from 'sweetalert2';
 
 export const DescripcionProceso = ( { proceso, onSubmit: onSubmitProp, ownersOptions, onUpdated } ) => {
 
+  console.log('ownersOptions:', ownersOptions);
+
 
 
   const form = useForm( {
@@ -232,12 +234,12 @@ export const DescripcionProceso = ( { proceso, onSubmit: onSubmitProp, ownersOpt
                     <FormControl className="w-full">
                       <ReactSelect
                         isMulti
-                        options={ ownersOptions.map( d => ( { value: d.id.toString(), label: d.oficina } ) ) }
+                        options={ ownersOptions.map( d => ( { value: d.id.toString(), label: d.unidadOperativa.nombre } ) ) }
                         value={
                           Array.isArray( field.value )
                             ? ownersOptions
                               .filter( d => field.value.includes( d.id.toString() ) )
-                              .map( d => ( { value: d.id.toString(), label: d.oficina } ) )
+                              .map( d => ( { value: d.id.toString(), label: d.unidadOperativa.nombre } ) )
                             : []
                         }
                         onChange={ selected => {

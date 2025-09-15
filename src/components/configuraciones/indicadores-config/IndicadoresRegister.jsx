@@ -21,7 +21,7 @@ import { usuarioSchema } from '@/schema/UsuarioSchema';
 
 
 
-export const UsuariosRegister = ( { onSubmit, initialValues } ) => {
+export const InidicadoresRegister = ( { onSubmit, initialValues } ) => {
 
   const [ roles, setRoles ] = useState( [] );
 
@@ -50,7 +50,7 @@ export const UsuariosRegister = ( { onSubmit, initialValues } ) => {
 
 
   const form = useForm( {
-    resolver: zodResolver( usuarioSchema  ),
+    resolver: zodResolver( usuarioSchema ),
     defaultValues: {
       mapaId: initialValues.mapaId,
       nombre: initialValues?.nombre || "",
@@ -63,7 +63,7 @@ export const UsuariosRegister = ( { onSubmit, initialValues } ) => {
     },
   } );
 
-  
+
 
   useEffect( () => {
     if ( initialValues.mapaId ) {

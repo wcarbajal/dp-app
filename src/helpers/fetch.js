@@ -42,13 +42,13 @@ export const fetchConToken = async (endpoint, data, method = 'GET') => {
     const url = `${baseUrl}/${endpoint}`;
     const token = localStorage.getItem('token') || '';
 
+    let respuesta;
     if (method === 'GET') {
-      const respuesta = await fetch(url, {
+      respuesta = await fetch(url, {
         headers: {
           'x-token': token
         }
       });
-      return await respuesta.json();
     } else {
       let options = {
         method,
@@ -64,9 +64,14 @@ export const fetchConToken = async (endpoint, data, method = 'GET') => {
         options.body = JSON.stringify(data);
       }
 
-      const respuesta = await fetch(url, options);
-      return await respuesta.json();
+      respuesta = await fetch(url, options);
     }
+
+    const json = await respuesta.json();
+    return {
+      ...json,
+      status: respuesta.status // <-- aquí agregas el status
+    };
   } catch (error) {
     console.log('Error in fetchConToken:', error);
     throw new Error('Error in fetchConToken: ' + error.message);

@@ -30,8 +30,8 @@ import { AuthContext } from '@/auth/AuthContext';
 
 
 export const UsuarioConfig = () => {
-   const { auth } = useContext( AuthContext );
-   
+  const { auth } = useContext( AuthContext );
+
 
   const [ mapas, setMapas ] = useState( null );
   const [ mapaSeleccionado, setMapaSeleccionado ] = useState( null );
@@ -65,14 +65,14 @@ export const UsuarioConfig = () => {
     if ( !mapaSeleccionado ) return;
     try {
       const respuesta = await fetchConToken( `usuario/${ mapaSeleccionado.id }` );
-      
+
       let usuariosPermitidos = [];
 
       if ( auth.rol !== 'ADMIN' ) {
-         usuariosPermitidos = respuesta.usuarios.filter( usuario => usuario.rol.rol !== 'ADMIN' );
-        
-      }else{
-          usuariosPermitidos = respuesta.usuarios;
+        usuariosPermitidos = respuesta.usuarios.filter( usuario => usuario.rol.rol !== 'ADMIN' );
+
+      } else {
+        usuariosPermitidos = respuesta.usuarios;
       }
 
       if ( respuesta.ok ) {
@@ -97,7 +97,7 @@ export const UsuarioConfig = () => {
   // Crear o editar owner
   const handleSubmit = async ( data ) => {
 
-    console.log( { data } );
+    
 
 
     try {
@@ -111,7 +111,8 @@ export const UsuarioConfig = () => {
         respuesta = await fetchConToken( `usuario/${ mapaSeleccionado.id }`, data, "POST" );
 
       }
-      console.log("Respuesta:", respuesta);
+      
+
       if ( respuesta.ok ) {
 
         setOpen( false );
@@ -119,10 +120,11 @@ export const UsuarioConfig = () => {
         setEditUsuario( null );
         // Recargar lista
         const nuevaLista = await fetchConToken( `usuario/${ mapaSeleccionado.id }` );
-        setUsuarios( nuevaLista.unidadesFuncionales || [] );
+        
+        setUsuarios( nuevaLista.usuarios || [] );
 
       } else {
-        setError( respuesta.msg || "Error al usuarios unidades funcionales" );
+        setError( respuesta.msg || "Error al registrar/actualizar usuarios" );
       }
     } catch ( error ) {
       console.log( error );
@@ -131,7 +133,7 @@ export const UsuarioConfig = () => {
   };
 
   // Eliminar unidad funcional
-  const eliminarUsuario = async ( unidadFuncional ) => {
+  const eliminarUsuario = async ( usuario ) => {
 
 
     const result = await Swal.fire( {
@@ -151,14 +153,11 @@ export const UsuarioConfig = () => {
     if ( !result.isConfirmed ) return;
 
     //eliminacion
-    const respuesta = await fetchConToken( `unidad-operativa/eliminar/${ unidadFuncional.id }`, {}, "PUT" );
+    const respuesta = await fetchConToken( `usuario/${ usuario.id }`, {}, "DELETE" );
 
     if ( respuesta.ok ) {
-      setUsuarios( usuarios?.filter( o => o.id !== unidadFuncional.id ) );
-      // Recargar lista
-      /*  const nuevaLista = await fetchConToken( `unidad-operativa/${ mapaSeleccionado.id }` );
-       setUnidadesFuncionales( nuevaLista.unidadesFuncionales || [] );
-  */
+      setUsuarios( usuarios?.filter( o => o.id !== usuario.id ) );     
+ 
       Swal.fire( {
         title: 'Confirmación de eliminación',
         text: "La unidad funcional ha sido eliminada.",
@@ -168,12 +167,22 @@ export const UsuarioConfig = () => {
         customClass: {
           confirmButton: 'bg-primary text-primary-foreground shadow-xs hover:bg-primary/90',
         }
-      } );
-
-
-      //setUnidadesFuncionales( nuevaLista.unidadesFuncionales || [] );
+      } );      
 
     } else {
+     // console.error( "Error al eliminar unidad funcional: ", respuesta );
+      if ( respuesta.status === 401 ) {
+        Swal.fire( {
+          title: 'Error de autorización',
+          text: "No tienes permiso para eliminar este usuario.",
+          icon: 'error',
+          confirmButtonColor: '#2A2A2A',
+          confirmButtonText: 'Aceptar',
+          customClass: {
+            confirmButton: 'bg-primary text-primary-foreground shadow-xs hover:bg-primary/90',
+          }
+        } );
+      }
       setError( respuesta.msg || "Error al eliminar unidad funcional" );
     }
   };
@@ -275,7 +284,7 @@ export const UsuarioConfig = () => {
                     <TableHead className="border-r border-gray-300 ">Apellido materno</TableHead>
                     <TableHead className="border-r border-gray-300 ">Correo</TableHead>
                     <TableHead className="border-r border-gray-300 ">Rol</TableHead>
-                    
+
                     <TableHead>Acciones</TableHead>
                   </TableRow>
                 </TableHeader>
@@ -285,7 +294,7 @@ export const UsuarioConfig = () => {
                       <TableCell>{ ( paginaActual - 1 ) * itemsPorPagina + index + 1 }</TableCell>
                       <TableCell className="whitespace-normal break-words">
                         <Avatar  >
-                          <AvatarImage src="https://github.com/shadcn.png"  />
+                          <AvatarImage src="https://github.com/shadcn.png" />
                           <AvatarFallback>{ usuario?.nombre?.charAt( 0 ) + usuario?.apellidoPaterno?.charAt( 0 ) }</AvatarFallback>
                         </Avatar>
                       </TableCell>
@@ -293,13 +302,13 @@ export const UsuarioConfig = () => {
                       <TableCell className="whitespace-normal break-words">{ usuario?.apellidoPaterno }</TableCell>
                       <TableCell className="whitespace-normal break-words">{ usuario?.apellidoMaterno }</TableCell>
                       <TableCell className="whitespace-normal break-words">{ usuario?.correo }</TableCell>
-                      <TableCell className="whitespace-normal break-words">{ capitalizarTexto( usuario?.rol?.rol) }</TableCell>
+                      <TableCell className="whitespace-normal break-words">{ capitalizarTexto( usuario?.rol?.rol ) }</TableCell>
 
                       <TableCell>
                         <div className="flex gap-2 justify-center">
                           <Button variant="outline" onClick={ () => { setEditUsuario( usuario ); setOpen( true ); } }>
                             <IoEyeOutline />
-                          </Button>                         
+                          </Button>
                           <Button variant="destructive" onClick={ () => eliminarUsuario( usuario ) }>
                             <MdOutlineDeleteForever />
                           </Button>
