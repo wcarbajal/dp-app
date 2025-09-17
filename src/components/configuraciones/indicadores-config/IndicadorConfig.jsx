@@ -4,12 +4,11 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-//import "mathlive/dist/mathlive.min.css";
 import { MathfieldElement } from "mathlive";
-
 
 // Datos de muestra basados en el modelo Prisma
 const indicadorDemo = {
@@ -64,6 +63,7 @@ const indicadorSchema = z.object( {
   lineaBase: z.string().optional(),
 } );
 
+
 // Zod schema para validación de Resultado
 const resultadoSchema = z.object( {
   denominacion: z.string().optional(),
@@ -76,9 +76,11 @@ export function IndicadorConfig() {
 
   const mathFieldRef = useRef( null );
 
+
   // Para guardar el valor de la fórmula
   const handleFormulaChange = ( evt ) => {
     const latex = evt.target.value; // LaTeX string
+    console.log( "Fórmula en LaTeX:", latex );
     form.setValue( "formula", latex );
   };
 
@@ -209,7 +211,9 @@ export function IndicadorConfig() {
   };
 
   return (
-    <div className="flex flex-col gap-5 max-w-2xl mx-auto mt-8">
+    <div className="flex flex-col gap-5 max-w-2xl mx-auto mt-8"
+      style={ { minHeight: "90vh", paddingBottom: "200px" } }
+    >
       <Card>
         <CardHeader>
           <CardTitle>Editar Indicador</CardTitle>
@@ -217,79 +221,84 @@ export function IndicadorConfig() {
         <CardContent>
           <Form { ...form }>
             <form onSubmit={ form.handleSubmit( handleSubmit ) } className="space-y-4">
+              <div className="grid grid-cols-4 gap-4">
+                <FormField
+                  control={ form.control }
+                  name="codigo"
+                  render={ ( { field } ) => (
+                    <FormItem>
+                      <FormLabel>Código</FormLabel>
+                      <FormControl>
+                        <Input { ...field } />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  ) }
+                />
+                <FormField
+                  control={ form.control }
+                  name="nombre"
 
-              <FormField
-                control={ form.control }
-                name="codigo"
-                render={ ( { field } ) => (
-                  <FormItem>
-                    <FormLabel>Código</FormLabel>
-                    <FormControl>
-                      <Input { ...field } />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                ) }
-              />
-              <FormField
-                control={ form.control }
-                name="nombre"
-                render={ ( { field } ) => (
-                  <FormItem className="col-span-2">
-                    <FormLabel>Nombre</FormLabel>
-                    <FormControl>
-                      <Input { ...field } />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                ) }
-              />
-              <FormField
-                control={ form.control }
-                name="tipoNivel"
-                render={ ( { field } ) => (
-                  <FormItem>
-                    <FormLabel>Tipo de Nivel</FormLabel>
-                    <FormControl>
-                      <select { ...field } className="w-full border rounded p-2">
-                        <option value="OEI">OEI</option>
-                        <option value="AEI">AEI</option>
-                        <option value="IO">IO</option>
-                      </select>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                ) }
-              />
-              <FormField
-                control={ form.control }
-                name="estado"
-                render={ ( { field } ) => (
-                  <FormItem>
-                    <FormLabel>Estado</FormLabel>
-                    <FormControl>
-                      <input
-                        type="checkbox"
-                        checked={ field.value }
-                        onChange={ field.onChange }
-                        className="ml-2"
-                      />
-                    </FormControl>
-                  </FormItem>
-                ) }
-              />
-              <FormField
-                control={ form.control }
-                name="justificacion"
-                render={ ( { field } ) => (
-                  <FormItem>
-                    <FormLabel>Justificación</FormLabel>
-                    <FormControl>
-                      <Input { ...field } />
-                    </FormControl>
-                  </FormItem>
-                ) }
-              />
+                  render={ ( { field } ) => (
+                    <FormItem className="col-span-3">
+                      <FormLabel>Nombre</FormLabel>
+                      <FormControl>
+                        <Input { ...field } />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  ) }
+                />
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <FormField
+                  control={ form.control }
+                  name="tipoNivel"
+                  render={ ( { field } ) => (
+                    <FormItem>
+                      <FormLabel>Tipo de Nivel</FormLabel>
+                      <FormControl>
+                        <select { ...field } className="w-full border rounded p-2">
+                          <option value="OEI">OEI</option>
+                          <option value="AEI">AEI</option>
+                          <option value="IO">IO</option>
+                        </select>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  ) }
+                />
+                <FormField
+                  control={ form.control }
+                  name="justificacion"
+                  render={ ( { field } ) => (
+                    <FormItem>
+                      <FormLabel>Justificación</FormLabel>
+                      <FormControl>
+                        <Input { ...field } />
+                      </FormControl>
+                    </FormItem>
+                  ) }
+                />
+               {/*  <FormField
+                  control={ form.control }
+                  name="estado"
+                  render={ ( { field } ) => (
+                    <FormItem className="flex items-center justify-around mt-6">
+                      <FormLabel>Estado</FormLabel>
+                      <FormControl>
+                        <input
+                          type="checkbox"
+                          checked={ field.value }
+                          onChange={ field.onChange }
+                          className="ml-2"
+                        />
+                      </FormControl>
+                    </FormItem>
+                  ) }
+                /> */}
+
+              </div>
               <FormField
                 control={ form.control }
                 name="formula"
@@ -301,6 +310,9 @@ export function IndicadorConfig() {
                         ref={ mathFieldRef }
                         value={ field.value }
                         onInput={ handleFormulaChange }
+                        virtual-keyboard-mode="onfocus"
+                        virtual-keyboard-theme="material"
+                        virtual-keyboard-placement="right"
                         style={ { width: "100%", minHeight: "40px", border: "1px solid #ccc", borderRadius: "6px", padding: "8px" } }
                       />
                     </FormControl>
@@ -308,78 +320,89 @@ export function IndicadorConfig() {
                   </FormItem>
                 ) }
               />
-              <FormField
-                control={ form.control }
-                name="sentidoEsperado"
-                render={ ( { field } ) => (
-                  <FormItem>
-                    <FormLabel>Sentido Esperado</FormLabel>
-                    <FormControl>
-                      <Input { ...field } />
-                    </FormControl>
-                  </FormItem>
-                ) }
-              />
-              <FormField
-                control={ form.control }
-                name="unidadMedida"
-                render={ ( { field } ) => (
-                  <FormItem>
-                    <FormLabel>Unidad de Medida</FormLabel>
-                    <FormControl>
-                      <Input { ...field } />
-                    </FormControl>
-                  </FormItem>
-                ) }
-              />
-              <FormField
-                control={ form.control }
-                name="frecuencia"
-                render={ ( { field } ) => (
-                  <FormItem>
-                    <FormLabel>Frecuencia</FormLabel>
-                    <FormControl>
-                      <Input { ...field } />
-                    </FormControl>
-                  </FormItem>
-                ) }
-              />
-              <FormField
-                control={ form.control }
-                name="fuenteDatos"
-                render={ ( { field } ) => (
-                  <FormItem>
-                    <FormLabel>Fuente de Datos</FormLabel>
-                    <FormControl>
-                      <Input { ...field } />
-                    </FormControl>
-                  </FormItem>
-                ) }
-              />
-              <FormField
-                control={ form.control }
-                name="logrosEsperados"
-                render={ ( { field } ) => (
-                  <FormItem>
-                    <FormLabel>Logros Esperados</FormLabel>
-                    <FormControl>
-                      <Input { ...field } />
-                    </FormControl>
-                  </FormItem>
-                ) }
-              />
-              <FormField
-                control={ form.control }
-                name="lineaBase"
-                render={ ( { field } ) => (
-                  <FormItem>
-                    <FormLabel>Línea Base</FormLabel>
-                    <FormControl>
-                      <Input { ...field } />
-                    </FormControl>
-                  </FormItem>
-                ) }
-              />
+
+              <div className="grid grid-cols-2 gap-4">
+
+                <FormField
+                  control={ form.control }
+                  name="unidadMedida"
+                  render={ ( { field } ) => (
+                    <FormItem>
+                      <FormLabel>Unidad de Medida</FormLabel>
+                      <FormControl>
+                        <Input { ...field } />
+                      </FormControl>
+                    </FormItem>
+                  ) }
+                />
+                <FormField
+                  control={ form.control }
+                  name="frecuencia"
+                  render={ ( { field } ) => (
+                    <FormItem>
+                      <FormLabel>Frecuencia</FormLabel>
+                      <FormControl>
+                        <Input { ...field } />
+                      </FormControl>
+                    </FormItem>
+                  ) }
+                />
+
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <FormField
+                  control={ form.control }
+                  name="fuenteDatos"
+                  render={ ( { field } ) => (
+                    <FormItem>
+                      <FormLabel>Fuente de Datos</FormLabel>
+                      <FormControl>
+                        <Input { ...field } />
+                      </FormControl>
+                    </FormItem>
+                  ) }
+                />
+                <FormField
+                  control={ form.control }
+                  name="logrosEsperados"
+                  render={ ( { field } ) => (
+                    <FormItem>
+                      <FormLabel>Logros Esperados</FormLabel>
+                      <FormControl>
+                        <Input { ...field } />
+                      </FormControl>
+                    </FormItem>
+                  ) }
+                />
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <FormField
+                  control={ form.control }
+                  name="lineaBase"
+                  render={ ( { field } ) => (
+                    <FormItem>
+                      <FormLabel>Línea Base</FormLabel>
+                      <FormControl>
+                        <Input { ...field } />
+                      </FormControl>
+                    </FormItem>
+                  ) }
+                />
+
+                <FormField
+                  control={ form.control }
+                  name="sentidoEsperado"
+                  render={ ( { field } ) => (
+                    <FormItem>
+                      <FormLabel>Sentido Esperado</FormLabel>
+                      <FormControl>
+                        <Input { ...field } />
+                      </FormControl>
+                    </FormItem>
+                  ) }
+                />
+              </div>
+
               <Button type="submit">Actualizar</Button>
               { mensaje && <div className="text-green-600 text-sm mt-2">{ mensaje }</div> }
             </form>
@@ -388,7 +411,7 @@ export function IndicadorConfig() {
       </Card>
 
       {/* Resultados */ }
-      <Card className="mt-8">
+         <Card className="mt-8">
         <CardHeader>
           <CardTitle>Resultados del Indicador</CardTitle>
         </CardHeader>
@@ -441,7 +464,7 @@ export function IndicadorConfig() {
             <Button type="submit">{ editIdx !== null ? "Actualizar Resultado" : "Agregar Resultado" }</Button>
           </form>
 
-          {/* Lista de resultados */ }
+          // Lista de resultados 
           <div className="mt-6">
             { resultados.length === 0 && (
               <div className="text-muted-foreground text-sm">No hay resultados registrados</div>
@@ -462,7 +485,7 @@ export function IndicadorConfig() {
             ) ) }
           </div>
         </CardContent>
-      </Card>
+      </Card> 
     </div>
   );
 }

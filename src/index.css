@@ -128,7 +128,23 @@
     @apply bg-slate-400 border font-bold text-center hover:bg-slate-400;
   }
 
-/*   :root {
+ 
+  /* Reduce el tamaño del teclado virtual de MathLive */
+  body .ML__virtual-keyboard {
+    font-size: 0.8em !important;
+    max-width: 320px !important;
+    min-width: 200px !important;
+    padding: 4px !important;
+  }
+
+  .ML__virtual-keyboard .MLK__keycap {
+    font-size: 0.85em !important;
+    padding: 2px 6px !important;
+    min-width: 24px !important;
+    min-height: 24px !important;
+  }
+
+  /*   :root {
     
     --chart-1: oklch(0.646 0.222 41.116);
     --chart-2: oklch(0.6 0.118 184.704);

@@ -1,171 +1,60 @@
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { RenderIndicadorArbol } from '@/utils/RenderIndicadorArbol';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import indicadoresIniciales from './indicadoresIniciales';
+import { Button } from '@/components/ui/button';
+import { Plus } from 'tabler-icons-react';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { NuevoIndicadorForm } from './NuevoIndicadorForm';
+import { cargarMapas } from '@/helpers/mapas';
+import { cargarIndicadores } from '@/helpers/indicadrores';
+import { ListaMapas } from '@/components/ListaMapas';
 
-const indicadoresIniciales = [
-
-  {
-    id: 1,
-    codigo: "OEI.0X",
-    nombre: "Mejorar la calidad psicologica",
-    tipo: "OEI",
-    hijos: [
-      {
-        id: 2,
-        codigo: "AEI.01",
-        nombre: "Capacitación docente",
-        tipo: "AEI",
-        hijos: [
-          {
-            id: 3,
-            codigo: "IP.01",
-            nombre: "N° de docentes capacitados",
-            tipo: "IP",
-            hijos: [
-              {
-                id: 4,
-                codigo: "AEI.01",
-                nombre: "Capacitación docente",
-                tipo: "AEI",
-                hijos: [
-                  {
-                    id: 5,
-                    codigo: "IP.01",
-                    nombre: "N° de docentes capacitados",
-                    tipo: "IP",
-                    hijos: []
-                  },
-                  {
-                    id: 6,
-                    codigo: "IP.02",
-                    nombre: "Horas de capacitación",
-                    tipo: "IP",
-                    hijos: []
-                  },
-                  {
-                    id: 7,
-                    codigo: "IP.01",
-                    nombre: "N° de docentes capacitados",
-                    tipo: "IP",
-                    hijos: []
-                  },
-                  {
-                    id: 8,
-                    codigo: "IP.02",
-                    nombre: "Horas de capacitación",
-                    tipo: "IP",
-                    hijos: []
-                  }
-                ]
-              },
-            ]
-          },
-          {
-            id: 9,
-            codigo: "IP.02",
-            nombre: "Horas de capacitación",
-            tipo: "IP",
-            hijos: []
-          },
-          {
-            id: 10,
-            codigo: "IP.01",
-            nombre: "N° de docentes capacitados",
-            tipo: "IP",
-            hijos: []
-          },
-          {
-            id: 11,
-            codigo: "IP.02",
-            nombre: "Horas de capacitación",
-            tipo: "IP",
-            hijos: []
-          }
-        ]
-      },
-      {
-        id: 12,
-        codigo: "AEI.02",
-        nombre: "Mejorar infraestructura",
-        tipo: "AEI",
-        hijos: [
-          {
-            id: 13,
-            codigo: "IP.03",
-            nombre: "Aulas renovadas",
-            tipo: "IP",
-            hijos: []
-          }
-        ]
-      }
-    ]
-  },
-  {
-    id: 14,
-    codigo: "OEI.0X",
-    nombre: "Mejorar la calidad psicologica",
-    tipo: "OEI",
-    hijos: [
-      {
-        id: 15,
-        codigo: "AEI.01",
-        nombre: "Capacitación docente",
-        tipo: "AEI",
-        hijos: [
-          {
-            id: 16,
-            codigo: "IP.01",
-            nombre: "N° de docentes capacitados",
-            tipo: "IP",
-            hijos: []
-          },
-          {
-            id: 17,
-            codigo: "IP.02",
-            nombre: "Horas de capacitación",
-            tipo: "IP",
-            hijos: []
-          },
-          {
-            id: 18,
-            codigo: "IP.01",
-            nombre: "N° de docentes capacitados",
-            tipo: "IP",
-            hijos: []
-          },
-          {
-            id: 19,
-            codigo: "IP.02",
-            nombre: "Horas de capacitación",
-            tipo: "IP",
-            hijos: []
-          }
-        ]
-      },
-      {
-        id: 20,
-        codigo: "AEI.02",
-        nombre: "Mejorar infraestructura",
-        tipo: "AEI",
-        hijos: [
-          {
-            id: 6,
-            codigo: "IP.03",
-            nombre: "Aulas renovadas",
-            tipo: "IP",
-            hijos: []
-          }
-        ]
-      }
-    ]
-  }
-];
+//import { IconPlus } from '@tabler/icons-react';
 
 
 export const IndicadoresConfig = () => {
+
+  const [ loading, setLoading ] = useState( true );
+  const [ mapas, setMapas ] = useState( null );
+  const [ mapaSeleccionado, setMapaSeleccionado ] = useState( null );
+
+  const [ indicadoresJSON, setIndicadoresJSON ] = useState( indicadoresIniciales );
+  const [ indicadores, setIndicadores ] = useState( [] );
   
-  const [ indicadores, setIndicadores ] = useState( indicadoresIniciales );
+
+  useEffect( () => {
+    const obtenerMapas = async () => {
+      setLoading( true );
+      const mapas = await cargarMapas();
+      setMapas( mapas );
+      setLoading( false );
+    };
+    obtenerMapas();
+  }, [ mapaSeleccionado ] );
+
+  useEffect( () => {
+    const obtenerindicadores = async () => {
+
+      if ( !mapaSeleccionado ) return;
+
+      const indicadoresList = await cargarIndicadores( mapaSeleccionado.id );
+      console.log( { indicadoresList } );
+      setIndicadoresJSON( indicadoresList.indicadoresJSON );
+      setIndicadores( indicadoresList.indicadores );
+    };
+    obtenerindicadores();
+  }, [ mapaSeleccionado ] );
+
+
 
   function moveIndicador( idArrastrado, idDestino ) {
     // 1. Extraer el nodo arrastrado y quitarlo de su padre actual
@@ -184,7 +73,7 @@ export const IndicadoresConfig = () => {
       } );
     }
 
-    const arbolSinArrastrado = extraerNodo( [ ...indicadores ] );
+    const arbolSinArrastrado = extraerNodo( [ ...indicadoresJSON ] );
 
     // Si no se encontró el nodo, no hacemos nada
     if ( !nodoArrastrado ) return;
@@ -211,24 +100,58 @@ export const IndicadoresConfig = () => {
     const nuevoArbol = insertarNodo( arbolSinArrastrado );
 
     // 3. Actualizar el estado con el nuevo árbol
-    setIndicadores( nuevoArbol );
+    setIndicadoresJSON( nuevoArbol );
   }
   return (
-    <div className="flex flex-col items-center gap-6 p-8 bg-gray-50 min-h-screen w-full">
-      <h2 className="text-2xl font-bold mb-6">Árbol de Indicadores</h2>
-      <div className="w-full border border-red-600 flex flex-col p-4 rounded-lg shadow-md">
-        <div className="flex w-full border gap-5">
-          { indicadores.length === 0
-            ? <span className="text-muted-foreground text-sm">No hay indicadores registrados</span>
-            : <DndProvider backend={ HTML5Backend }>
-              {/* Aquí va tu renderizado del árbol */ }
-              { indicadores.map( indicador =>
-                <RenderIndicadorArbol key={ indicador.id } indicador={ indicador } moveIndicador={ moveIndicador } />
-              ) }
-            </DndProvider>
-          }
-        </div>
-      </div>
-    </div>
+
+    <section className="flex flex-col min-h-[calc(100vh-5rem)] gap-1 items-center p-5   rounded-lg shadow-lg ">
+      <h1 className="text-xl font-bold text-center  ">Indicadores de la entidad</h1>
+      { loading
+        ? ( <span className="text-center text-gray-500">Cargando...</span> )
+        : (
+          <>
+            <ListaMapas mapas={ mapas } setMapaSeleccionado={ setMapaSeleccionado } mapaSeleccionado={ mapaSeleccionado } />
+            {
+              mapaSeleccionado && (
+                <div className="flex flex-col items-center gap-6 p-8 bg-gray-50 min-h-screen w-full">
+                  <h2 className="text-2xl font-bold mb-6">Árbol de Indicadores</h2>
+
+                  <Dialog>
+                    <DialogTrigger className="fixed bottom-10 right-8 z-50 rounded-full w-14 h-14 hover:flex hover:items-center  hover:justify-between bg-black/70 hover:bg-black hover:w-46 transition-all duration-300 group overflow-hidden ">
+
+                      <Plus strokeWidth={ 3 } size={ 50 } className="text-white h-8" />
+                      <span className=" absolute left-12 opacity-0 group-hover:opacity-100 transition-all duration-300 text-white text-base font-semibold whitespace-nowrap">
+                        Agregar indicador
+                      </span>
+                    </DialogTrigger>
+                    <DialogContent>
+                      <NuevoIndicadorForm mapaId={mapaSeleccionado.id} indicadoresList={indicadores} />
+                    </DialogContent>
+                  </Dialog>
+
+                  <div className="w-full border border-red-600 flex flex-col p-4 rounded-lg shadow-md">
+                    <div className="flex w-full border gap-5">
+                      { indicadoresJSON.length === 0
+                        ? <span className="text-muted-foreground text-sm">No hay indicadores registrados</span>
+                        : <DndProvider backend={ HTML5Backend }>
+                          {/* Aquí va tu renderizado del árbol */ }
+                          { indicadoresJSON.map( indicador =>
+                            <RenderIndicadorArbol key={ indicador.id } indicador={ indicador } moveIndicador={ moveIndicador } />
+                          ) }
+                        </DndProvider>
+                      }
+                    </div>
+                  </div>
+                </div>
+              )
+            }
+          </>
+        )
+
+      }
+    </section >
+
+
   );
 };
+

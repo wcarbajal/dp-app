@@ -59,7 +59,7 @@ export function RenderIndicadorArbol( { indicador, moveIndicador } ) {
       } ) );
       setLineas( nuevasLineas );
     }
-  }, [ indicador.hijos, indicador.hijos.length ] );
+  }, [ indicador.hijos, indicador?.hijos?.length ] );
 
   return (
     <div
