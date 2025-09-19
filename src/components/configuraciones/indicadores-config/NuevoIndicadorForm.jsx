@@ -3,18 +3,24 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
+import {
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  Dialog,
+  DialogContent,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { nuevoIndicadorSchema } from '@/schema/InidicadorSchema';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { fetchConToken } from '@/helpers/fetch';
+import { Plus } from 'tabler-icons-react';
+import Swal from 'sweetalert2';
 
 
-export const NuevoIndicadorForm = ( { mapaId, indicadoresList } ) => {
+export const NuevoIndicadorForm = ( { mapaId, indicadoresList, obtenerIndicadores } ) => {
 
-  console.log( { indicadoresList } );
-
-
-
+  const [ open, setOpen ] = useState( false );
 
   const form = useForm( {
     resolver: zodResolver( nuevoIndicadorSchema ),
@@ -31,7 +37,7 @@ export const NuevoIndicadorForm = ( { mapaId, indicadoresList } ) => {
   const tipoNivel = form.watch( "tipoNivel" );
   // Nuevo campo para la parte editable del código
   const codigoSufijo = form.watch( "codigoSufijo" ) || "";
-  console.log( { tipoNivel } );
+  
 
   // Cuando cambia tipoNivel, actualiza el código automáticamente
   // Puedes personalizar la lógica para construir el código aquí
@@ -46,113 +52,155 @@ export const NuevoIndicadorForm = ( { mapaId, indicadoresList } ) => {
 
 
   const onSubmit = async ( data ) => {
-    
+
     console.log( data );
 
-    const respuesta = await fetchConToken( `indicador/${mapaId}`, data, 'POST' );
+    const respuesta = await fetchConToken( `indicador/${ mapaId }`, data, 'POST' );
+    if ( respuesta.ok ) {
+      form.reset();
+      obtenerIndicadores();
+      setOpen( false );
+      // 'Éxito', 'Indicador creado correctamente', 'success'
+      Swal.fire( {
+        title: 'Confirmación de creacioçón',
+        text: "El indicador ha sido creado correctamente.",
+        icon: 'success',
+        confirmButtonColor: '#2A2A2A',
+        confirmButtonText: 'Aceptar',
+        customClass: {
+          confirmButton: 'bg-primary text-primary-foreground shadow-xs hover:bg-primary/90',
+        }
+      } );
+    }else {
+      setOpen( false );
+      await Swal.fire( {
+        title: `Error: ${ respuesta.msg || 'No se pudo crear el indicador' }`,
+        text: "Ha ocurrido un error al crear el indicador.",
+        icon: 'error',
+        confirmButtonColor: '#2A2A2A',
+        confirmButtonText: 'Regresar',
+        customClass: {
+          confirmButton: 'bg-primary text-primary-foreground shadow-xs hover:bg-primary/90 z-10',
+        }
+      } );
+      setOpen( true );
+
+    }
 
     console.log( { respuesta } );
   };
 
   return (
-    <DialogHeader>
-      <DialogTitle>Registrar nuevo indicador</DialogTitle>
-      <DialogDescription>
-        Completa los datos para crear un nuevo indicador.
-      </DialogDescription>
-      <Form { ...form }>
-        <form
-          onSubmit={ form.handleSubmit( onSubmit ) }
-          className="space-y-3 mt-4"
-        >
-          <div className="grid grid-cols-2 gap-4">
-            <FormField
-              control={ form.control }
-              name="tipoNivel"
-              render={ ( { field } ) => (
-                <FormItem>
-                  <FormLabel>Tipo de Nivel</FormLabel>
-                  <FormControl>
-                    <select { ...field } className="w-full border rounded p-2">
-                      <option value="">...</option>
-                      <option value="OEI">OEI</option>
-                      <option value="AEI">AEI</option>
-                      <option value="IO">IO</option>
-                    </select>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              ) }
-            />
+    <Dialog open={ open } onOpenChange={ setOpen }>
+      <DialogTrigger className="fixed bottom-10 right-8 z-50 rounded-full w-14 h-14 hover:flex hover:items-center  hover:justify-between bg-black/70 hover:bg-black hover:w-46 transition-all duration-300 group overflow-hidden ">
 
-            <FormField
-              control={ form.control }
-              name="codigoSufijo"
-              render={ ( { field } ) => (
-                <FormItem>
-                  <FormLabel>Correlativo de indicador</FormLabel>
-                  <FormControl>
-                    <Input { ...field } autoFocus placeholder="Ingrese el sufijo del código" />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              ) }
-            />
-          </div>
-          <FormField
-            control={ form.control }
-            name="codigo"
-            render={ ( { field } ) => (
-              <FormItem>
-                <FormLabel>Código</FormLabel>
-                <FormControl>
-                  <Input { ...field } readOnly />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            ) }
-          />
+        <Plus strokeWidth={ 3 } size={ 50 } className="text-white h-8" />
+        <span className=" absolute left-12 opacity-0 group-hover:opacity-100 transition-all duration-300 text-white text-base font-semibold whitespace-nowrap">
+          Agregar indicador
+        </span>
+      </DialogTrigger>
+      <DialogContent>
 
-          <FormField
-            control={ form.control }
-            name="nombre"
-            render={ ( { field } ) => (
-              <FormItem>
-                <FormLabel>Nombre</FormLabel>
-                <FormControl>
-                  <Input { ...field } />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            ) }
-          />
+        <DialogHeader>
+          <DialogTitle>Registrar nuevo indicador</DialogTitle>
+          <DialogDescription>
+            Completa los datos para crear un nuevo indicador.
+          </DialogDescription>
+          <Form { ...form }>
+            <form
+              onSubmit={ form.handleSubmit( onSubmit ) }
+              className="space-y-3 mt-4"
+            >
+              <div className="grid grid-cols-2 gap-4">
+                <FormField
+                  control={ form.control }
+                  name="tipoNivel"
+                  render={ ( { field } ) => (
+                    <FormItem>
+                      <FormLabel>Tipo de Nivel</FormLabel>
+                      <FormControl>
+                        <select { ...field } className="w-full border rounded p-2">
+                          <option value="">...</option>
+                          <option value="OEI">OEI</option>
+                          <option value="AEI">AEI</option>
+                          <option value="IO">IO</option>
+                        </select>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  ) }
+                />
 
-          <FormField
-            control={ form.control }
-            name="parentId"
-            render={ ( { field } ) => (
-              <FormItem>
-                <FormLabel>Tipo de Nivel</FormLabel>
-                <FormControl>
-                  <select { ...field } className="w-full border rounded p-2">
-                    <option value="">Sin padre</option>
-                    { indicadoresList && indicadoresList.map( indicador => (
-                      <option key={ indicador.id } value={ indicador.id }>{ indicador.codigo } - { indicador.nombre }</option>
-                    ) )
+                <FormField
+                  control={ form.control }
+                  name="codigoSufijo"
+                  render={ ( { field } ) => (
+                    <FormItem>
+                      <FormLabel>Correlativo de indicador</FormLabel>
+                      <FormControl>
+                        <Input type='number' min={1} { ...field } autoFocus placeholder="Ingrese el sufijo del código" />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  ) }
+                />
+              </div>
+              <FormField
+                control={ form.control }
+                name="codigo"
+                render={ ( { field } ) => (
+                  <FormItem>
+                    <FormLabel>Código</FormLabel>
+                    <FormControl>
+                      <Input { ...field } readOnly />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                ) }
+              />
 
-                    }
-                  </select>
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            ) }
-          />
-          {/* Agrega aquí más campos según tu schema */ }
-          <Button type="submit" className="w-full mt-2">
-            Registrar
-          </Button>
-        </form>
-      </Form>
-    </DialogHeader>
+              <FormField
+                control={ form.control }
+                name="nombre"
+                render={ ( { field } ) => (
+                  <FormItem>
+                    <FormLabel>Nombre</FormLabel>
+                    <FormControl>
+                      <Input { ...field } />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                ) }
+              />
+
+              <FormField
+                control={ form.control }
+                name="parentId"
+                render={ ( { field } ) => (
+                  <FormItem>
+                    <FormLabel>Tipo de Nivel</FormLabel>
+                    <FormControl>
+                      <select { ...field } className="w-full border rounded p-2">
+                        <option value="">Sin padre</option>
+                        { indicadoresList && indicadoresList.map( indicador => (
+                          <option key={ indicador.id } value={ indicador.id }>{ indicador.codigo } - { indicador.nombre }</option>
+                        ) )
+
+                        }
+                      </select>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                ) }
+              />
+              {/* Agrega aquí más campos según tu schema */ }
+              <Button type="submit" className="w-full mt-2">
+                Registrar
+              </Button>
+            </form>
+          </Form>
+        </DialogHeader>
+      </DialogContent>
+    </Dialog >
   );
 };

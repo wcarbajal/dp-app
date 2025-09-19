@@ -1,7 +1,7 @@
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { RenderIndicadorArbol } from '@/utils/RenderIndicadorArbol';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import indicadoresIniciales from './indicadoresIniciales';
 import { Button } from '@/components/ui/button';
 import { Plus } from 'tabler-icons-react';
@@ -29,7 +29,7 @@ export const IndicadoresConfig = () => {
 
   const [ indicadoresJSON, setIndicadoresJSON ] = useState( indicadoresIniciales );
   const [ indicadores, setIndicadores ] = useState( [] );
-  
+
 
   useEffect( () => {
     const obtenerMapas = async () => {
@@ -41,18 +41,19 @@ export const IndicadoresConfig = () => {
     obtenerMapas();
   }, [ mapaSeleccionado ] );
 
-  useEffect( () => {
-    const obtenerindicadores = async () => {
+  const obtenerIndicadores = useCallback( async () => {
 
-      if ( !mapaSeleccionado ) return;
+    if ( !mapaSeleccionado ) return;
 
-      const indicadoresList = await cargarIndicadores( mapaSeleccionado.id );
-      console.log( { indicadoresList } );
-      setIndicadoresJSON( indicadoresList.indicadoresJSON );
-      setIndicadores( indicadoresList.indicadores );
-    };
-    obtenerindicadores();
+    const indicadoresList = await cargarIndicadores( mapaSeleccionado.id );
+    
+    setIndicadoresJSON( indicadoresList.indicadoresJSON );
+    setIndicadores( indicadoresList.indicadores );
   }, [ mapaSeleccionado ] );
+
+  useEffect( () => {
+    obtenerIndicadores();
+  }, [ obtenerIndicadores ] );
 
 
 
@@ -116,18 +117,8 @@ export const IndicadoresConfig = () => {
                 <div className="flex flex-col items-center gap-6 p-8 bg-gray-50 min-h-screen w-full">
                   <h2 className="text-2xl font-bold mb-6">Árbol de Indicadores</h2>
 
-                  <Dialog>
-                    <DialogTrigger className="fixed bottom-10 right-8 z-50 rounded-full w-14 h-14 hover:flex hover:items-center  hover:justify-between bg-black/70 hover:bg-black hover:w-46 transition-all duration-300 group overflow-hidden ">
 
-                      <Plus strokeWidth={ 3 } size={ 50 } className="text-white h-8" />
-                      <span className=" absolute left-12 opacity-0 group-hover:opacity-100 transition-all duration-300 text-white text-base font-semibold whitespace-nowrap">
-                        Agregar indicador
-                      </span>
-                    </DialogTrigger>
-                    <DialogContent>
-                      <NuevoIndicadorForm mapaId={mapaSeleccionado.id} indicadoresList={indicadores} />
-                    </DialogContent>
-                  </Dialog>
+                  <NuevoIndicadorForm mapaId={ mapaSeleccionado.id } indicadoresList={ indicadores } obtenerIndicadores={ obtenerIndicadores } />
 
                   <div className="w-full border border-red-600 flex flex-col p-4 rounded-lg shadow-md">
                     <div className="flex w-full border gap-5">

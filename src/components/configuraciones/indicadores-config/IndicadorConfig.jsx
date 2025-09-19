@@ -1,118 +1,84 @@
-import { useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
+
 import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
-import { z } from "zod";
+
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { MathfieldElement } from "mathlive";
+import { modificarIndicadorSchema } from '@/schema/InidicadorSchema';
+import { Link, useNavigate, useParams } from 'react-router';
+import { fetchConToken } from '@/helpers/fetch';
+import Swal from 'sweetalert2';
+import { ArrowBackUp, Plus } from 'tabler-icons-react';
+
+
+
 
 // Datos de muestra basados en el modelo Prisma
-const indicadorDemo = {
-  id: 1,
-  codigo: "OEI.01",
-  nombre: "Mejorar la calidad educativa",
-  tipoNivel: "OEI",
-  estado: true,
-  creadoEn: new Date( "2024-01-01" ),
-  actualizadoEn: new Date( "2024-06-01" ),
-  justificacion: "Justificación ejemplo",
-  formula: "Fórmula ejemplo",
-  sentidoEsperado: "Ascendente",
-  unidadMedida: "Porcentaje",
-  frecuencia: "Mensual",
-  fuenteDatos: "SIE",
-  logrosEsperados: "80%",
-  lineaBase: "60%",
-  parentId: null,
-  procesoId: 1,
-  resultados: [
-    {
-      id: 1,
-      denominacion: "Resultado 1",
-      descripcion: "Primer resultado",
-      valor: 75.5,
-      fechaRegistro: "2024-06-01",
-    },
-    {
-      id: 2,
-      denominacion: "Resultado 2",
-      descripcion: "Segundo resultado",
-      valor: 80.0,
-      fechaRegistro: "2024-06-10",
-    },
-  ],
-};
-
-// Zod schema para validación de Indicador
-const indicadorSchema = z.object( {
-  codigo: z.string().min( 1, "El código es obligatorio" ),
-  nombre: z.string().min( 1, "El nombre es obligatorio" ),
-  tipoNivel: z.enum( [ "OEI", "AEI", "IO" ] ),
-  estado: z.boolean(),
-  justificacion: z.string().optional(),
-  formula: z.string().optional(),
-  sentidoEsperado: z.string().optional(),
-  unidadMedida: z.string().optional(),
-  frecuencia: z.string().optional(),
-  fuenteDatos: z.string().optional(),
-  logrosEsperados: z.string().optional(),
-  lineaBase: z.string().optional(),
-} );
 
 
-// Zod schema para validación de Resultado
-const resultadoSchema = z.object( {
-  denominacion: z.string().optional(),
-  descripcion: z.string().optional(),
-  valor: z.coerce.number().min( 0, "Debe ser un número positivo" ),
-  fechaRegistro: z.string().min( 1, "La fecha es obligatoria" ),
-} );
 
 export function IndicadorConfig() {
+
+  const [ indicador, setIndicador ] = useState( null );
+
+  const { id } = useParams();
+
+  const navigate = useNavigate();
+
+  const cargarIndicador = useCallback( async () => {
+    const resultado = await fetchConToken( `indicador/unico/${ id }` );
+    
+    if ( resultado.ok ) {
+      setIndicador( resultado.indicador );
+
+    } else {
+      setIndicador( null );
+    }
+  }, [ id ] );
+
+  useEffect( () => {
+    cargarIndicador();
+  }, [ cargarIndicador ] );
+
 
   const mathFieldRef = useRef( null );
 
 
   // Para guardar el valor de la fórmula
   const handleFormulaChange = ( evt ) => {
-    const latex = evt.target.value; // LaTeX string
-    console.log( "Fórmula en LaTeX:", latex );
+    const latex = evt.target.value; // LaTeX string   
+    
     form.setValue( "formula", latex );
   };
 
   const form = useForm( {
-    resolver: zodResolver( indicadorSchema ),
+    resolver: zodResolver( modificarIndicadorSchema ),
     defaultValues: {
-      codigo: indicadorDemo.codigo,
-      nombre: indicadorDemo.nombre,
-      tipoNivel: indicadorDemo.tipoNivel,
-      estado: indicadorDemo.estado,
-      justificacion: indicadorDemo.justificacion || "",
-      formula: indicadorDemo.formula || "",
-      sentidoEsperado: indicadorDemo.sentidoEsperado || "",
-      unidadMedida: indicadorDemo.unidadMedida || "",
-      frecuencia: indicadorDemo.frecuencia || "",
-      fuenteDatos: indicadorDemo.fuenteDatos || "",
-      logrosEsperados: indicadorDemo.logrosEsperados || "",
-      lineaBase: indicadorDemo.lineaBase || "",
+      codigo: indicador?.codigo || "",
+      nombre: indicador?.nombre || "",
+      tipoNivel: indicador?.tipoNivel || "OEI",
+      estado: indicador?.estado ?? true,
+      justificacion: indicador?.justificacion || "",
+      formula: indicador?.formula || "",
+      sentidoEsperado: indicador?.sentidoEsperado || "",
+      unidadMedida: indicador?.unidadMedida || "",
+      frecuencia: indicador?.frecuencia || "",
+      fuenteDatos: indicador?.fuenteDatos || "",
+      logrosEsperados: indicador?.logrosEsperados || "",
+      lineaBase: indicador?.lineaBase || "",
     }
   } );
 
-  const [ resultados, setResultados ] = useState( indicadorDemo.resultados );
-  const [ resultadoForm, setResultadoForm ] = useState( {
-    denominacion: "",
-    descripcion: "",
-    valor: "",
-    fechaRegistro: "",
-  } );
-  const [ editIdx, setEditIdx ] = useState( null );
-  const [ mensaje, setMensaje ] = useState( "" );
+  //const [ resultados, setResultados ] = useState( indicador.resultados );
+
+  //const [ editIdx, setEditIdx ] = useState( null );
+  //const [ mensaje, setMensaje ] = useState( "" );
   //const [ formErrors, setFormErrors ] = useState( {} );
-  const [ resultadoErrors, setResultadoErrors ] = useState( {} );
+
 
   // Indicador
   /*  const handleChange = ( field, value  ) => {
@@ -120,94 +86,109 @@ export function IndicadorConfig() {
      setMensaje( "" );
    }; */
 
-  // Resultado
-  const handleResultadoChange = ( field, value ) => {
-    setResultadoForm( { ...resultadoForm, [ field ]: value } );
-  };
+
 
   // Guardar Indicador
-  const handleSubmit = ( e ) => {
-    e.preventDefault();
-    const result = indicadorSchema.safeParse( form );
-    if ( !result.success ) {
-      const zodErrors = {};
-      result.error.errors.forEach( ( err ) => {
-        zodErrors[ err.path[ 0 ] ] = err.message;
-      } );
-      //setFormErrors( zodErrors );
-      return;
-    }
-    //setFormErrors( {} );
-    setMensaje( "Indicador actualizado correctamente" );
-  };
+  const handleSubmit = async ( values ) => {
+    
+    const respuesta = await fetchConToken( `indicador/${ id }`, values, "PUT" );
+    if ( respuesta.ok ) {
 
-  // Guardar o editar Resultado
-  const handleResultadoSubmit = ( e ) => {
-    e.preventDefault();
-    const result = resultadoSchema.safeParse( resultadoForm );
-    if ( !result.success ) {
-      const zodErrors = {};
-      result.error.errors.forEach( ( err ) => {
-        zodErrors[ err.path[ 0 ] ] = err.message;
+      // 'Éxito', 'Indicador creado correctamente', 'success'
+      Swal.fire( {
+        title: 'Confirmación de creacioçón',
+        text: "El indicador ha sido creado correctamente.",
+        icon: 'success',
+        confirmButtonColor: '#2A2A2A',
+        confirmButtonText: 'Aceptar',
+        customClass: {
+          confirmButton: 'bg-primary text-primary-foreground shadow-xs hover:bg-primary/90',
+        }
       } );
-      setResultadoErrors( zodErrors );
-      return;
-    }
-    setResultadoErrors( {} );
-    if ( editIdx !== null ) {
-      // Editar resultado existente
-      const nuevos = [ ...resultados ];
-      nuevos[ editIdx ] = {
-        ...nuevos[ editIdx ],
-        ...resultadoForm,
-        valor: Number( resultadoForm.valor ),
-        fechaRegistro: resultadoForm.fechaRegistro,
-      };
-      setResultados( nuevos );
-      setEditIdx( null );
     } else {
-      // Agregar nuevo resultado
-      setResultados( [
-        ...resultados,
-        {
-          id: resultados.length + 1,
-          ...resultadoForm,
-          valor: Number( resultadoForm.valor ),
-          fechaRegistro: resultadoForm.fechaRegistro,
-        },
-      ] );
+
+      await Swal.fire( {
+        title: `Error: ${ respuesta.msg || 'No se pudo crear el indicador' }`,
+        text: "Ha ocurrido un error al crear el indicador.",
+        icon: 'error',
+        confirmButtonColor: '#2A2A2A',
+        confirmButtonText: 'Regresar',
+        customClass: {
+          confirmButton: 'bg-primary text-primary-foreground shadow-xs hover:bg-primary/90 z-10',
+        }
+      } );
+
+
     }
-    setResultadoForm( {
-      denominacion: "",
-      descripcion: "",
-      valor: "",
-      fechaRegistro: "",
-    } );
   };
 
-  // Editar resultado
-  const handleEditResultado = ( idx ) => {
-    setResultadoForm( {
-      denominacion: resultados[ idx ].denominacion || "",
-      descripcion: resultados[ idx ].descripcion || "",
-      valor: resultados[ idx ].valor,
-      fechaRegistro: resultados[ idx ].fechaRegistro
-        ? resultados[ idx ].fechaRegistro
-        : "",
-    } );
-    setEditIdx( idx );
-  };
 
-  // Eliminar resultado
-  const handleDeleteResultado = ( idx ) => {
-    setResultados( resultados.filter( ( _, i ) => i !== idx ) );
-    setEditIdx( null );
-    setResultadoForm( {
-      denominacion: "",
-      descripcion: "",
-      valor: "",
-      fechaRegistro: "",
+  useEffect( () => {
+    if ( indicador ) {
+      form.reset( {
+        codigo: indicador.codigo,
+        nombre: indicador.nombre,
+        tipoNivel: indicador.tipoNivel,
+        estado: indicador.estado,
+        justificacion: indicador.justificacion || "",
+        formula: indicador.formula || "",
+        sentidoEsperado: indicador.sentidoEsperado || "",
+        unidadMedida: indicador.unidadMedida || "",
+        frecuencia: indicador.frecuencia || "",
+        fuenteDatos: indicador.fuenteDatos || "",
+        logrosEsperados: indicador.logrosEsperados || "",
+        lineaBase: indicador.lineaBase || "",
+      } );
+    }
+  }, [ indicador, form ] );
+
+  const handleDelete = async () => {
+
+    const result = await Swal.fire( {
+      title: '¿Estás seguro?',
+      text: "No podrás deshacer esta acción",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Sí, eliminar',
+      cancelButtonText: 'Cancelar',
+      buttonsStyling: false, // <--- Esto es clave
+      customClass: {
+        confirmButton: 'bg-primary text-primary-foreground shadow-xs hover:bg-primary/90 z-10 px-4 py-2 rounded mr-2 rounded-lg', // azul
+        cancelButton: 'bg-red-600 text-white shadow-xs hover:bg-red-700 z-10 px-4 py-2 rounded-lg', // rojo
+      }
     } );
+
+    if ( result.isConfirmed ) {
+
+      const respuesta = await fetchConToken( `indicador/${ id }`, {}, 'DELETE' );
+
+      if ( respuesta.ok ) {
+
+        await Swal.fire( {
+          title: 'Eliminaciòn exitosa',
+          text: "Indicador eliminado correctamente",
+          icon: 'success',
+          confirmButtonText: 'Aceptar',
+          buttonsStyling: false, // <--- Esto es clave
+          customClass: {
+            confirmButton: 'bg-primary text-primary-foreground shadow-xs hover:bg-primary/90 z-10 px-4 py-2 rounded mr-2 rounded-lg',
+          }
+        } );
+        navigate( '/config/indicadores' );
+      } else {
+         Swal.fire( {
+          title: 'Error en la eliminación',
+          text: "Indicador no se pudo borrar: " + ( respuesta.msg || '' ),
+          icon: 'error',
+          confirmButtonText: 'Aceptar',
+          buttonsStyling: false, // <--- Esto es clave
+          customClass: {
+            confirmButton: 'bg-primary text-primary-foreground shadow-xs hover:bg-primary/90 z-10 px-4 py-2 rounded mr-2 rounded-lg',
+          }
+        } );
+
+      }
+    }
   };
 
   return (
@@ -249,6 +230,7 @@ export function IndicadorConfig() {
                     </FormItem>
                   ) }
                 />
+
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <FormField
@@ -280,23 +262,7 @@ export function IndicadorConfig() {
                     </FormItem>
                   ) }
                 />
-               {/*  <FormField
-                  control={ form.control }
-                  name="estado"
-                  render={ ( { field } ) => (
-                    <FormItem className="flex items-center justify-around mt-6">
-                      <FormLabel>Estado</FormLabel>
-                      <FormControl>
-                        <input
-                          type="checkbox"
-                          checked={ field.value }
-                          onChange={ field.onChange }
-                          className="ml-2"
-                        />
-                      </FormControl>
-                    </FormItem>
-                  ) }
-                /> */}
+
 
               </div>
               <FormField
@@ -402,16 +368,22 @@ export function IndicadorConfig() {
                   ) }
                 />
               </div>
-
-              <Button type="submit">Actualizar</Button>
-              { mensaje && <div className="text-green-600 text-sm mt-2">{ mensaje }</div> }
+              <div className="flex justify-center gap-2 ">
+                <Button type="button" variant="outline">
+                  <Link to="/config/indicadores" className="flex gap-2">
+                    <ArrowBackUp size={ 24 } />
+                    Regresar
+                  </Link> </Button>
+                <Button type="submit" disabled={ !form.formState.isDirty }>Actualizar</Button>
+                <Button variant="destructive" type="button" onClick={ handleDelete }>Eliminar</Button>
+              </div>
             </form>
           </Form>
         </CardContent>
       </Card>
 
       {/* Resultados */ }
-         <Card className="mt-8">
+      {/*  <Card className="mt-8">
         <CardHeader>
           <CardTitle>Resultados del Indicador</CardTitle>
         </CardHeader>
@@ -485,7 +457,7 @@ export function IndicadorConfig() {
             ) ) }
           </div>
         </CardContent>
-      </Card> 
+      </Card>  */}
     </div>
   );
 }
