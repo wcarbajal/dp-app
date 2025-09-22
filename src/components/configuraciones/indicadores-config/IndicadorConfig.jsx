@@ -12,26 +12,21 @@ import { modificarIndicadorSchema } from '@/schema/InidicadorSchema';
 import { Link, useNavigate, useParams } from 'react-router';
 import { fetchConToken } from '@/helpers/fetch';
 import Swal from 'sweetalert2';
-import { ArrowBackUp, Plus } from 'tabler-icons-react';
+import { ArrowBackUp } from 'tabler-icons-react';
+import { capitalize } from '@/utils/text';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
-
-
-
-// Datos de muestra basados en el modelo Prisma
-
-
-
-export function IndicadorConfig() {
+export function IndicadorConfig(  ) {
 
   const [ indicador, setIndicador ] = useState( null );
-
+  
   const { id } = useParams();
 
   const navigate = useNavigate();
 
   const cargarIndicador = useCallback( async () => {
     const resultado = await fetchConToken( `indicador/unico/${ id }` );
-    
+
     if ( resultado.ok ) {
       setIndicador( resultado.indicador );
 
@@ -51,7 +46,7 @@ export function IndicadorConfig() {
   // Para guardar el valor de la fórmula
   const handleFormulaChange = ( evt ) => {
     const latex = evt.target.value; // LaTeX string   
-    
+
     form.setValue( "formula", latex );
   };
 
@@ -60,7 +55,8 @@ export function IndicadorConfig() {
     defaultValues: {
       codigo: indicador?.codigo || "",
       nombre: indicador?.nombre || "",
-      tipoNivel: indicador?.tipoNivel || "OEI",
+      nivelIndicador: indicador?.nivelIndicador || "OEI",
+      tipoIndicador: indicador?.tipoIndicador || "IR",
       estado: indicador?.estado ?? true,
       justificacion: indicador?.justificacion || "",
       formula: indicador?.formula || "",
@@ -90,14 +86,14 @@ export function IndicadorConfig() {
 
   // Guardar Indicador
   const handleSubmit = async ( values ) => {
-    
+
     const respuesta = await fetchConToken( `indicador/${ id }`, values, "PUT" );
     if ( respuesta.ok ) {
 
       // 'Éxito', 'Indicador creado correctamente', 'success'
       Swal.fire( {
-        title: 'Confirmación de creacioçón',
-        text: "El indicador ha sido creado correctamente.",
+        title: 'Confirmación de actualización',
+        text: "El indicador ha sido actualizado correctamente.",
         icon: 'success',
         confirmButtonColor: '#2A2A2A',
         confirmButtonText: 'Aceptar',
@@ -105,11 +101,13 @@ export function IndicadorConfig() {
           confirmButton: 'bg-primary text-primary-foreground shadow-xs hover:bg-primary/90',
         }
       } );
+      form.reset( values );
+      
     } else {
 
       await Swal.fire( {
-        title: `Error: ${ respuesta.msg || 'No se pudo crear el indicador' }`,
-        text: "Ha ocurrido un error al crear el indicador.",
+        title: `Error: ${ respuesta.msg || 'No se pudo actualizar el indicador' }`,
+        text: "Ha ocurrido un error al actualizar el indicador.",
         icon: 'error',
         confirmButtonColor: '#2A2A2A',
         confirmButtonText: 'Regresar',
@@ -128,7 +126,8 @@ export function IndicadorConfig() {
       form.reset( {
         codigo: indicador.codigo,
         nombre: indicador.nombre,
-        tipoNivel: indicador.tipoNivel,
+        nivelIndicador: indicador?.nivelIndicador || "",
+        tipoIndicador: indicador?.tipoIndicador || "",
         estado: indicador.estado,
         justificacion: indicador.justificacion || "",
         formula: indicador.formula || "",
@@ -174,9 +173,10 @@ export function IndicadorConfig() {
             confirmButton: 'bg-primary text-primary-foreground shadow-xs hover:bg-primary/90 z-10 px-4 py-2 rounded mr-2 rounded-lg',
           }
         } );
+        
         navigate( '/config/indicadores' );
       } else {
-         Swal.fire( {
+        Swal.fire( {
           title: 'Error en la eliminación',
           text: "Indicador no se pudo borrar: " + ( respuesta.msg || '' ),
           icon: 'error',
@@ -190,6 +190,10 @@ export function IndicadorConfig() {
       }
     }
   };
+
+  //mmuestrame los todos los errores del formulario
+
+
 
   return (
     <div className="flex flex-col gap-5 max-w-2xl mx-auto mt-8"
@@ -235,35 +239,56 @@ export function IndicadorConfig() {
               <div className="grid grid-cols-2 gap-4">
                 <FormField
                   control={ form.control }
-                  name="tipoNivel"
+                  name="nivelIndicador"
                   render={ ( { field } ) => (
                     <FormItem>
                       <FormLabel>Tipo de Nivel</FormLabel>
-                      <FormControl>
-                        <select { ...field } className="w-full border rounded p-2">
-                          <option value="OEI">OEI</option>
-                          <option value="AEI">AEI</option>
-                          <option value="IO">IO</option>
-                        </select>
-                      </FormControl>
+                      <Select
+                        value={ field.value }
+                        onValueChange={ field.onChange }
+                      >
+                        <FormControl>
+                          <SelectTrigger className="w-full">
+                            <SelectValue placeholder="Selecciona el tipo de nivel" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          <SelectItem value="OEI">OEI - Objetivo Estratégico Institucional</SelectItem>
+                          <SelectItem value="AEI">AEI - Objetivo Estratégico de Aprendizaje</SelectItem>
+                          <SelectItem value="PE">PE - Producto Estratégico</SelectItem>
+                          <SelectItem value="AO">AO - Actividad Operativa</SelectItem>
+                          <SelectItem value="IG">IG - Indicador de gestión</SelectItem>
+                        </SelectContent>
+                      </Select>
                       <FormMessage />
                     </FormItem>
                   ) }
                 />
                 <FormField
                   control={ form.control }
-                  name="justificacion"
+                  name="tipoIndicador"
                   render={ ( { field } ) => (
                     <FormItem>
-                      <FormLabel>Justificación</FormLabel>
-                      <FormControl>
-                        <Input { ...field } />
-                      </FormControl>
+                      <FormLabel>Tipo de Indicador</FormLabel>
+                      <Select
+                        value={ field.value }
+                        onValueChange={ field.onChange }
+                      >
+                        <FormControl>
+                          <SelectTrigger className="w-full">
+                            <SelectValue placeholder="Selecciona el tipo de indicador" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          <SelectItem value="IR">IR - Indicador de Resultado</SelectItem>
+                          <SelectItem value="IP">IP - Indicador de Producto</SelectItem>
+                          <SelectItem value="IA">IA - Indicador de Actividad</SelectItem>
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
                     </FormItem>
                   ) }
                 />
-
-
               </div>
               <FormField
                 control={ form.control }
@@ -286,6 +311,18 @@ export function IndicadorConfig() {
                   </FormItem>
                 ) }
               />
+              <FormField
+                control={ form.control }
+                name="justificacion"
+                render={ ( { field } ) => (
+                  <FormItem>
+                    <FormLabel>Justificación</FormLabel>
+                    <FormControl>
+                      <Input { ...field } />
+                    </FormControl>
+                  </FormItem>
+                ) }
+              />
 
               <div className="grid grid-cols-2 gap-4">
 
@@ -296,7 +333,10 @@ export function IndicadorConfig() {
                     <FormItem>
                       <FormLabel>Unidad de Medida</FormLabel>
                       <FormControl>
-                        <Input { ...field } />
+                        <Input { ...field }
+                          value={ capitalize( field.value ) || "" }
+                          onChange={ e => field.onChange( capitalize( e.target.value ) ) }
+                        />
                       </FormControl>
                     </FormItem>
                   ) }
@@ -361,22 +401,46 @@ export function IndicadorConfig() {
                   render={ ( { field } ) => (
                     <FormItem>
                       <FormLabel>Sentido Esperado</FormLabel>
-                      <FormControl>
-                        <Input { ...field } />
-                      </FormControl>
+                      <Select
+                        value={ field.value || "" }
+                        onValueChange={ field.onChange }
+                      >
+                        <FormControl>
+                          <SelectTrigger className="w-full">
+                            <SelectValue placeholder="Selecciona el sentido" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          <SelectItem value="Ascendente">Ascendente</SelectItem>
+                          <SelectItem value="Descendente">Descendente</SelectItem>
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
                     </FormItem>
                   ) }
                 />
               </div>
+              { Object.keys( form.formState.errors ).length > 0 && (
+                <div className="bg-red-50 border border-red-200 text-red-700 rounded p-3 text-sm space-y-1">
+                  { Object.entries( form.formState.errors ).map( ( [ key, error ] ) => (
+                    <div key={ key }>
+                      { error.message }
+                    </div>
+                  ) ) }
+                </div>
+              ) }
               <div className="flex justify-center gap-2 ">
                 <Button type="button" variant="outline">
                   <Link to="/config/indicadores" className="flex gap-2">
                     <ArrowBackUp size={ 24 } />
                     Regresar
-                  </Link> </Button>
+                  </Link>
+                </Button>
                 <Button type="submit" disabled={ !form.formState.isDirty }>Actualizar</Button>
                 <Button variant="destructive" type="button" onClick={ handleDelete }>Eliminar</Button>
               </div>
+
+
             </form>
           </Form>
         </CardContent>

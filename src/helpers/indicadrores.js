@@ -7,9 +7,11 @@ import { fetchConToken } from '@/helpers/fetch';
  * @returns {Promise<Array>} Unidades operativas o []
  */
 export async function cargarIndicadores(mapaId) {
+
   if (!mapaId) return [];
   try {
     const respuesta = await fetchConToken(`indicador/${mapaId}`);
+    
     if (respuesta.ok) {
       return {  indicadores: respuesta.indicadores, indicadoresJSON: respuesta.indicadoresJSON };
     } else {

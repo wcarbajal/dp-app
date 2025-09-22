@@ -55,7 +55,7 @@ export const DashboardCards = () => {
                     <BarChartHorizontal
                       titulo="Procesos por nivel"
                       subtitulo="Cantidad de procesos por nivel"
-                      data={ dataChart?.porNivel }
+                      data={ dataChart?.procesosPorNivel }
                       variables={ [ "nivel", "cantidad" ] }
                     />
                   </DetalleError>
@@ -64,7 +64,7 @@ export const DashboardCards = () => {
                     <BarChartVertical
                       titulo="Procesos por tipo"
                       subtitulo="Cantidad de procesos por tipo"
-                      data={ dataChart?.porTipo }
+                      data={ dataChart?.procesosPorTipo }
                       variables={ [ "tipo", "cantidad" ] }
                     />
                   </DetalleError>

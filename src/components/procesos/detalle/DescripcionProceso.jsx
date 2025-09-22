@@ -26,10 +26,6 @@ import Swal from 'sweetalert2';
 
 export const DescripcionProceso = ( { proceso, onSubmit: onSubmitProp, ownersOptions, onUpdated } ) => {
 
-  console.log('ownersOptions:', ownersOptions);
-
-
-
   const form = useForm( {
     resolver: zodResolver( actualizarProcesoSchema ),
     defaultValues: {

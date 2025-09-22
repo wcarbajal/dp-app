@@ -17,8 +17,6 @@ import { FaRegSave } from 'react-icons/fa';
 
 export const ProcedimientoProceso = ( { actividades, idProceso } ) => {
 
-  console.log( { actividades } );
-  console.log( { idProceso } );
 
   const form = useForm( {
     resolver: zodResolver( procedimientoSchema ),
@@ -37,7 +35,7 @@ export const ProcedimientoProceso = ( { actividades, idProceso } ) => {
 
   const moveUp = ( idx ) => {
 
-    console.log(" posicion actual:", idx + 1)
+    
     if ( idx === 0 ) return;
     swap( idx, idx - 1 );
     // Actualiza numOrden después de swap
@@ -46,7 +44,7 @@ export const ProcedimientoProceso = ( { actividades, idProceso } ) => {
       numOrden: i + 1,
     } ) );
     form.setValue( "actividades", actividadesActualizadas, { shouldDirty: true } );
-    console.log(" posicion final:", idx  )
+    
   };
 
   const moveDown = ( idx ) => {

@@ -16,6 +16,7 @@ import { useEffect, useState } from 'react';
 import { fetchConToken } from '@/helpers/fetch';
 import { Plus } from 'tabler-icons-react';
 import Swal from 'sweetalert2';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 
 export const NuevoIndicadorForm = ( { mapaId, indicadoresList, obtenerIndicadores } ) => {
@@ -27,41 +28,41 @@ export const NuevoIndicadorForm = ( { mapaId, indicadoresList, obtenerIndicadore
     defaultValues: {
       codigo: "",
       nombre: "",
+      nivelIndicador: "",
+      codigoSufijo: "",
       tipoNivel: "",
-      parentId: null,
+      parentId: "",
       mapaId: mapaId || null,
     },
   } );
 
-  // Escucha cambios en tipoNivel y actualiza el código
-  const tipoNivel = form.watch( "tipoNivel" );
+  // Escucha cambios en nivelIndicador y actualiza el código
+  const nivelIndicador = form.watch( "nivelIndicador" );
   // Nuevo campo para la parte editable del código
   const codigoSufijo = form.watch( "codigoSufijo" ) || "";
-  
+
 
   // Cuando cambia tipoNivel, actualiza el código automáticamente
   // Puedes personalizar la lógica para construir el código aquí
   // Actualiza el valor de "codigo" cada vez que cambia tipoNivel o codigoSufijo
   useEffect( () => {
-    if ( tipoNivel ) {
-      form.setValue( "codigo", `${ tipoNivel }.${ codigoSufijo }` );
+    if ( nivelIndicador ) {
+      form.setValue( "codigo", `${ nivelIndicador }.${ codigoSufijo }` );
     } else {
       form.setValue( "codigo", "" );
     }
-  }, [ tipoNivel, codigoSufijo, form ] );
+  }, [ nivelIndicador, codigoSufijo, form ] );
 
 
   const onSubmit = async ( data ) => {
 
-    console.log( data );
-
-    const respuesta = await fetchConToken( `indicador/${ mapaId }`, data, 'POST' );
+       const respuesta = await fetchConToken( `indicador/${ mapaId }`, data, 'POST' );
     if ( respuesta.ok ) {
       form.reset();
-      obtenerIndicadores();
+
       setOpen( false );
       // 'Éxito', 'Indicador creado correctamente', 'success'
-      Swal.fire( {
+          Swal.fire( {
         title: 'Confirmación de creacioçón',
         text: "El indicador ha sido creado correctamente.",
         icon: 'success',
@@ -71,7 +72,9 @@ export const NuevoIndicadorForm = ( { mapaId, indicadoresList, obtenerIndicadore
           confirmButton: 'bg-primary text-primary-foreground shadow-xs hover:bg-primary/90',
         }
       } );
-    }else {
+      obtenerIndicadores();
+      form.reset();
+    } else {
       setOpen( false );
       await Swal.fire( {
         title: `Error: ${ respuesta.msg || 'No se pudo crear el indicador' }`,
@@ -86,8 +89,7 @@ export const NuevoIndicadorForm = ( { mapaId, indicadoresList, obtenerIndicadore
       setOpen( true );
 
     }
-
-    console.log( { respuesta } );
+    
   };
 
   return (
@@ -109,23 +111,59 @@ export const NuevoIndicadorForm = ( { mapaId, indicadoresList, obtenerIndicadore
           <Form { ...form }>
             <form
               onSubmit={ form.handleSubmit( onSubmit ) }
-              className="space-y-3 mt-4"
+              className="space-y-3 mt-4 "
             >
-              <div className="grid grid-cols-2 gap-4">
+              
                 <FormField
                   control={ form.control }
-                  name="tipoNivel"
+                  name="nivelIndicador"
                   render={ ( { field } ) => (
                     <FormItem>
-                      <FormLabel>Tipo de Nivel</FormLabel>
-                      <FormControl>
-                        <select { ...field } className="w-full border rounded p-2">
-                          <option value="">...</option>
-                          <option value="OEI">OEI</option>
-                          <option value="AEI">AEI</option>
-                          <option value="IO">IO</option>
-                        </select>
-                      </FormControl>
+                      <FormLabel>Nivel Indicador</FormLabel>
+                      <Select
+                        value={ field.value || "" }
+                        onValueChange={ field.onChange }
+                      >
+                        <FormControl>
+                          <SelectTrigger className="w-full">
+                            <SelectValue placeholder="Selecciona el nivel" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent className="max-h-60 overflow-y-auto">
+                          <SelectItem value="OEI">OEI - Objetivo Estratégico Institucional</SelectItem>
+                          <SelectItem value="AEI">AEI - Objetivo Estratégico Institucional</SelectItem>
+                          <SelectItem value="IO">IO - Indicador de Resultado</SelectItem>
+                          <SelectItem value="PE">PE - Producto Esperado</SelectItem>
+                          <SelectItem value="AO">AO - Actividad Operativa</SelectItem>
+                          <SelectItem value="IG">IG - Indicador de Gestión</SelectItem>
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  ) }
+                />
+                <FormField
+                  control={ form.control }
+                  name="tipoIndicador"
+                  render={ ( { field } ) => (
+                    <FormItem>
+                      <FormLabel>Tipo Indicador</FormLabel>
+                      <Select
+                        value={ field.value || "" }
+                        onValueChange={ field.onChange }
+                      >
+                        <FormControl>
+                          <SelectTrigger className="w-full">
+                            <SelectValue placeholder="Selecciona el nivel" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent className="max-h-60 overflow-y-auto">
+                          <SelectItem value="IR">IR - Indicador de Resultado</SelectItem>
+                          <SelectItem value="IP">IP - Indicador de Proceso</SelectItem>
+                          <SelectItem value="IA">IA - Indicador de Actividad</SelectItem>
+                        
+                        </SelectContent>
+                      </Select>
                       <FormMessage />
                     </FormItem>
                   ) }
@@ -138,13 +176,14 @@ export const NuevoIndicadorForm = ( { mapaId, indicadoresList, obtenerIndicadore
                     <FormItem>
                       <FormLabel>Correlativo de indicador</FormLabel>
                       <FormControl>
-                        <Input type='number' min={1} { ...field } autoFocus placeholder="Ingrese el sufijo del código" />
+                        <Input type='number' value={field.value ?? 1} min={ 1 } { ...field } autoFocus placeholder="Ingrese el sufijo del código" />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
                   ) }
-                />
-              </div>
+
+/>
+              
               <FormField
                 control={ form.control }
                 name="codigo"
@@ -152,7 +191,7 @@ export const NuevoIndicadorForm = ( { mapaId, indicadoresList, obtenerIndicadore
                   <FormItem>
                     <FormLabel>Código</FormLabel>
                     <FormControl>
-                      <Input { ...field } readOnly />
+                      <Input { ...field } value={field.value ?? ""} readOnly />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -166,7 +205,7 @@ export const NuevoIndicadorForm = ( { mapaId, indicadoresList, obtenerIndicadore
                   <FormItem>
                     <FormLabel>Nombre</FormLabel>
                     <FormControl>
-                      <Input { ...field } />
+                      <Input { ...field } value={field.value ?? ""}/>
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -178,17 +217,27 @@ export const NuevoIndicadorForm = ( { mapaId, indicadoresList, obtenerIndicadore
                 name="parentId"
                 render={ ( { field } ) => (
                   <FormItem>
-                    <FormLabel>Tipo de Nivel</FormLabel>
-                    <FormControl>
-                      <select { ...field } className="w-full border rounded p-2">
-                        <option value="">Sin padre</option>
-                        { indicadoresList && indicadoresList.map( indicador => (
-                          <option key={ indicador.id } value={ indicador.id }>{ indicador.codigo } - { indicador.nombre }</option>
-                        ) )
+                    <FormLabel>Selecciona un padre</FormLabel>
+                    <Select
+                      value={ field.value || "" }
+                      onValueChange={ field.onChange }
+                    >
+                      <FormControl>
+                        <SelectTrigger className="w-full">
+                          <SelectValue placeholder="Sin padre" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
 
-                        }
-                      </select>
-                    </FormControl>
+                        { indicadoresList && indicadoresList.map( indicador => (
+
+                          <SelectItem key={ indicador.id } value={ String( indicador.id ) }>
+                            { indicador.codigo } - { indicador.nombre }
+                          </SelectItem>
+
+                        ) ) }
+                      </SelectContent>
+                    </Select>
                     <FormMessage />
                   </FormItem>
                 ) }
@@ -196,6 +245,7 @@ export const NuevoIndicadorForm = ( { mapaId, indicadoresList, obtenerIndicadore
               {/* Agrega aquí más campos según tu schema */ }
               <Button type="submit" className="w-full mt-2">
                 Registrar
+                
               </Button>
             </form>
           </Form>

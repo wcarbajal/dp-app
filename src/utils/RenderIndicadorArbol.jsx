@@ -40,7 +40,7 @@ export function RenderIndicadorArbol( { indicador, moveIndicador } ) {
   // Estado para guardar las posiciones
   const [ lineas, setLineas ] = useState( [] );
 
-  //  console.log( "lineas", lineas );
+  
 
   useEffect( () => {
     if ( !indicador.hijos || indicador.hijos.length === 0 ) return;

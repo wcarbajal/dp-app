@@ -22,8 +22,6 @@ export const DetalleProceso = ( { procesoId } ) => {
     try {
       const consulta = await fetchConToken( `procesos/detalle/${ procesoId }` );
 
-      console.log( "consulta", consulta );
-
       setDetalleProceso( consulta );
 
       const consultaOwners = await fetchConToken( "owners" );
