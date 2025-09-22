@@ -12,15 +12,19 @@ import { TempDatos } from './detalle/TempDatos';
 import { BpmnModeler } from '../bpmn/BpmnModeler';
 
 export const DetalleProceso = ( { procesoId } ) => {
+  
   const [ detalleProceso, setDetalleProceso ] = useState( null );
-  const [ loading, setLoading ] = useState( false );
+   const [ loading, setLoading ] = useState( false );
   const [ ownersList, setOwnersList ] = useState( [] );
+
+  console.log({detalleProceso})
 
   const cargarDetalle = useCallback( async () => {
     setLoading( true );
 
     try {
       const consulta = await fetchConToken( `procesos/detalle/${ procesoId }` );
+      console.log({consulta})
 
       setDetalleProceso( consulta );
 
@@ -37,6 +41,7 @@ export const DetalleProceso = ( { procesoId } ) => {
 
   useEffect( () => {
     if ( procesoId ) cargarDetalle();
+    
   }, [ cargarDetalle, procesoId ] );
 
   if ( loading ) return <div className="p-4">Cargando...</div>;
@@ -68,7 +73,7 @@ export const DetalleProceso = ( { procesoId } ) => {
         <ProcedimientoProceso actividades={ detalleProceso?.proceso?.actividades || [] } idProceso={ detalleProceso.proceso.id || '' } />
       </TabsContent>
       <TabsContent value="indicadores" className=" ">
-        <IndicadoresProceso proceso={ detalleProceso || [] } />
+        <IndicadoresProceso procesos={ detalleProceso.proceso || [] } indicadores={ detalleProceso.indicadores || [] } />
       </TabsContent>
       <TabsContent value="documentos" className=" ">
         <DocumentosProceso proceso={ detalleProceso.proceso || [] } />
