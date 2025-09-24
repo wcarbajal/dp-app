@@ -174,7 +174,7 @@ export function IndicadorConfig(  ) {
           }
         } );
         
-        navigate( '/config/indicadores' );
+        navigate( '/indicadores' );
       } else {
         Swal.fire( {
           title: 'Error en la eliminación',
@@ -431,7 +431,7 @@ export function IndicadorConfig(  ) {
               ) }
               <div className="flex justify-center gap-2 ">
                 <Button type="button" variant="outline">
-                  <Link to="/config/indicadores" className="flex gap-2">
+                  <Link to="/indicadores" className="flex gap-2">
                     <ArrowBackUp size={ 24 } />
                     Regresar
                   </Link>

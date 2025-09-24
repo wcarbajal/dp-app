@@ -30,7 +30,7 @@ export const itemsNav = {
     },
     {
       title: "Mapa",
-      url: "/mapa",
+      url: "/mapas",
       icon: FcFlowChart ,
     },
     {
@@ -88,31 +88,31 @@ export const itemsNav = {
 
 export const listConfiguracciones = [
   {
-    ruta: '/config/mapa',
+    ruta: '/mapa',
     objeto: 'Mapa',
     cantidad: 96,
     icono: <FcWorkflow />
   },
   {
-    ruta: '/config/procesos',
+    ruta: '/procesos',
     objeto: 'Procesos',
     cantidad: 96,
     icono: <FcWorkflow />
   },
    {
-    ruta: '/config/owners',
+    ruta: '/owners',
     objeto: 'Dueños de procesos',
     cantidad: 12,
     icono: <IconCurrentLocation className="size-4" />
   },
   {
-    ruta: '/config/usuarios',
+    ruta: '/usuarios',
     objeto: 'Usuarios',
     cantidad: 12,
     icono: <IconCurrentLocation className="size-4" />
   },
   {
-    ruta: '/config/reportes',
+    ruta: '/reportes',
     objeto: 'Reportes',
     cantidad: 5,
     icono: <IconTrendingDown className="size-4" />

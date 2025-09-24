@@ -71,7 +71,7 @@ export function RenderIndicadorArbol( { indicador, moveIndicador } ) {
       {/* Nodo padre */ }
       <div ref={ padreRef }>
         <div ref={ dragRef }>
-          <Link to={ `/config/indicador/${ indicador.id }` } >
+          <Link to={ `/indicador/${ indicador.id }` } >
             <Card className={ `shadow w-32 border-l-4 ${ indicador.tipo === "OEI"
               ? "border-blue-500 bg-blue-50"
               : indicador.tipo === "AEI"

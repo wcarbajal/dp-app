@@ -20,7 +20,7 @@ export const ConfiguracionesPage = () => {
   const listConfiguracciones = [
 
        {
-      ruta: '/config/mapa',
+      ruta: '/mapa',
       objeto: 'Mapa de procesos',
       cantidad: cantidades.mapas,
 
@@ -32,32 +32,32 @@ export const ConfiguracionesPage = () => {
 
     },
     {
-      ruta: '/config/owners',
+      ruta: '/owners',
       objeto: 'Dueños de procesos',
       cantidad: cantidades.owners,
 
     },
     {
-      ruta: '/config/unidades-funcionales',
+      ruta: '/unidades-funcionales',
       objeto: 'Unidades funcionales',
       cantidad: cantidades.unidadesFuncionales,
 
     },
     {
-      ruta: '/config/usuarios',
+      ruta: '/usuarios',
       objeto: 'Usuarios',
       cantidad: cantidades.usuarios,
 
     },
     
     {
-      ruta: '/config/indicadores',
+      ruta: '/indicadores',
       objeto: 'Indicadores',
       cantidad: cantidades.reportes,
 
     },
     {
-      ruta: '/config/reportes',
+      ruta: '/reportes',
       objeto: 'Reportes',
       cantidad: cantidades.reportes,
 
