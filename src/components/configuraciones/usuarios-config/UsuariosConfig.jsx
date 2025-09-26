@@ -65,7 +65,7 @@ export const UsuarioConfig = () => {
     if ( !mapaSeleccionado ) return;
     try {
       const respuesta = await fetchConToken( `usuario/${ mapaSeleccionado.id }` );
-      console.log({respuesta})
+      
 
 
       let usuariosPermitidos = [];

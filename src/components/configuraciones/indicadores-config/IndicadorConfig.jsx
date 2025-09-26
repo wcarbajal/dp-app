@@ -9,20 +9,35 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { MathfieldElement } from "mathlive";
 import { modificarIndicadorSchema } from '@/schema/InidicadorSchema';
-import { Link, useNavigate, useParams } from 'react-router';
+import { Link, Navigate, useNavigate, useParams } from 'react-router';
 import { fetchConToken } from '@/helpers/fetch';
 import Swal from 'sweetalert2';
 import { ArrowBackUp } from 'tabler-icons-react';
 import { capitalize } from '@/utils/text';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { useLocation } from 'react-router';
 
-export function IndicadorConfig(  ) {
+export function IndicadorConfig() {
 
   const [ indicador, setIndicador ] = useState( null );
-  
+
+
   const { id } = useParams();
 
   const navigate = useNavigate();
+  const location = useLocation();
+
+  const { from, procesoId } = location.state || {};
+
+
+
+  const handleRegresar = () => {
+    if ( from === 'proceso' && procesoId ) {
+      navigate( `/proceso/${ procesoId }#indicadores` );
+    } else {
+      navigate( '/indicadores' );
+    }
+  };
 
   const cargarIndicador = useCallback( async () => {
     const resultado = await fetchConToken( `indicador/unico/${ id }` );
@@ -69,19 +84,6 @@ export function IndicadorConfig(  ) {
     }
   } );
 
-  //const [ resultados, setResultados ] = useState( indicador.resultados );
-
-  //const [ editIdx, setEditIdx ] = useState( null );
-  //const [ mensaje, setMensaje ] = useState( "" );
-  //const [ formErrors, setFormErrors ] = useState( {} );
-
-
-  // Indicador
-  /*  const handleChange = ( field, value  ) => {
-     setForm({ ...form, [field]: value });
-     setMensaje( "" );
-   }; */
-
 
 
   // Guardar Indicador
@@ -102,7 +104,7 @@ export function IndicadorConfig(  ) {
         }
       } );
       form.reset( values );
-      
+
     } else {
 
       await Swal.fire( {
@@ -173,7 +175,7 @@ export function IndicadorConfig(  ) {
             confirmButton: 'bg-primary text-primary-foreground shadow-xs hover:bg-primary/90 z-10 px-4 py-2 rounded mr-2 rounded-lg',
           }
         } );
-        
+
         navigate( '/indicadores' );
       } else {
         Swal.fire( {
@@ -190,8 +192,6 @@ export function IndicadorConfig(  ) {
       }
     }
   };
-
-  //mmuestrame los todos los errores del formulario
 
 
 
@@ -430,11 +430,9 @@ export function IndicadorConfig(  ) {
                 </div>
               ) }
               <div className="flex justify-center gap-2 ">
-                <Button type="button" variant="outline">
-                  <Link to="/indicadores" className="flex gap-2">
-                    <ArrowBackUp size={ 24 } />
-                    Regresar
-                  </Link>
+                <Button type="button" variant="outline" onClick={ handleRegresar }>
+                  <ArrowBackUp size={ 24 } />
+                  Regresar
                 </Button>
                 <Button type="submit" disabled={ !form.formState.isDirty }>Actualizar</Button>
                 <Button variant="destructive" type="button" onClick={ handleDelete }>Eliminar</Button>

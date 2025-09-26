@@ -40,7 +40,7 @@ export function RenderIndicadorArbol( { indicador, moveIndicador } ) {
   // Estado para guardar las posiciones
   const [ lineas, setLineas ] = useState( [] );
 
-  
+
 
   useEffect( () => {
     if ( !indicador.hijos || indicador.hijos.length === 0 ) return;
@@ -71,7 +71,10 @@ export function RenderIndicadorArbol( { indicador, moveIndicador } ) {
       {/* Nodo padre */ }
       <div ref={ padreRef }>
         <div ref={ dragRef }>
-          <Link to={ `/indicador/${ indicador.id }` } >
+          <Link
+            to={ `/indicador/${ indicador.id }` }
+            state={ { from: 'config' } }
+          >
             <Card className={ `shadow w-32 border-l-4 ${ indicador.tipo === "OEI"
               ? "border-blue-500 bg-blue-50"
               : indicador.tipo === "AEI"

@@ -5,26 +5,26 @@ import { DescripcionProceso } from './detalle/DescripcionProceso';
 import { DiagramaProceso } from './detalle/DiagramaProceso';
 import { FichaProceso } from './detalle/FichaProceso';
 import { ProcedimientoProceso } from './detalle/ProcedimientoProceso';
-import { IndicadoresProceso } from './detalle/IndicadoresProceso';
+import { IndicadoresProceso } from './detalle/indicadores-proceso/IndicadoresProceso';
 import { DocumentosProceso } from './detalle/DocumentosProceso';
 import { TempDatos } from './detalle/TempDatos';
-  
+
 import { BpmnModeler } from '../bpmn/BpmnModeler';
 
 export const DetalleProceso = ( { procesoId } ) => {
-  
+
   const [ detalleProceso, setDetalleProceso ] = useState( null );
-   const [ loading, setLoading ] = useState( false );
+  const [ loading, setLoading ] = useState( false );
   const [ ownersList, setOwnersList ] = useState( [] );
 
-  console.log({detalleProceso})
+
 
   const cargarDetalle = useCallback( async () => {
     setLoading( true );
 
     try {
       const consulta = await fetchConToken( `procesos/detalle/${ procesoId }` );
-      console.log({consulta})
+
 
       setDetalleProceso( consulta );
 
@@ -41,7 +41,7 @@ export const DetalleProceso = ( { procesoId } ) => {
 
   useEffect( () => {
     if ( procesoId ) cargarDetalle();
-    
+
   }, [ cargarDetalle, procesoId ] );
 
   if ( loading ) return <div className="p-4">Cargando...</div>;

@@ -4,6 +4,8 @@ import { SocketProvider } from './context/SocketContext';
 import { AppRouter } from './router/AppRouter';
 import { EntidadProvider } from './context/EntidadContext';
 
+import { BrowserRouter } from 'react-router-dom';
+
 
 
 
@@ -15,7 +17,9 @@ function App() { //Identico al chatApp.jsx
       <EntidadProvider>
         <SocketProvider>
           <AsidebarProvider>
-            <AppRouter />
+            <BrowserRouter>
+              <AppRouter />
+            </BrowserRouter>
           </AsidebarProvider>
         </SocketProvider>
       </EntidadProvider>
