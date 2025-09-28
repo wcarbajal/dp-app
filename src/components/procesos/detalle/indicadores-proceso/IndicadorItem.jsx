@@ -1,12 +1,42 @@
 import { Button } from '@/components/ui/button';
 import { Card, CardFooter } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
+import { fetchConToken } from '@/helpers/fetch';
 import React from 'react';
 import { TbTrash } from 'react-icons/tb';
 import { Link } from 'react-router';
+import Swal from 'sweetalert2';
 import { Edit, Trash } from 'tabler-icons-react';
 
-export const IndicadorItem = ({ indicador, proceso, eliminarIndicadorDeProceso }) => {
+export const IndicadorItem = ( { indicador, proceso, onIndicadoresAgregados } ) => {
+
+  const eliminarIndicadorDeProceso = async ( indicadorId ) => {
+    
+    const eliminarIndicador = await fetchConToken( `indicador/sin-proceso/${ indicadorId }`, {}, 'GET' );
+
+   
+
+    if ( eliminarIndicador.ok ) {
+     
+      // Notificar al componente padre para recargar los indicadores
+      if ( onIndicadoresAgregados ) {
+        onIndicadoresAgregados();
+        await Swal.fire( {
+          title: 'Indicador eliminado',
+          text: "El indicador ha sido eliminado correctamente.",
+          icon: 'success',
+          confirmButtonColor: '#2A2A2A',
+          confirmButtonText: 'Aceptar',
+          customClass: {
+            confirmButton: 'bg-primary text-primary-foreground shadow-xs hover:bg-primary/90',
+          }
+        } );
+      }
+    } else {
+      console.log( 'Error al eliminar el indicador del proceso:', eliminarIndicador.msg );
+    }
+
+  };
   return (
     <Card key={ indicador.codigo } className='m-0 p-0 px-5 bg-slate-100 shadow-lg border border-gray-200'>
       <div className="mb-4 p-4">

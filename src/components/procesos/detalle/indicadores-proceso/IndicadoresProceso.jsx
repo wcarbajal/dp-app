@@ -5,19 +5,15 @@ import { Separator } from '@/components/ui/separator';
 import React from 'react';
 import { TbTrashX } from 'react-icons/tb';
 import { Link } from 'react-router';
-import { Edit, Plus } from 'tabler-icons-react';
+import { BrandPrisma, Edit, Plus } from 'tabler-icons-react';
 import { IndicadorItem } from './IndicadorItem';
 import { AgregarIndicador } from './AgregarIndicador';
 
-export const IndicadoresProceso = ( { proceso } ) => {
+
+export const IndicadoresProceso = ( { proceso, onIndicadoresAgregados } ) => {
   const indicadores = proceso?.proceso?.indicadores || [];
 
-  const eliminarIndicadorDeProceso = ( id ) => {
-    console.log( "Procesos actual", proceso?.proceso?.id );
-    console.log( 'Eliminar indicador con ID:', id );
-    // Aquí puedes agregar la lógica para eliminar el indicador
-  };
-
+  
 
   return (
     <article className='flex flex-col items-center gap-4 w-full'>
@@ -27,7 +23,7 @@ export const IndicadoresProceso = ( { proceso } ) => {
 
       <div className='flex flex-col items-center w-full p-4 bg-white rounded-md shadow-md'>
 
-        <AgregarIndicador mapaId={ proceso?.proceso?.mapaId } />
+        <AgregarIndicador mapaId={ proceso?.proceso?.mapaId } procesoId={ proceso?.proceso?.id } indicadoresAsociados={ indicadores } onIndicadoresAgregados={ onIndicadoresAgregados } />
 
 
         <div className="grid grid-cols-1 gap-4 mt-4 w-full md:grid-cols-2 lg:grid-cols-3">
@@ -58,7 +54,7 @@ export const IndicadoresProceso = ( { proceso } ) => {
               // Si ambos son iguales, ordenar por ID como fallback
               return a.id - b.id;
             } ).map( ( indicador ) => (
-              <IndicadorItem key={ indicador.id } indicador={ indicador } proceso={ proceso } eliminarIndicadorDeProceso={ eliminarIndicadorDeProceso } />
+              <IndicadorItem key={ indicador.id } indicador={ indicador } proceso={ proceso } onIndicadoresAgregados={ onIndicadoresAgregados } />
             ) )
           ) }
         </div>

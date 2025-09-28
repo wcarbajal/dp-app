@@ -63,7 +63,7 @@ export const NuevoIndicadorForm = ( { mapaId, indicadoresList, obtenerIndicadore
       setOpen( false );
       // 'Éxito', 'Indicador creado correctamente', 'success'
           Swal.fire( {
-        title: 'Confirmación de creacioçón',
+        title: 'Confirmación de creación',
         text: "El indicador ha sido creado correctamente.",
         icon: 'success',
         confirmButtonColor: '#2A2A2A',

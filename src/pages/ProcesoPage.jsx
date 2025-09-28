@@ -106,7 +106,7 @@ export const ProcesoPage = () => {
         </TabsContent>
 
         <TabsContent value="indicadores" className="">
-          <IndicadoresProceso proceso={ detalleProceso || [] } />
+          <IndicadoresProceso proceso={ detalleProceso || [] } onIndicadoresAgregados={ cargarDetalle } />
         </TabsContent>
 
         <TabsContent value="documentos" className="">

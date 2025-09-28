@@ -40,7 +40,7 @@ export const renderProcesoTreeVertical = ( proceso, handleEliminar, listadoProce
         </div>
       </Link>
       <div className="flex gap-2">
-        {/* Si necesitas el console.log, colócalo fuera del JSX */ }
+        
         <CreateEditProceso
           listadoProcesos={ listadoProcesos }
           proceso={ proceso }
