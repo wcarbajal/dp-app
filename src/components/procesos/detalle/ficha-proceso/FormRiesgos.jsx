@@ -12,7 +12,7 @@ import Swal from 'sweetalert2';
 
 export const FormRiesgos = ( { proceso } ) => {
 
-  
+
   const [ riesgos, setRiesgos ] = useState( [] );
 
   const cargarRiesgos = useCallback( async () => {
@@ -85,6 +85,17 @@ export const FormRiesgos = ( { proceso } ) => {
         confirmButtonText: 'Aceptar'
       } );
 
+      await Swal.fire( {
+        title: 'Registro exitoso',
+        text: "Los riesgos fueron registrados correctamente.",
+        icon: 'success',
+        confirmButtonColor: '#2A2A2A',
+        confirmButtonText: 'Aceptar',
+        customClass: {
+          confirmButton: 'bg-primary text-primary-foreground shadow-xs hover:bg-primary/90',
+        }
+      } );
+
     } else {
       console.error( 'Error al registrar Input/Output' );
     }
@@ -143,7 +154,7 @@ export const FormRiesgos = ( { proceso } ) => {
                     <Button variant="outline" type="button" onClick={ () => append( { denominacion: "" } ) }>
                       <MdOutlineAdd /> Agregar riesgo
                     </Button>
-                    <Button type="submit" variant="default" disabled={!form.formState.isDirty}>
+                    <Button type="submit" variant="default" disabled={ !form.formState.isDirty }>
                       <MdOutlineSave /> Guardar riesgos
                     </Button>
                   </div>

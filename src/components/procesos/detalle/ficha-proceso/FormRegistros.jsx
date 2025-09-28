@@ -46,7 +46,7 @@ export const FormRegistros = ( { proceso } ) => {
   } );
 
   useEffect( () => {
-    
+
     if ( registros !== undefined ) {
       form.reset( {
         registros: registros.length
@@ -67,7 +67,7 @@ export const FormRegistros = ( { proceso } ) => {
 
   const onSubmit = async ( data ) => {
 
-    
+
 
     let fichaId;
 
@@ -84,11 +84,16 @@ export const FormRegistros = ( { proceso } ) => {
     if ( response.ok ) {
       setRegistros( response.registros );
       cargarRegistros();
-      Swal.fire( {
-        title: 'Éxito',
-        text: 'Registros registrados correctamente',
+
+      await Swal.fire( {
+        title: 'Registro exitoso',
+        text: "Registro completo.",
         icon: 'success',
-        confirmButtonText: 'Aceptar'
+        confirmButtonColor: '#2A2A2A',
+        confirmButtonText: 'Aceptar',
+        customClass: {
+          confirmButton: 'bg-primary text-primary-foreground shadow-xs hover:bg-primary/90',
+        }
       } );
 
     } else {
@@ -102,6 +107,12 @@ export const FormRegistros = ( { proceso } ) => {
       <Form { ...form }>
         <form onSubmit={ form.handleSubmit( onSubmit ) } className="m-0  rounded-lg px-5">
           <table className=" border  bg-white rounded-lg w-full overflow-hidden">
+            <colgroup>
+              <col className="w-12" /> {/* # */ }
+              <col className="" />  {/* Proveedor */ }
+              <col className="" />  {/* Entrada */ }
+              <col className="w-24" />   {/* Acciones */ }
+            </colgroup>
             <thead>
               <tr className="bg-slate-100">
                 <th>#</th>
@@ -137,10 +148,10 @@ export const FormRegistros = ( { proceso } ) => {
                       name={ `registros.${ idx }.tipoRegistro` }
                       render={ ( { field } ) => (
                         <FormItem>
-                          <FormControl>                            
+                          <FormControl>
                             <Select
                               value={ field.value }
-                              onValueChange={field.onChange}
+                              onValueChange={ field.onChange }
                             >
                               <SelectTrigger className="w-full">
                                 <SelectValue placeholder="Seleccione un tipo" />
@@ -178,7 +189,7 @@ export const FormRegistros = ( { proceso } ) => {
                     <Button variant="outline" type="button" onClick={ () => append( { denominacion: "", tipoRegistro: "físico" } ) }>
                       <MdOutlineAdd /> Agregar registro
                     </Button>
-                    <Button type="submit" disabled={!form.formState.isDirty}>
+                    <Button type="submit" disabled={ !form.formState.isDirty }>
 
                       <MdOutlineSave /> Guardar registros
                     </Button>

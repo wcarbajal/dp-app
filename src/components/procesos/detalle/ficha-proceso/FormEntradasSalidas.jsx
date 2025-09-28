@@ -12,7 +12,7 @@ import { useCallback, useEffect, useState } from 'react';
 import Swal from 'sweetalert2';
 
 export const FormEntradasSalidas = ( { proceso } ) => {
-  
+
 
   const [ ioResult, setIoResult ] = useState( [] );
 
@@ -70,30 +70,41 @@ export const FormEntradasSalidas = ( { proceso } ) => {
 
 
     let fichaId;
+    console.log( "proceso en onsubmit", proceso?.ficha );
 
 
-    if ( proceso?.ficha === null ) {
 
+    if ( !proceso?.ficha ) {
 
+      console.log( "registrando ficha nueva" );
       const fichaNueva = await fetchConToken( `procesos/${ proceso.id }/registrar-ficha` );
+      console.log( { fichaNueva } );
 
 
       fichaId = fichaNueva.id;
     } else {
+
+      console.log( " ficha existente" );
       fichaId = proceso.ficha.id;
     }
+    const dataSend = { fichaId, ...data };
+    console.log( "data a enviar", dataSend );
 
-
-    const response = await fetchConToken( `ficha/${ fichaId }/registrar-io`, data, 'POST' );
+    const response = await fetchConToken( `ficha/${ fichaId }/registrar-io`, dataSend, 'POST' );
 
     if ( response.ok ) {
       setIoResult( response.inputOutput );
       cargarInputOutput();
-      Swal.fire( {
-        title: 'Éxito',
-        text: 'SIPOC  registrado correctamente',
+
+      await Swal.fire( {
+        title: 'Registro exitoso',
+        text: "Las entradas y salidas fueron registradas correctamente.",
         icon: 'success',
-        confirmButtonText: 'Aceptar'
+        confirmButtonColor: '#2A2A2A',
+        confirmButtonText: 'Aceptar',
+        customClass: {
+          confirmButton: 'bg-primary text-primary-foreground shadow-xs hover:bg-primary/90',
+        }
       } );
 
     } else {
@@ -109,6 +120,14 @@ export const FormEntradasSalidas = ( { proceso } ) => {
           console.error( 'Errores en el formulario:', errors );
         } ) } className="px-5 rounded-lg ">
           <table className="border rounded-lg overflow-hidden bg-white w-full">
+            <colgroup>
+              <col className="w-12" /> {/* # */ }
+              <col className="w-1/5" />  {/* Proveedor */ }
+              <col className="w-1/4" />  {/* Entrada */ }
+              <col className="w-1/4" />  {/* Salida */ }
+              <col className="w-1/5" />  {/* Clientes */ }
+              <col className="w-24" />   {/* Acciones */ }
+            </colgroup>
             <thead>
               <tr className="bg-slate-100">
                 <th className="p-2 border">#</th>
@@ -215,7 +234,7 @@ export const FormEntradasSalidas = ( { proceso } ) => {
                     >
                       <MdOutlineAdd />  Agregar
                     </Button>
-                    <Button type="submit" disabled={!form.formState.isDirty}>
+                    <Button type="submit" disabled={ !form.formState.isDirty }>
                       <MdOutlineSave /> Guardar
                     </Button>
                   </div>

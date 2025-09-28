@@ -11,13 +11,11 @@ import { Edit, Trash } from 'tabler-icons-react';
 export const IndicadorItem = ( { indicador, proceso, onIndicadoresAgregados } ) => {
 
   const eliminarIndicadorDeProceso = async ( indicadorId ) => {
-    
+
     const eliminarIndicador = await fetchConToken( `indicador/sin-proceso/${ indicadorId }`, {}, 'GET' );
 
-   
-
     if ( eliminarIndicador.ok ) {
-     
+
       // Notificar al componente padre para recargar los indicadores
       if ( onIndicadoresAgregados ) {
         onIndicadoresAgregados();
@@ -34,6 +32,16 @@ export const IndicadorItem = ( { indicador, proceso, onIndicadoresAgregados } ) 
       }
     } else {
       console.log( 'Error al eliminar el indicador del proceso:', eliminarIndicador.msg );
+      await Swal.fire( {
+        title: 'Indicador eliminado',
+        text: "El indicador ha sido eliminado correctamente.",
+        icon: 'success',
+        confirmButtonColor: '#2A2A2A',
+        confirmButtonText: 'Aceptar',
+        customClass: {
+          confirmButton: 'bg-primary text-primary-foreground shadow-xs hover:bg-primary/90',
+        }
+      } );
     }
 
   };
