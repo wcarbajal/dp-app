@@ -27,6 +27,7 @@ export const DetalleProceso = ( { procesoId } ) => {
 
 
       setDetalleProceso( consulta );
+      console.log("detalleProceso",consulta)
 
       const consultaOwners = await fetchConToken( "owners" );
       setOwnersList( consultaOwners.owners );

@@ -121,23 +121,18 @@ export const FormEntradasSalidas = ( { proceso } ) => {
         } ) } className="px-5 rounded-lg ">
           <table className="border rounded-lg overflow-hidden bg-white w-full">
             <colgroup>
-              <col className="w-12" /> {/* # */ }
-              <col className="w-1/5" />  {/* Proveedor */ }
-              <col className="w-1/4" />  {/* Entrada */ }
-              <col className="w-1/4" />  {/* Salida */ }
-              <col className="w-1/5" />  {/* Clientes */ }
-              <col className="w-24" />   {/* Acciones */ }
-            </colgroup>
-            <thead>
-              <tr className="bg-slate-100">
-                <th className="p-2 border">#</th>
-                <th className="p-2 border">Proveedor</th>
-                <th className="p-2 border">Entrada</th>
-                <th className="p-2 border">Salida</th>
-                <th className="p-2 border">Clientes</th>
-                <th className="p-2 border w-25">Acciones</th>
-              </tr>
-            </thead>
+      <col className="w-12" /><col className="w-1/5" /><col className="w-1/4" /><col className="w-1/4" /><col className="w-1/5" /><col className="w-24" />
+    </colgroup>
+    <thead>
+      <tr className="bg-slate-100">
+        <th className="p-2 border text-center">#</th>
+        <th className="p-2 border">Proveedor</th>
+        <th className="p-2 border">Entrada</th>
+        <th className="p-2 border">Salida</th>
+        <th className="p-2 border">Clientes</th>
+        <th className="p-2 border">Acciones</th>
+      </tr>
+    </thead>
             <tbody>
               { fields.map( ( field, idx ) => (
                 <tr key={ field.id }>

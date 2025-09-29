@@ -19,6 +19,7 @@ export const ProcesoPage = () => {
 
 
   const [ detalleProceso, setDetalleProceso ] = useState( null );
+  const [ indicadoresList, setIndicadoresList ] = useState( [] );
   const [ loading, setLoading ] = useState( false );
   const [ ownersList, setOwnersList ] = useState( [] );
 
@@ -30,11 +31,14 @@ export const ProcesoPage = () => {
     setLoading( true );
     try {
 
-      const consulta = await fetchConToken( `procesos/detalle/${ id }` );
+      const detalleProcesos = await fetchConToken( `procesos/detalle/${ id }` );
 
-      setDetalleProceso( consulta );
+      setDetalleProceso( detalleProcesos );
 
-      const consultaOwners = await fetchConToken( `owners/${ 1 }`, {}, 'GET' );
+      const consultaOwners = await fetchConToken( `owners/${ detalleProceso?.proceso?.mapaId }`, {}, 'GET' );
+      const consultaIndicadores = await fetchConToken( `indicador/${ detalleProceso?.proceso?.mapaId }`, {}, 'GET' );
+
+      setIndicadoresList( consultaIndicadores.indicadores );
 
       setOwnersList( consultaOwners.owners );
     } catch ( error ) {
@@ -43,7 +47,7 @@ export const ProcesoPage = () => {
     } finally {
       setLoading( false );
     }
-  }, [ id ] );
+  }, [detalleProceso?.proceso?.mapaId, id] );
 
   useEffect( () => {
 
@@ -90,7 +94,7 @@ export const ProcesoPage = () => {
         </TabsList>
 
         <TabsContent value="descripcion" className="">
-          <DescripcionProceso proceso={ detalleProceso.proceso || [] } ownersOptions={ ownersList || [] } onUpdated={ cargarDetalle } />
+          <DescripcionProceso proceso={ detalleProceso.proceso || [] } ownersOptions={ ownersList || [] } onUpdated={ cargarDetalle } indicadores={ indicadoresList } />
         </TabsContent>
 
         <TabsContent value="diagrama" className="">

@@ -108,10 +108,10 @@ export const FormRegistros = ( { proceso } ) => {
         <form onSubmit={ form.handleSubmit( onSubmit ) } className="m-0  rounded-lg px-5">
           <table className=" border  bg-white rounded-lg w-full overflow-hidden">
             <colgroup>
-              <col className="w-12" /> {/* # */ }
-              <col className="" />  {/* Proveedor */ }
-              <col className="" />  {/* Entrada */ }
-              <col className="w-24" />   {/* Acciones */ }
+              <col className="w-12" />
+              <col className="" />
+              <col className="" />
+              <col className="w-24" />
             </colgroup>
             <thead>
               <tr className="bg-slate-100">

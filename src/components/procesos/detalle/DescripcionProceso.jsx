@@ -24,7 +24,12 @@ import { actualizarProcesoSchema } from '@/schema/ProcesosSchema';
 import { fetchConToken } from '@/helpers/fetch';
 import Swal from 'sweetalert2';
 
-export const DescripcionProceso = ( { proceso, onSubmit: onSubmitProp, ownersOptions, onUpdated } ) => {
+export const DescripcionProceso = ( { proceso, onSubmit: onSubmitProp, ownersOptions, onUpdated, indicadores } ) => {
+
+
+  const indicadoresOEI = indicadores?.filter( ind => ind.nivelIndicador === 'OEI' );
+
+
 
   const form = useForm( {
     resolver: zodResolver( actualizarProcesoSchema ),
@@ -38,22 +43,25 @@ export const DescripcionProceso = ( { proceso, onSubmit: onSubmitProp, ownersOpt
       tipo: proceso?.tipo || "",
       objetivo: proceso?.objetivo || "",
       alcance: proceso?.alcance || "",
-      estrategico: proceso?.estrategico || "",
+      estrategico: proceso?.estrategicoId?.toString() || "",
       owners: proceso?.owners?.map( d => d.id.toString() ) || [],
     },
     mode: "onChange",
   } );
 
-
-
   const onSubmit = async ( values ) => {
 
 
     if ( onSubmitProp ) {
+      console.log("onSubmitProp",values)
       onSubmitProp( values );
     } else {
+      console.log( "Formulario enviado:", values );
       // Por defecto, solo muestra los datos en consola
       const actualizarProceso = await fetchConToken( `procesos/descripcion/${ proceso.id }`, values, "PUT" );
+
+      console.log( { actualizarProceso } );
+
 
       if ( actualizarProceso.ok ) {
 
@@ -69,9 +77,9 @@ export const DescripcionProceso = ( { proceso, onSubmit: onSubmitProp, ownersOpt
           buttonsStyling: false // Esto es clave para que se apliquen tus clases
         } );
       }
-      form.reset(actualizarProceso.proceso ?? values);
-       // Llama a la función de recarga si existe
-      if (typeof onUpdated === "function") {
+      form.reset( actualizarProceso.proceso ?? values );
+      // Llama a la función de recarga si existe
+      if ( typeof onUpdated === "function" ) {
         onUpdated();
       }
     }
@@ -213,11 +221,28 @@ export const DescripcionProceso = ( { proceso, onSubmit: onSubmitProp, ownersOpt
                 name="estrategico"
                 render={ ( { field } ) => (
                   <FormItem className="flex items-center">
-                    <FormLabel className="w-24">Objetivos Estratégicos</FormLabel>
+                    <FormLabel className="w-24">Objetivo estratégico</FormLabel>
                     <FormControl className="w-full">
-                      <Input className="w-full" placeholder="Objetivos Estratégico del proceso" { ...field } />
+                      <Select onValueChange={ field.onChange } defaultValue={ field.value }>
+                        <FormControl>
+                          <SelectTrigger className="w-full">
+                            <SelectValue placeholder="Seleccione un objetico estratégico" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          { indicadoresOEI && indicadoresOEI.length > 0 ? (
+                            indicadoresOEI.map( ( ind ) => (
+                              <SelectItem key={ ind.id } value={ ind.id.toString() }>
+                                { ind.codigo }- { ind.nombre } 
+                              </SelectItem>
+                            ) )
+                          ) : (
+                            <SelectItem disabled>No hay indicadores disponibles</SelectItem>
+                          ) }
+                        </SelectContent>
+                      </Select>
                     </FormControl>
-                    <FormMessage />
+
                   </FormItem>
                 ) }
               />

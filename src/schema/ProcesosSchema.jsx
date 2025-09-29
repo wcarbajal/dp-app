@@ -31,7 +31,7 @@ export const actualizarProcesoSchema  = z.object( {
   } ).optional(),//ok
   objetivo: z.string().min( 5, "El objetivo es obligatorio" ).optional(),
   alcance: z.string().min( 5, "El alcance es obligatorio" ).optional(),
-  estrategico: z.string().min( 5, "Los objetivos estratégicos son obligatorios" ).optional(),
+  estrategico: z.string().optional(),
   owners: z.array( z.string() ).optional(),
 } );
 
