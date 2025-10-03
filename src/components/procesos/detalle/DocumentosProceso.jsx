@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { PDFDownloadLink, PDFViewer } from "@react-pdf/renderer";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { useState, Suspense } from "react";
 
 import { Form, FormField, FormItem, FormControl, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
@@ -8,55 +9,83 @@ import { Input } from "@/components/ui/input";
 import { ProcedimientoPdf } from '@/components/pdf-view/ProcedimientoPdf';
 import { FichaPdf } from '@/components/pdf-view/FichaPdf';
 
-
-
 export const DocumentosProceso = ( { proceso } ) => {
+  
+  const [pdfError, setPdfError] = useState(null);
+  const [showPdf, setShowPdf] = useState(false);
 
-   return (
+  const esFicha = proceso?.hijos?.length > 0;
+
+  
+  const renderPdfComponent = () => {
+    try {
+      return esFicha
+        ? <FichaPdf proceso={ proceso } />
+        : <ProcedimientoPdf proceso={ proceso } />;
+    } catch (error) {
+      console.error("Error rendering PDF:", error);
+      setPdfError(error.message);
+      return null;
+    }
+  };
+
+  if (pdfError) {
+    return (
+      <div className="space-y-6">
+        <h1 className="text-xl font-bold">Documentos del Proceso</h1>
+        <div className="p-4 border border-red-200 rounded-md bg-red-50">
+          <p className="text-red-600">Error al generar el PDF: {pdfError}</p>
+          <p className="text-sm text-red-500 mt-2">
+            Verifique que todos los datos del proceso estén completos.
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  return (
     <div className="space-y-6">
       <h1 className="text-xl font-bold">Documentos del Proceso</h1>
-      <Tabs defaultValue="ficha" className="w-full flex flex-col justify-center">
-        <TabsList className="w-full  ">
-          <TabsTrigger value="ficha" >Ficha</TabsTrigger>
-          <TabsTrigger value="procedimiento">Procedimiento</TabsTrigger>
-        </TabsList>
-        <TabsContent value="ficha">
-          {/* Puedes agregar aquí un formulario de filtro si lo necesitas */ }
-          <div className="flex flex-col gap-4 mb-2">
-            <PDFDownloadLink
-              document={ <FichaPdf proceso={ proceso }  /> }
-              fileName="FichaProceso.pdf"
-            >
-              { ( { loading } ) => (
-                <Button variant="outline" disabled={ loading }>
-                  { loading ? "Generando Ficha..." : "Descargar Ficha PDF" }
+      <div className="flex flex-col gap-4">
+        <PDFDownloadLink
+          document={renderPdfComponent()}
+          fileName={`${proceso?.codigo || 'proceso'}-${esFicha ? 'ficha' : 'procedimiento'}.pdf`}
+        >
+          { ( { loading, error } ) => {
+            if (error) {
+              console.error("Error en PDFDownloadLink:", error);
+              return (
+                <Button variant="destructive" disabled>
+                  Error al generar PDF
                 </Button>
-              ) }
-            </PDFDownloadLink>
-          </div>
-          <PDFViewer width="100%" height={ 600 }>
-            <FichaPdf />
-          </PDFViewer>
+              );
+            }
+            
+            return (
+              <Button variant="outline" disabled={ loading }>
+                { loading ? "Generando PDF..." : `Descargar ${esFicha ? 'Ficha' : 'Procedimiento'}` }
+              </Button>
+            );
+          }}
+        </PDFDownloadLink>
 
-        </TabsContent>
-        <TabsContent value="procedimiento">
-          <div className="flex flex-col gap-4">
-            <PDFDownloadLink
-              document={ <ProcedimientoPdf proceso={ proceso }  /> }
-              fileName="ProcedimientoProceso.pdf"
-            >
-              { ( { loading } ) => (
-                <Button variant="outline" disabled={ loading }>
-                  { loading ? "Generando Procedimiento..." : "Descargar Procedimiento PDF" }
-                </Button>
-              ) }
-            </PDFDownloadLink>
-            <PDFViewer width="100%" height={ 600 }>
-              <FichaPdf />
-            </PDFViewer>
+        <Button 
+          variant="secondary" 
+          onClick={() => setShowPdf(!showPdf)}
+        >
+          {showPdf ? "Ocultar Vista Previa" : "Mostrar Vista Previa"}
+        </Button>
+        
+        {showPdf && (
+          <div className="border rounded-md overflow-hidden">
+            <Suspense fallback={<div className="p-4 text-center">Cargando PDF...</div>}>
+              <PDFViewer width="100%" height={ 600 }>
+                {renderPdfComponent()}
+              </PDFViewer>
+            </Suspense>
           </div>
-        </TabsContent>
-      </Tabs>
+        )}
+      </div>
     </div>
   );
 };

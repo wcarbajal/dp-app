@@ -12,17 +12,28 @@ import { IoAddOutline } from "react-icons/io5";
 import Swal from 'sweetalert2';
 import { Table } from '@/components/ui/table';
 import { FaRegSave } from 'react-icons/fa';
+import { fetchConToken } from '@/helpers/fetch';
 
 //TODO: cambiarlo a un proceso propio
 
-export const ProcedimientoProceso = ( { actividades, idProceso } ) => {
+export const ProcedimientoProceso = ( { actividades, idProceso, onActividadesActualizadas } ) => {
 
+  // Normalizar actividades para evitar valores null
+  const actividadesNormalizadas = (actividades || []).map(actividad => ({
+    ...actividad,
+    nombre: actividad?.nombre || "",
+    descripcion: actividad?.descripcion || "",
+    unidadOperativa: actividad?.unidadOperativa || "",
+    responsable: actividad?.responsable || "",
+    registro: actividad?.registro || "",
+    numOrden: actividad?.numOrden || 1,
+  }));
 
   const form = useForm( {
     resolver: zodResolver( procedimientoSchema ),
     defaultValues: {
       procesoId: idProceso || undefined,
-      actividades: actividades || [],
+      actividades: actividadesNormalizadas,
     },
     mode: "onChange",
   } );
@@ -67,13 +78,90 @@ export const ProcedimientoProceso = ( { actividades, idProceso } ) => {
       registro: "",
       numOrden: fields.length + 1,
     } );
+    
+    // Marcar el formulario como dirty cuando se agrega un nuevo registro
+    form.setValue("actividades", form.getValues("actividades"), { shouldDirty: true });
   };
 
   const onSubmit = async ( formulario ) => {
     console.log( formulario );
-  };
+    
+    try {
+      // Enviar las actividades al backend
+      const response = await fetchConToken(
+        `procesos/${idProceso}/registrar-actividades`, 
+        formulario, 
+        'POST'
+      );
 
-  return (
+      if (response.ok) {
+        // Actualizar el formulario con los datos devueltos por el servidor
+        if (response.actividadesActualizadas) {
+          // Normalizar las actividades actualizadas
+          const actividadesNormalizadasNuevas = response.actividadesActualizadas.map(actividad => ({
+            ...actividad,
+            nombre: actividad?.nombre || "",
+            descripcion: actividad?.descripcion || "",
+            unidadOperativa: actividad?.unidadOperativa || "",
+            responsable: actividad?.responsable || "",
+            registro: actividad?.registro || "",
+            numOrden: actividad?.numOrden || 1,
+          }));
+          
+          // Resetear el formulario con los datos actualizados
+          form.reset({
+            procesoId: idProceso,
+            actividades: actividadesNormalizadasNuevas
+          });
+        }
+
+        // Notificar al componente padre si existe la función callback
+        if (onActividadesActualizadas && typeof onActividadesActualizadas === 'function') {
+          onActividadesActualizadas();
+        }
+
+        // Mostrar mensaje de éxito
+        await Swal.fire({
+          title: 'Registro exitoso',
+          text: 'Las actividades han sido registradas correctamente.',
+          icon: 'success',
+          confirmButtonColor: '#2A2A2A',
+          confirmButtonText: 'Aceptar',
+          customClass: {
+            confirmButton: 'bg-primary text-primary-foreground shadow-xs hover:bg-primary/90',
+          }
+        });
+
+        //actujalis la tabla
+
+        
+      } else {
+        // Mostrar mensaje de error
+        Swal.fire({
+          title: 'Error',
+          text: response.msg || 'Ocurrió un error al registrar las actividades',
+          icon: 'error',
+          confirmButtonColor: '#2A2A2A',
+          confirmButtonText: 'Aceptar',
+          customClass: {
+            confirmButton: 'bg-primary text-primary-foreground shadow-xs hover:bg-primary/90',
+          }
+        });
+      }
+    } catch (error) {
+      console.error('Error al enviar las actividades:', error);
+      Swal.fire({
+        title: 'Error',
+        text: 'Ocurrió un error inesperado al registrar las actividades',
+        icon: 'error',
+        confirmButtonColor: '#2A2A2A',
+        confirmButtonText: 'Aceptar',
+        customClass: {
+          confirmButton: 'bg-primary text-primary-foreground shadow-xs hover:bg-primary/90',
+        }
+      });
+    }
+  };  return (
     <Form { ...form }>
       <form onSubmit={ form.handleSubmit( onSubmit ) } className="flex flex-col gap-5">
         <h3 className="text-lg font-bold">Actividades</h3>
@@ -260,8 +348,8 @@ export const ProcedimientoProceso = ( { actividades, idProceso } ) => {
             >
               <IoAddOutline /> Agregar
             </Button>
-            <Button type="submit" disabled={ !form.formState.isDirty || !form.formState.isValid } >
-              <FaRegSave /> Guardar
+            <Button type="submit" disabled={ !form.formState.isDirty } >
+              <FaRegSave /> Guardar 
             </Button>
           </div>
         </div>

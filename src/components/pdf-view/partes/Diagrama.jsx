@@ -25,19 +25,40 @@ const styles = StyleSheet.create( {
 } );
 
 
-export const Diagrama = ( { imgBase64 } ) => (
+export const Diagrama = ( { imgBase64 } ) => {
 
-  <View>
-    <View wrap={ false }>
-      <Text>Diagrama de interaccion de proceso</Text>
+  // Validar si la imagen es válida
+  const isValidImage = imgBase64 && 
+    (imgBase64.startsWith('data:image/') || 
+     imgBase64.startsWith('http') || 
+     imgBase64.startsWith('/'));
 
-      <View style={ styles.table }>
-        <Image
-          style={ styles.imagen }
-          src={ imgBase64 }
-          alt="Diagrama de interaccion de proceso"
-        />
+  return (
+    <View>
+      <View wrap={ false }>
+        <Text style={styles.titulo}>Diagrama de interacción de proceso</Text>
+
+        <View style={ styles.table }>
+          {isValidImage ? (
+            <Image
+              style={ styles.imagen }
+              src={ imgBase64 }
+            />
+          ) : (
+            <View style={{ 
+              ...styles.imagen, 
+              display: 'flex', 
+              justifyContent: 'center', 
+              alignItems: 'center',
+              backgroundColor: '#f5f5f5'
+            }}>
+              <Text style={{ fontSize: 10, color: '#666' }}>
+                Diagrama no disponible
+              </Text>
+            </View>
+          )}
+        </View>
       </View>
     </View>
-  </View>
-);
+  );
+};

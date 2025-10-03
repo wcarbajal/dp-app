@@ -48,11 +48,13 @@ export const DetalleProceso = ( { procesoId } ) => {
   if ( loading ) return <div className="p-4">Cargando...</div>;
   if ( !detalleProceso ) return <div className="p-4 text-red-500">No se encontró el detalle del proceso.</div>;
 
+  console.log({detalleProceso})
+
   return (
 
     <Tabs defaultValue="descripcion" className=" flex flex-col ">
       <TabsList className="w-full h-10 bg-gray-200 rounded-t-lg flex items-center justify-around">
-        <TabsTrigger value="descripcion">Descripción</TabsTrigger>
+        <TabsTrigger value="descripcion">Descripción XX</TabsTrigger>
         <TabsTrigger value="diagrama">Diagrama</TabsTrigger>
         <TabsTrigger value="ficha">Ficha</TabsTrigger>
         <TabsTrigger value="procedimiento">Procedimiento</TabsTrigger>

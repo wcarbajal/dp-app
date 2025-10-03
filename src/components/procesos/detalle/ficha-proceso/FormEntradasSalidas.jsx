@@ -68,13 +68,13 @@ export const FormEntradasSalidas = ( { proceso } ) => {
 
   const onSubmit = async ( data ) => {
 
-
     let fichaId;
-    console.log( "proceso en onsubmit", proceso?.ficha );
+
+    console.log( "proceso en onsubmit", proceso.id );
 
 
 
-    if ( !proceso?.ficha ) {
+    if ( proceso?.ficha === null || proceso?.ficha === undefined ) {
 
       console.log( "registrando ficha nueva" );
       const fichaNueva = await fetchConToken( `procesos/${ proceso.id }/registrar-ficha` );

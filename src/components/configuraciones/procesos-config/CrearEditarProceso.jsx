@@ -35,30 +35,42 @@ export const CreateEditProceso = ( { idMapa, listadoProcesos, proceso, cargarPro
 
   const onSubmit = async ( values ) => {
 
+    console.log( "Submitting form with values:", values );
+
     try {
       let respuesta;
 
+      console.log( { respuesta } );
+
       const valuesToSend = { ...values };
+      console.log( "valuesToSend before adjustment:", valuesToSend );
+
       if ( valuesToSend.parentId === "" ) {
         delete valuesToSend.parentId;
       }
+
+      console.log( { proceso } );
 
       if ( proceso && proceso.id ) {
 
         respuesta = await fetchConToken( `procesos/${ proceso.id }/actualizar`, valuesToSend, "PUT" );
       } else {
         respuesta = await fetchConToken( `procesos/${ idMapa }/registrar`, valuesToSend, "POST" );
+        console.log( { respuesta } );
       }
 
       if ( respuesta.ok ) {
-
 
         setOpenDialog( false );
         Swal.fire( {
           title: "Éxito",
           text: "Proceso guardado correctamente",
           icon: "success",
-          confirmButtonText: "Aceptar"
+          confirmButtonColor: '#2A2A2A',
+          confirmButtonText: 'Aceptar',
+          customClass: {
+            confirmButton: 'bg-primary text-primary-foreground shadow-xs hover:bg-primary/90 z-10',
+          }
         } );
         form.reset();
         if ( cargarProcesos ) {
@@ -66,8 +78,18 @@ export const CreateEditProceso = ( { idMapa, listadoProcesos, proceso, cargarPro
         }
 
       } else {
-
-        alert( "Error al guardar el proceso" );
+        setOpenDialog( false );
+        await Swal.fire( {
+          title: "Ha ocurrido un error al crear el indicador.",
+          text: `Error: ${ respuesta.msg || 'No se pudo crear el indicador' }`,
+          icon: 'error',
+          confirmButtonColor: '#2A2A2A',
+          confirmButtonText: 'Regresar',
+          customClass: {
+            confirmButton: 'bg-primary text-primary-foreground shadow-xs hover:bg-primary/90 z-10',
+          }
+        } );
+        setOpenDialog( true );
       }
     } catch ( error ) {
       console.error( "Error al guardar proceso:", error );
@@ -100,12 +122,13 @@ export const CreateEditProceso = ( { idMapa, listadoProcesos, proceso, cargarPro
         </Button>
       </DialogTrigger>
       <DialogContent aria-describedby="dialog-description" className="  ">
+
         <DialogHeader>
           <DialogTitle className="text-lg font-boldt text-center">{ ( proceso && proceso.id ) ? "Editar Proceso" : "Nuevo Proceso" }</DialogTitle>
+          <DialogDescription>
+            Complete los datos para crear o editar un proceso.
+          </DialogDescription>
         </DialogHeader>
-        <DialogDescription id="dialog-description">
-          Complete los datos para crear o editar un proceso.
-        </DialogDescription>
 
         <div className="flex max-w-[500px] w-full ">
           <Form { ...form }>

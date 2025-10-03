@@ -47,7 +47,7 @@ export const ProcesoPage = () => {
     } finally {
       setLoading( false );
     }
-  }, [detalleProceso?.proceso?.mapaId, id] );
+  }, [ detalleProceso?.proceso?.mapaId, id ] );
 
   useEffect( () => {
 
@@ -74,6 +74,8 @@ export const ProcesoPage = () => {
   if ( loading ) return <div className="p-4">Cargando...</div>;
   if ( !detalleProceso ) return <div className="p-4 text-red-500">No se encontró el detalle del proceso.</div>;
 
+  const tieneHijos = detalleProceso.proceso.hijos.length > 0;
+
   return (
     <section className="bg-[#90A1B9] p-2">
       <Card className="flex flex-col text-lg font-bold justify-center items-center h-6 mb-3">
@@ -86,8 +88,13 @@ export const ProcesoPage = () => {
         <TabsList className="w-full h-10 bg-gray-200 rounded-t-lg flex items-center justify-around shadow-lg">
           <TabsTrigger value="descripcion">Descripción</TabsTrigger>
           <TabsTrigger value="diagrama">Diagrama</TabsTrigger>
-          <TabsTrigger value="ficha">Ficha</TabsTrigger>
-          <TabsTrigger value="procedimiento">Procedimiento</TabsTrigger>
+          {
+            tieneHijos && ( <TabsTrigger value="ficha">Ficha</TabsTrigger> )
+          }
+          {
+            !tieneHijos && ( <TabsTrigger value="procedimiento">Procedimiento</TabsTrigger> )
+          }
+
           <TabsTrigger value="indicadores">Indicadores</TabsTrigger>
           <TabsTrigger value="documentos">Documentos</TabsTrigger>
           <TabsTrigger value="datos">Datos</TabsTrigger>

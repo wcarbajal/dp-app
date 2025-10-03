@@ -25,8 +25,6 @@ import Swal from 'sweetalert2';
 
 export const BpmnModeler = ( { xmlInicial, procesoId, codigo, nombre } ) => {
 
-
-
   const [ open, setOpen ] = useState( true );
 
   const containerRef = useRef( null );
@@ -35,6 +33,39 @@ export const BpmnModeler = ( { xmlInicial, procesoId, codigo, nombre } ) => {
   const LOCAL_KEY = `${ codigo } ${ nombre } - bpmn-xml`;
 
   // Función para aplicar estilos por defecto a todos los elementos BPMN
+  // Función para convertir SVG a PNG en base64
+  const convertSvgToPng = (svg) => {
+    return new Promise((resolve) => {
+      const img = new window.Image();
+      const svgBlob = new Blob([svg], { type: 'image/svg+xml;charset=utf-8' });
+      const url = URL.createObjectURL(svgBlob);
+
+      img.onload = function () {
+        const canvas = document.createElement('canvas');
+        canvas.width = img.width;
+        canvas.height = img.height;
+        const ctx = canvas.getContext('2d');
+        
+        // Pinta el fondo blanco antes de dibujar el SVG
+        ctx.fillStyle = '#fff';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.drawImage(img, 0, 0);
+        
+        canvas.toBlob(function (blob) {
+          // Convertir blob a base64
+          const reader = new FileReader();
+          reader.onload = function() {
+            URL.revokeObjectURL(url);
+            resolve(reader.result); // Esto es el base64
+          };
+          reader.readAsDataURL(blob);
+        }, 'image/png');
+      };
+      
+      img.src = url;
+    });
+  };
+
   const aplicarEstilosPorDefecto = () => {
 
     const modeling = modelerRef.current.get( 'modeling' );
@@ -273,26 +304,83 @@ export const BpmnModeler = ( { xmlInicial, procesoId, codigo, nombre } ) => {
   };
 
   const handleSaveToDB = async () => {
-    if ( !modelerRef.current ) return;
-    const { xml } = await modelerRef.current.saveXML( { format: true } );
+    if (!modelerRef.current) return;
+    
+    try {
+      // Mostrar loading
+      Swal.fire({
+        title: 'Guardando diagrama...',
+        text: 'Por favor espere mientras se procesa el diagrama',
+        allowOutsideClick: false,
+        allowEscapeKey: false,
+        showConfirmButton: false,
+        didOpen: () => {
+          Swal.showLoading();
+        }
+      });
 
+      // Obtener XML
+      const { xml } = await modelerRef.current.saveXML({ format: true });
+      
+      // Obtener SVG y convertir a PNG
+      const { svg } = await modelerRef.current.saveSVG();
+      const pngBase64 = await convertSvgToPng(svg);
 
-    const response = await fetchConToken( `procesos/${ procesoId }/registrar-diagrama`, { xml }, 'POST' );
-    if ( response.ok ) {
-      Swal.fire( {
-        title: 'Registro exitoso al registrar el mapa',
-        text: response.msg,
-        icon: 'success',
-        iconColor: '#2E2E2E', // azul tailwind-500
-        confirmButtonColor: '#2A2A2A', // azul tailwind-500
+      // Preparar datos para enviar
+      const dataToSend = {
+        xml: xml,
+        imagen: pngBase64, // Base64 del PNG
+        metadatos: {
+          fechaActualizacion: new Date().toISOString(),
+          version: '1.0',
+          herramienta: 'bpmn-js'
+        }
+      };
+
+      const response = await fetchConToken(
+        `procesos/${procesoId}/registrar-diagrama`, 
+        dataToSend, 
+        'POST'
+      );
+
+      // Cerrar loading
+      Swal.close();
+
+      if (response.ok) {
+        Swal.fire({
+          title: '¡Éxito!',
+          text: 'Diagrama guardado correctamente en la base de datos',
+          icon: 'success',
+          iconColor: '#2E2E2E',
+          confirmButtonColor: '#2A2A2A',
+          confirmButtonText: 'Aceptar',
+          customClass: {
+            popup: 'z-[100]',
+            confirmButton: 'bg-primary text-primary-foreground shadow-xs hover:bg-primary/90',
+          },
+        });
+      } else {
+        throw new Error(response.msg || 'Error al guardar el diagrama');
+      }
+
+    } catch (error) {
+      console.error('Error al guardar diagrama:', error);
+      
+      // Cerrar loading si está abierto
+      Swal.close();
+      
+      Swal.fire({
+        title: 'Error',
+        text: `No se pudo guardar el diagrama: ${error.message}`,
+        icon: 'error',
+        confirmButtonColor: '#2A2A2A',
+        confirmButtonText: 'Entendido',
         customClass: {
           popup: 'z-[100]',
-          confirmButton: 'z-index-1000 bg-primary text-primary-foreground shadow-xs hover:bg-primary/90',
+          confirmButton: 'bg-primary text-primary-foreground shadow-xs hover:bg-primary/90',
         },
-      } );
+      });
     }
-
-
   };
 
   const handleDescargarXml = async () => {

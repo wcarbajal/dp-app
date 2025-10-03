@@ -6,8 +6,8 @@ import { Descripcion } from './partes/Descripcion';
 import { Indicadores } from './partes/Indicadores';
 import { Validacion } from './partes/Validacion';
 import { Diagrama } from './partes/Diagrama';
-import { useEffect, useState } from 'react';
-import { fetchConToken } from '@/helpers/fetch';
+
+
 
 
 
@@ -22,34 +22,30 @@ const styles = StyleSheet.create( {
 
 } );
 
-export const FichaPdf = ( { procesoId = 1 } ) => {
+export const FichaPdf = ( { proceso } ) => {
 
-  const [ imgBase64, setImgBase64 ] = useState( "" );
-  console.log( 'Proceso ID:', procesoId );
-  console.log( 'Imagen Base64:', imgBase64 );
+  console.log( "proceso en ficha pdf", proceso?.diagrama?.url );
 
-  useEffect(() => {
+  // Validar y limpiar la imagen
+  let imgBase64 = "";
+  if (proceso?.diagrama?.url) {
+    const url = proceso.diagrama.url;
+    // Verificar si es base64 o una URL válida
+    if (url.startsWith('data:image/')) {
+      imgBase64 = url;
+    } else if (url.startsWith('http') || url.startsWith('/')) {
+      // Es una URL normal, intentar convertir o usar directamente
+      imgBase64 = url;
+    }
+  }
 
-    const fetchImage = async () => {
-      try {
-        const response = await fetchConToken( `procesos/${procesoId}/imagen-diagrama-64` );
-        console.log( 'Response:', response);
-        //const data = await response.json();
-        setImgBase64( response.base64 );
-      } catch ( error ) {
-        console.error( 'Error fetching image:', error );
-      }
-    };
-
-    fetchImage();
-  }, [procesoId]);
 
 
   return (
     <Document>
       <Page size="A4" style={ styles.page }>
         <Cabecera
-          imagen="img/MINEDU.png"
+          imagen="/img/MINEDU.png"
           titulo="Ficha de proceso"
           codigoFormato="FPE03.02.01"
           version="2"

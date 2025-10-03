@@ -13,10 +13,30 @@ const styles = StyleSheet.create( {
 
 
 export const Cabecera = ({imagen, titulo, codigoFormato, version}) => {
+  
+  // Validar si la imagen es válida
+  const isValidImage = imagen && 
+    (imagen.startsWith('data:image/') || 
+     imagen.startsWith('http') || 
+     imagen.startsWith('/'));
+
   return (
     <View style={ styles.contenedorTitulo }>
       <View style={ styles.seccionTituloIz }>
-        <Image src={imagen} style={ { width: '100%', height: 'auto' } } />
+        {isValidImage ? (
+          <Image src={imagen} style={ { width: '100%', height: 'auto' } } />
+        ) : (
+          <View style={{ 
+            width: '100%', 
+            height: '100%', 
+            display: 'flex', 
+            justifyContent: 'center', 
+            alignItems: 'center',
+            backgroundColor: '#f0f0f0'
+          }}>
+            <Text style={{ fontSize: 8, color: '#666' }}>Logo</Text>
+          </View>
+        )}
       </View>
       <View style={ styles.seccionTituloCentro }>
         <Text style={ styles.titulo }>{titulo} </Text>
