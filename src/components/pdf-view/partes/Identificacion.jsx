@@ -35,13 +35,13 @@ const styles = StyleSheet.create( {
   rowMain: {
     display: "flex",
     flexDirection: "row",
-    
-    
+
+
   },
   cellRowMain1: {
     width: 114,
     backgroundColor: "#f0f0f0",
-    fontWeight: "bold", 
+    fontWeight: "bold",
     borderStyle: "solid",
     borderWidth: 1,
     borderLeftWidth: 0,
@@ -92,49 +92,49 @@ const styles = StyleSheet.create( {
 export const Identificacion = ( { proceso } ) => {
 
   const { codigo, nombre, objetivo, estrategico, owners, tipo, version } = proceso || {};
-  
+
   // Extraer las unidades operativas de los owners
   const obtenerUnidadesOperativas = () => {
-    if (!owners || !Array.isArray(owners) || owners.length === 0) {
+    if ( !owners || !Array.isArray( owners ) || owners.length === 0 ) {
       return 'No asignado';
     }
-    
+
     // Mapear los owners para obtener sus unidades operativas
     const unidadesOperativas = owners
-      .map(owner => owner?.unidadOperativa?.nombre)
-      .filter(nombre => nombre) // Filtrar valores nulos o undefined
-      .join(', '); // Unir con comas
-    
+      .map( owner => owner?.unidadOperativa?.nombre )
+      .filter( nombre => nombre ) // Filtrar valores nulos o undefined
+      .join( ', ' ); // Unir con comas
+
     return unidadesOperativas || 'No asignado';
   };
 
   const duenios = obtenerUnidadesOperativas();
 
- 
-  
- return (<View style={ styles.table }>
+
+
+  return ( <View style={ styles.table }>
     <View style={ styles.row }>
       <View style={ styles.rowMain }>
         <Text style={ styles.cellRowMain1 }>Código y nombre</Text>
-        <Text style={ styles.cellRowMain2 }>{ codigo } - { nombre}</Text>
+        <Text style={ styles.cellRowMain2 }>{ codigo } - { nombre }</Text>
         <Text style={ styles.cellRowMain3 }>Tipo</Text>
         <Text style={ styles.cellRowMain4 }>{ tipo }</Text>
         <Text style={ styles.cellRowMain3 }>Versión</Text>
-        <Text style={ styles.cellRowMain5  }>{ version }</Text>
+        <Text style={ styles.cellRowMain5 }>{ version }</Text>
       </View>
-    </View>
-    <View style={ styles.row }>
-      <Text style={ styles.cellConcept }>Objetivo</Text>
-      <Text style={ styles.cellDetail }>{ objetivo }</Text>
-    </View>
-    <View style={ styles.row }>
-      <Text style={ styles.cellConcept }>ObjetivoE</Text>
-      <Text style={ styles.cellDetail }>{ estrategico?.nombre || 'No asignado' }</Text>
     </View>
     <View style={ styles.row }>
       <Text style={ styles.cellConcept }>Dueño</Text>
       <Text style={ styles.cellDetail }>{ duenios }</Text>
     </View>
+    <View style={ styles.row }>
+      <Text style={ styles.cellConcept }>Objetivo del proceso</Text>
+      <Text style={ styles.cellDetail }>{ objetivo }</Text>
+    </View>
+    <View style={ styles.row }>
+      <Text style={ styles.cellConcept }>Objetivo estratégico</Text>
+      <Text style={ styles.cellDetail }>{ estrategico?.nombre || 'No asignado' }</Text>
+    </View>
   </View>
- )
+  );
 };

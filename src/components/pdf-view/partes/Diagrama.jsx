@@ -8,33 +8,30 @@ const styles = StyleSheet.create( {
   },
   table: {
     display: "flex",
-    width: "100%", // Cambiado de "auto" a "100%"
+    width: "100%",
     borderStyle: "solid",
     borderWidth: 1,
     borderColor: "black",    
-    marginVertical: 10,
+    marginVertical: 5,
     fontSize: 10,
     flexDirection: "column",
     padding: 5,
-    overflow: "hidden", // Evita desbordamiento
   },
   contenedorImagen: {
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
     width: '100%',
-    height: 'auto', // Altura automática
-    minHeight: 300,
-    maxHeight: 500, // Altura máxima reducida para evitar desbordamiento
+    maxHeight: 400,
     backgroundColor: '#f9f9f9',
-    padding: 10, // Padding para evitar que toque los bordes
+    padding: 5,
   },
   imagen: {
-    maxWidth: '95%', // Reducido para dejar margen
-    maxHeight: '95%', // Reducido para dejar margen
+    maxWidth: '90%',
+    maxHeight: '390px',
     width: 'auto',
     height: 'auto',
-    objectFit: 'contain', // Mantiene la proporción sin distorsión
+    objectFit: 'contain',
   },
   imagenPlaceholder: {
     display: 'flex', 
@@ -42,7 +39,7 @@ const styles = StyleSheet.create( {
     alignItems: 'center',
     backgroundColor: '#f5f5f5',
     width: '100%',
-    height: 300, // Altura reducida para evitar desbordamiento
+    height: 200,
     border: '1pt dashed #ccc',
   }
 } );
@@ -57,26 +54,23 @@ export const Diagrama = ( { imgBase64 } ) => {
      imgBase64.startsWith('/'));
 
   return (
-    <View style={{ marginTop: 15, width: '100%', maxWidth: '100%' }}>
-      <View style={{ width: '100%' }}>
-        <Text style={styles.titulo}>Diagrama de interacción de proceso</Text>
-
-        <View style={ styles.table }>
-          {isValidImage ? (
-            <View style={styles.contenedorImagen}>
-              <Image
-                style={styles.imagen}
-                src={imgBase64}
-              />
-            </View>
-          ) : (
-            <View style={styles.imagenPlaceholder}>
-              <Text style={{ fontSize: 10, color: '#666' }}>
-                Diagrama no disponible
-              </Text>
-            </View>
-          )}
-        </View>
+    <View>
+      <Text style={styles.titulo}>Diagrama de interacción de proceso</Text>
+      <View style={ styles.table }>
+        {isValidImage ? (
+          <View style={styles.contenedorImagen}>
+            <Image
+              style={styles.imagen}
+              src={imgBase64}
+            />
+          </View>
+        ) : (
+          <View style={styles.imagenPlaceholder}>
+            <Text style={{ fontSize: 10, color: '#666' }}>
+              Diagrama no disponible
+            </Text>
+          </View>
+        )}
       </View>
     </View>
   );
