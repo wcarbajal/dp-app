@@ -8,6 +8,37 @@ import { Validacion } from './partes/Validacion';
 import { Diagrama } from './partes/Diagrama';
 
 
+// Función para detectar si una imagen es más ancha que alta
+const getImageDimensions = (imgBase64) => {
+  if (!imgBase64 || typeof window === 'undefined') {
+    return { width: 1, height: 1 }; // default portrait
+  }
+
+  // Para imágenes base64, intentamos extraer las dimensiones del SVG si es posible
+  if (imgBase64.includes('data:image/svg')) {
+    // Si es SVG, podemos intentar parsearlo para obtener dimensiones
+    try {
+      const base64Data = imgBase64.split(',')[1];
+      const svgString = atob(base64Data);
+      const widthMatch = svgString.match(/width="([^"]+)"/);
+      const heightMatch = svgString.match(/height="([^"]+)"/);
+      
+      if (widthMatch && heightMatch) {
+        const width = parseFloat(widthMatch[1]);
+        const height = parseFloat(heightMatch[1]);
+        return { width, height };
+      }
+    } catch (error) {
+      console.warn('Error parsing SVG dimensions:', error);
+    }
+  }
+
+  // Para otros tipos de imagen, usamos dimensiones más conservadoras
+  // Solo asumimos landscape si realmente es muy horizontal
+  return { width: 1.2, height: 1 }; // Relación 1.2:1 - no alcanza el umbral de 1.5
+};
+
+
 
 
 
@@ -24,9 +55,7 @@ const styles = StyleSheet.create( {
 
 export const FichaPdf = ( { proceso } ) => {
 
-  console.log( "proceso en ficha pdf", proceso?.diagrama?.url );
-
-  // Validar y limpiar la imagen
+    // Validar y limpiar la imagen
   let imgBase64 = "";
   if (proceso?.diagrama?.url) {
     const url = proceso.diagrama.url;
@@ -38,6 +67,18 @@ export const FichaPdf = ( { proceso } ) => {
       imgBase64 = url;
     }
   }
+
+  // Determinar orientación de la página para el diagrama
+  const getPageOrientation = () => {
+    if (!imgBase64) return 'portrait';
+    
+    const dimensions = getImageDimensions(imgBase64);
+    // Solo girar a horizontal si el ancho es al menos 1.1 veces mayor que la altura
+    const aspectRatio = dimensions.width / dimensions.height;
+    return aspectRatio >= 1.1 ? 'landscape' : 'portrait';
+  };
+
+  const diagramPageOrientation = getPageOrientation();
 
 
 
@@ -55,10 +96,18 @@ export const FichaPdf = ( { proceso } ) => {
         <Descripcion />
         <Indicadores />
         <Validacion />
-
-        {imgBase64 && <Diagrama imgBase64={imgBase64} />}
-
       </Page>
+
+      {/* Página dedicada al diagrama con orientación dinámica */}
+      {imgBase64 && (
+        <Page 
+          size="A4" 
+          orientation={diagramPageOrientation}
+          style={styles.page}
+        >
+          <Diagrama imgBase64={imgBase64} />
+        </Page>
+      )}
     </Document>
   );
 };

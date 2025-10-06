@@ -20,6 +20,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";
+import { Separator } from "@/components/ui/separator";
 import { actualizarProcesoSchema } from '@/schema/ProcesosSchema';
 import { fetchConToken } from '@/helpers/fetch';
 import Swal from 'sweetalert2';
@@ -53,7 +54,7 @@ export const DescripcionProceso = ( { proceso, onSubmit: onSubmitProp, ownersOpt
 
 
     if ( onSubmitProp ) {
-      console.log("onSubmitProp",values)
+      console.log( "onSubmitProp", values );
       onSubmitProp( values );
     } else {
       console.log( "Formulario enviado:", values );
@@ -86,204 +87,202 @@ export const DescripcionProceso = ( { proceso, onSubmit: onSubmitProp, ownersOpt
   };
 
   return (
-    <Card className="flex w-full  shadow-lg">
+    <Card className="">
 
       <CardHeader className="">
         <CardTitle>Descripción del Proceso</CardTitle>
         <CardDescription>Datos generales del proceso</CardDescription>
-
+        <Separator className="" />
       </CardHeader>
 
-      <CardContent>
+      <Form { ...form }>
+        <form onSubmit={ form.handleSubmit( onSubmit ) } className="flex flex-col gap-4 w-full ">
+          <div className="grid grid-cols-2 gap-4 p-4">
 
-        <Form { ...form }>
-          <form onSubmit={ form.handleSubmit( onSubmit ) } className="flex flex-col gap-4 w-full ">
-            <div className="grid grid-cols-2 gap-4">
+            <FormField
+              control={ form.control }
+              name="codigo"
+              render={ ( { field } ) => (
+                <FormItem className="flex items-center">
+                  <FormLabel className="w-24">Código</FormLabel>
+                  <FormControl className="w-full bg-slate-100">
+                    <Input className="w-full" placeholder="Código del proceso" readOnly { ...field } />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              ) }
+            />
 
-              <FormField
-                control={ form.control }
-                name="codigo"
-                render={ ( { field } ) => (
-                  <FormItem className="flex items-center">
-                    <FormLabel className="w-24">Código</FormLabel>
-                    <FormControl className="w-full bg-slate-100">
-                      <Input className="w-full" placeholder="Código del proceso" readOnly { ...field } />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                ) }
-              />
+            <FormField
+              control={ form.control }
+              name="nombre"
+              render={ ( { field } ) => (
+                <FormItem className="flex items-center">
+                  <FormLabel className="w-24">Nombre</FormLabel>
+                  <FormControl className="w-full bg-slate-100">
+                    <Input className="w-full" readOnly placeholder="Nombre del proceso" { ...field } />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              ) }
+            />
 
-              <FormField
-                control={ form.control }
-                name="nombre"
-                render={ ( { field } ) => (
-                  <FormItem className="flex items-center">
-                    <FormLabel className="w-24">Nombre</FormLabel>
-                    <FormControl className="w-full bg-slate-100">
-                      <Input className="w-full" readOnly placeholder="Nombre del proceso" { ...field } />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                ) }
-              />
+            <FormField
+              control={ form.control }
+              name="tipo"
+              render={ ( { field } ) => (
+                <FormItem className="flex items-center">
+                  <FormLabel className="w-24">Tipo</FormLabel>
+                  <FormControl className="w-full">
+                    <Select onValueChange={ field.onChange } value={ field.value }>
+                      <SelectTrigger className="w-full">
+                        <SelectValue placeholder="Seleccione un tipo" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="Estratégico">Estratégico</SelectItem>
+                        <SelectItem value="Misional">Misional</SelectItem>
+                        <SelectItem value="Soporte">Soporte</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              ) }
+            />
 
-              <FormField
-                control={ form.control }
-                name="tipo"
-                render={ ( { field } ) => (
-                  <FormItem className="flex items-center">
-                    <FormLabel className="w-24">Tipo</FormLabel>
-                    <FormControl className="w-full">
-                      <Select onValueChange={ field.onChange } value={ field.value }>
+            <FormField
+              control={ form.control }
+              name="nivel"
+              render={ ( { field } ) => (
+                <FormItem className="flex items-center">
+                  <FormLabel className="w-24">Nivel</FormLabel>
+                  <FormControl className="w-full">
+                    <Select onValueChange={ field.onChange } value={ field.value }>
+                      <SelectTrigger className="w-full">
+                        <SelectValue placeholder="Seleccione un nivel" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        { [ "0", "1", "2", "3", "4", "5", "6", "7", "8", "9" ].map( ( n ) => (
+                          <SelectItem key={ n } value={ n }>
+                            { n }
+                          </SelectItem>
+                        ) ) }
+                      </SelectContent>
+                    </Select>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              ) }
+            />
+
+            <FormField
+              control={ form.control }
+              name="descripcion"
+              render={ ( { field } ) => (
+                <FormItem className="flex items-center">
+                  <FormLabel className="w-24">Descripción</FormLabel>
+                  <FormControl className="w-full">
+                    <Input className="w-full" placeholder="Descripción del proceso" { ...field } />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              ) }
+            />
+
+            <FormField
+              control={ form.control }
+              name="objetivo"
+              render={ ( { field } ) => (
+                <FormItem className="flex items-center">
+                  <FormLabel className="w-24">Objetivo</FormLabel>
+                  <FormControl className="w-full">
+                    <Input className="w-full" placeholder="Objetivo del proceso" { ...field } />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              ) }
+            />
+            <FormField
+              control={ form.control }
+              name="alcance"
+              render={ ( { field } ) => (
+                <FormItem className="flex items-center">
+                  <FormLabel className="w-24">Alcance</FormLabel>
+                  <FormControl className="w-full">
+                    <Input className="w-full" placeholder="Alcance del proceso" { ...field } />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              ) }
+            />
+            <FormField
+              control={ form.control }
+              name="estrategico"
+              render={ ( { field } ) => (
+                <FormItem className="flex items-center">
+                  <FormLabel className="w-24">Objetivo estratégico</FormLabel>
+                  <FormControl className="w-full">
+                    <Select onValueChange={ field.onChange } defaultValue={ field.value }>
+                      <FormControl>
                         <SelectTrigger className="w-full">
-                          <SelectValue placeholder="Seleccione un tipo" />
+                          <SelectValue placeholder="Seleccione un objetico estratégico" />
                         </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="Estratégico">Estratégico</SelectItem>
-                          <SelectItem value="Misional">Misional</SelectItem>
-                          <SelectItem value="Soporte">Soporte</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                ) }
-              />
-
-              <FormField
-                control={ form.control }
-                name="nivel"
-                render={ ( { field } ) => (
-                  <FormItem className="flex items-center">
-                    <FormLabel className="w-24">Nivel</FormLabel>
-                    <FormControl className="w-full">
-                      <Select onValueChange={ field.onChange } value={ field.value }>
-                        <SelectTrigger className="w-full">
-                          <SelectValue placeholder="Seleccione un nivel" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          { [ "0", "1", "2", "3", "4", "5", "6", "7", "8", "9" ].map( ( n ) => (
-                            <SelectItem key={ n } value={ n }>
-                              { n }
+                      </FormControl>
+                      <SelectContent>
+                        { indicadoresOEI && indicadoresOEI.length > 0 ? (
+                          indicadoresOEI.map( ( ind ) => (
+                            <SelectItem key={ ind.id } value={ ind.id.toString() }>
+                              { ind.codigo }- { ind.nombre }
                             </SelectItem>
-                          ) ) }
-                        </SelectContent>
-                      </Select>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                ) }
-              />
+                          ) )
+                        ) : (
+                          <SelectItem disabled>No hay indicadores disponibles</SelectItem>
+                        ) }
+                      </SelectContent>
+                    </Select>
+                  </FormControl>
 
-              <FormField
-                control={ form.control }
-                name="descripcion"
-                render={ ( { field } ) => (
-                  <FormItem className="flex items-center">
-                    <FormLabel className="w-24">Descripción</FormLabel>
-                    <FormControl className="w-full">
-                      <Input className="w-full" placeholder="Descripción del proceso" { ...field } />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                ) }
-              />
-
-              <FormField
-                control={ form.control }
-                name="objetivo"
-                render={ ( { field } ) => (
-                  <FormItem className="flex items-center">
-                    <FormLabel className="w-24">Objetivo</FormLabel>
-                    <FormControl className="w-full">
-                      <Input className="w-full" placeholder="Objetivo del proceso" { ...field } />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                ) }
-              />
-              <FormField
-                control={ form.control }
-                name="alcance"
-                render={ ( { field } ) => (
-                  <FormItem className="flex items-center">
-                    <FormLabel className="w-24">Alcance</FormLabel>
-                    <FormControl className="w-full">
-                      <Input className="w-full" placeholder="Alcance del proceso" { ...field } />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                ) }
-              />
-              <FormField
-                control={ form.control }
-                name="estrategico"
-                render={ ( { field } ) => (
-                  <FormItem className="flex items-center">
-                    <FormLabel className="w-24">Objetivo estratégico</FormLabel>
-                    <FormControl className="w-full">
-                      <Select onValueChange={ field.onChange } defaultValue={ field.value }>
-                        <FormControl>
-                          <SelectTrigger className="w-full">
-                            <SelectValue placeholder="Seleccione un objetico estratégico" />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          { indicadoresOEI && indicadoresOEI.length > 0 ? (
-                            indicadoresOEI.map( ( ind ) => (
-                              <SelectItem key={ ind.id } value={ ind.id.toString() }>
-                                { ind.codigo }- { ind.nombre } 
-                              </SelectItem>
-                            ) )
-                          ) : (
-                            <SelectItem disabled>No hay indicadores disponibles</SelectItem>
-                          ) }
-                        </SelectContent>
-                      </Select>
-                    </FormControl>
-
-                  </FormItem>
-                ) }
-              />
-              <FormField
-                control={ form.control }
-                name="owners"
-                render={ ( { field } ) => (
-                  <FormItem className="flex items-center col-span-2">
-                    <FormLabel className="w-24">Dueños</FormLabel>
-                    <FormControl className="w-full">
-                      <ReactSelect
-                        isMulti
-                        options={ ownersOptions.map( d => ( { value: d.id.toString(), label: d.unidadOperativa.nombre } ) ) }
-                        value={
-                          Array.isArray( field.value )
-                            ? ownersOptions
-                              .filter( d => field.value.includes( d.id.toString() ) )
-                              .map( d => ( { value: d.id.toString(), label: d.unidadOperativa.nombre } ) )
-                            : []
-                        }
-                        onChange={ selected => {
-                          field.onChange( selected ? selected.map( option => option.value ) : [] );
-                        }
-                        }
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                ) }
-              />
+                </FormItem>
+              ) }
+            />
+            <FormField
+              control={ form.control }
+              name="owners"
+              render={ ( { field } ) => (
+                <FormItem className="flex items-center col-span-2">
+                  <FormLabel className="w-24">Dueños</FormLabel>
+                  <FormControl className="w-full">
+                    <ReactSelect
+                      isMulti
+                      options={ ownersOptions.map( d => ( { value: d.id.toString(), label: d.unidadOperativa.nombre } ) ) }
+                      value={
+                        Array.isArray( field.value )
+                          ? ownersOptions
+                            .filter( d => field.value.includes( d.id.toString() ) )
+                            .map( d => ( { value: d.id.toString(), label: d.unidadOperativa.nombre } ) )
+                          : []
+                      }
+                      onChange={ selected => {
+                        field.onChange( selected ? selected.map( option => option.value ) : [] );
+                      }
+                      }
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              ) }
+            />
 
 
-            </div>
-            <div className="flex justify-center ">
-              <Button type="submit" disabled={ !form.formState.isDirty }>
-                Guardar Cambios
-              </Button>
-            </div>
-          </form>
-        </Form>
-      </CardContent>
+          </div>
+          <div className="flex justify-center ">
+            <Button type="submit" disabled={ !form.formState.isDirty }>
+              Guardar Cambios
+            </Button>
+          </div>
+        </form>
+      </Form>
+
 
     </Card>
   );

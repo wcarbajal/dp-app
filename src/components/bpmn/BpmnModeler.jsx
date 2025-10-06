@@ -23,7 +23,7 @@ import { fetchConToken } from '@/helpers/fetch';
 import Swal from 'sweetalert2';
 
 
-export const BpmnModeler = ( { xmlInicial, procesoId, codigo, nombre } ) => {
+export const BpmnModeler = ( { xmlInicial, procesoId, codigo, nombre, onDiagramaActualizado } ) => {
 
   const [ open, setOpen ] = useState( true );
 
@@ -34,36 +34,36 @@ export const BpmnModeler = ( { xmlInicial, procesoId, codigo, nombre } ) => {
 
   // Función para aplicar estilos por defecto a todos los elementos BPMN
   // Función para convertir SVG a PNG en base64
-  const convertSvgToPng = (svg) => {
-    return new Promise((resolve) => {
+  const convertSvgToPng = ( svg ) => {
+    return new Promise( ( resolve ) => {
       const img = new window.Image();
-      const svgBlob = new Blob([svg], { type: 'image/svg+xml;charset=utf-8' });
-      const url = URL.createObjectURL(svgBlob);
+      const svgBlob = new Blob( [ svg ], { type: 'image/svg+xml;charset=utf-8' } );
+      const url = URL.createObjectURL( svgBlob );
 
       img.onload = function () {
-        const canvas = document.createElement('canvas');
+        const canvas = document.createElement( 'canvas' );
         canvas.width = img.width;
         canvas.height = img.height;
-        const ctx = canvas.getContext('2d');
-        
+        const ctx = canvas.getContext( '2d' );
+
         // Pinta el fondo blanco antes de dibujar el SVG
         ctx.fillStyle = '#fff';
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-        ctx.drawImage(img, 0, 0);
-        
-        canvas.toBlob(function (blob) {
+        ctx.fillRect( 0, 0, canvas.width, canvas.height );
+        ctx.drawImage( img, 0, 0 );
+
+        canvas.toBlob( function ( blob ) {
           // Convertir blob a base64
           const reader = new FileReader();
-          reader.onload = function() {
-            URL.revokeObjectURL(url);
-            resolve(reader.result); // Esto es el base64
+          reader.onload = function () {
+            URL.revokeObjectURL( url );
+            resolve( reader.result ); // Esto es el base64
           };
-          reader.readAsDataURL(blob);
-        }, 'image/png');
+          reader.readAsDataURL( blob );
+        }, 'image/png' );
       };
-      
+
       img.src = url;
-    });
+    } );
   };
 
   const aplicarEstilosPorDefecto = () => {
@@ -175,7 +175,7 @@ export const BpmnModeler = ( { xmlInicial, procesoId, codigo, nombre } ) => {
           xml = xmlObj.xml;
         } catch ( e ) {
           // Si falla el parseo, asume que es XML plano
-          console.log("Error al parsear XML:", e);
+          console.log( "Error al parsear XML:", e );
           xml = xmlInicial;
         }
       }
@@ -304,11 +304,11 @@ export const BpmnModeler = ( { xmlInicial, procesoId, codigo, nombre } ) => {
   };
 
   const handleSaveToDB = async () => {
-    if (!modelerRef.current) return;
-    
+    if ( !modelerRef.current ) return;
+
     try {
       // Mostrar loading
-      Swal.fire({
+      Swal.fire( {
         title: 'Guardando diagrama...',
         text: 'Por favor espere mientras se procesa el diagrama',
         allowOutsideClick: false,
@@ -317,14 +317,14 @@ export const BpmnModeler = ( { xmlInicial, procesoId, codigo, nombre } ) => {
         didOpen: () => {
           Swal.showLoading();
         }
-      });
+      } );
 
       // Obtener XML
-      const { xml } = await modelerRef.current.saveXML({ format: true });
-      
+      const { xml } = await modelerRef.current.saveXML( { format: true } );
+
       // Obtener SVG y convertir a PNG
       const { svg } = await modelerRef.current.saveSVG();
-      const pngBase64 = await convertSvgToPng(svg);
+      const pngBase64 = await convertSvgToPng( svg );
 
       // Preparar datos para enviar
       const dataToSend = {
@@ -338,16 +338,26 @@ export const BpmnModeler = ( { xmlInicial, procesoId, codigo, nombre } ) => {
       };
 
       const response = await fetchConToken(
-        `procesos/${procesoId}/registrar-diagrama`, 
-        dataToSend, 
+        `procesos/${ procesoId }/registrar-diagrama`,
+        dataToSend,
         'POST'
       );
 
       // Cerrar loading
       Swal.close();
 
-      if (response.ok) {
-        Swal.fire({
+      if ( response.ok ) {
+
+        // Notificar al componente padre que el diagrama se actualizó
+        if ( onDiagramaActualizado && typeof onDiagramaActualizado === 'function' ) {
+          onDiagramaActualizado( {
+            xml: xml,
+            imagen: pngBase64,
+            url: response.diagrama?.url || pngBase64, // URL o base64 de la imagen
+            metadatos: dataToSend.metadatos
+          } );
+        }
+        Swal.fire( {
           title: '¡Éxito!',
           text: 'Diagrama guardado correctamente en la base de datos',
           icon: 'success',
@@ -358,20 +368,20 @@ export const BpmnModeler = ( { xmlInicial, procesoId, codigo, nombre } ) => {
             popup: 'z-[100]',
             confirmButton: 'bg-primary text-primary-foreground shadow-xs hover:bg-primary/90',
           },
-        });
+        } );
       } else {
-        throw new Error(response.msg || 'Error al guardar el diagrama');
+        throw new Error( response.msg || 'Error al guardar el diagrama' );
       }
 
-    } catch (error) {
-      console.error('Error al guardar diagrama:', error);
-      
+    } catch ( error ) {
+      console.error( 'Error al guardar diagrama:', error );
+
       // Cerrar loading si está abierto
       Swal.close();
-      
-      Swal.fire({
+
+      Swal.fire( {
         title: 'Error',
-        text: `No se pudo guardar el diagrama: ${error.message}`,
+        text: `No se pudo guardar el diagrama: ${ error.message }`,
         icon: 'error',
         confirmButtonColor: '#2A2A2A',
         confirmButtonText: 'Entendido',
@@ -379,7 +389,7 @@ export const BpmnModeler = ( { xmlInicial, procesoId, codigo, nombre } ) => {
           popup: 'z-[100]',
           confirmButton: 'bg-primary text-primary-foreground shadow-xs hover:bg-primary/90',
         },
-      });
+      } );
     }
   };
 

@@ -114,7 +114,7 @@ export const AgregarIndicador = ( { mapaId, procesoId, onIndicadoresAgregados } 
   return (
     <Dialog open={ open } onOpenChange={ handleOpenChange }>
       <DialogTrigger asChild>
-        <Button variant="outline">
+        <Button variant="">
           <Plus />
           Agregar indicador
         </Button>

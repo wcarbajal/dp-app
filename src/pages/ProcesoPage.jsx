@@ -17,115 +17,179 @@ export const ProcesoPage = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
+  const [proceso, setProceso] = useState(null);
+  const [indicadoresList, setIndicadoresList] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [ownersList, setOwnersList] = useState([]);
+  const [activeTab, setActiveTab] = useState('descripcion');
 
-  const [ detalleProceso, setDetalleProceso ] = useState( null );
-  const [ indicadoresList, setIndicadoresList ] = useState( [] );
-  const [ loading, setLoading ] = useState( false );
-  const [ ownersList, setOwnersList ] = useState( [] );
+  
 
-  // Estado controlado para la pestaña activa
-  const [ activeTab, setActiveTab ] = useState( 'descripcion' );
-
-  const cargarDetalle = useCallback( async () => {
-
-    setLoading( true );
+  // Cargar proceso principal
+  const cargarProceso = useCallback(async () => {
+    if (!id) return;
+    
+    setLoading(true);
     try {
-
-      const detalleProcesos = await fetchConToken( `procesos/detalle/${ id }` );
-
-      setDetalleProceso( detalleProcesos );
-
-      const consultaOwners = await fetchConToken( `owners/${ detalleProceso?.proceso?.mapaId }`, {}, 'GET' );
-      const consultaIndicadores = await fetchConToken( `indicador/${ detalleProceso?.proceso?.mapaId }`, {}, 'GET' );
-
-      setIndicadoresList( consultaIndicadores.indicadores );
-
-      setOwnersList( consultaOwners.owners );
-    } catch ( error ) {
-      setDetalleProceso( null );
-      console.log( "Error al cargar el detalle del proceso:", error );
+      const detalleProcesos = await fetchConToken(`procesos/detalle/${id}`);
+      
+      if (detalleProcesos.ok) {
+        setProceso(detalleProcesos.proceso);
+      } else {
+        setProceso(null);
+      }
+    } catch (error) {
+      setProceso(null);
+      console.error("Error al cargar el detalle del proceso:", error);
     } finally {
-      setLoading( false );
+      setLoading(false);
     }
-  }, [ detalleProceso?.proceso?.mapaId, id ] );
+  }, [id]);
 
-  useEffect( () => {
+  // Cargar indicadores (solo cuando hay mapaId)
+  const cargarIndicadores = useCallback(async (mapaId) => {
+    if (!mapaId) return;
+    
+    try {
+      const consultaIndicadores = await fetchConToken(`indicador/${mapaId}`, {}, 'GET');
+      if (consultaIndicadores.ok) {
+        setIndicadoresList(consultaIndicadores.indicadores);
+      }
+    } catch (error) {
+      setIndicadoresList([]);
+      console.error("Error al cargar indicadores:", error);
+    }
+  }, []);
 
-    if ( id ) cargarDetalle();
-  }, [ cargarDetalle, id ] );
+  // Cargar owners (solo cuando hay mapaId)
+  const cargarOwners = useCallback(async (mapaId) => {
+    if (!mapaId) return;
+    
+    try {
+      const consultaOwners = await fetchConToken(`owners/${mapaId}`, {}, 'GET');
+      if (consultaOwners.ok) {
+        setOwnersList(consultaOwners.owners);
+      }
+    } catch (error) {
+      setOwnersList([]);
+      console.error("Error al cargar owners:", error);
+    }
+  }, []);
 
-  // Actualizar activeTab basado en el hash
-  useEffect( () => {
-    const hash = location.hash.replace( '#', '' );
-    const tab = hash || 'descripcion';
-
-    setActiveTab( tab );
-  }, [ location.hash, location.pathname ] );
-
-  // Manejar cambio de pestaña y actualizar la URL
-  const handleTabChange = ( value ) => {
-
-    setActiveTab( value );
-    navigate( `/proceso/${ id }#${ value }`, { replace: true } );
+  // Función para actualizar el diagrama en el estado local
+  const handleDiagramaActualizado = (nuevoDiagrama) => {
+        
+    setProceso(procesoAnterior => {
+      if (!procesoAnterior) return procesoAnterior;
+      
+      return {
+        ...procesoAnterior,
+        diagrama: {
+          ...procesoAnterior.diagrama,
+          xml: nuevoDiagrama.xml,
+          imagen: nuevoDiagrama.imagen,
+          url: nuevoDiagrama.url,
+          metadatos: nuevoDiagrama.metadatos,
+          fechaActualizacion: new Date().toISOString()
+        }
+      };
+    });
   };
 
+  // Cargar proceso inicial
+  useEffect(() => {
+    cargarProceso();
+  }, [cargarProceso]);
 
+  // Cargar datos dependientes cuando cambie el mapaId
+  useEffect(() => {
+    if (proceso?.mapaId) {
+      cargarIndicadores(proceso.mapaId);
+      cargarOwners(proceso.mapaId);
+    }
+  }, [proceso?.mapaId, cargarIndicadores, cargarOwners]);
 
-  if ( loading ) return <div className="p-4">Cargando...</div>;
-  if ( !detalleProceso ) return <div className="p-4 text-red-500">No se encontró el detalle del proceso.</div>;
+  // Manejar tab activo basado en URL
+  useEffect(() => {
+    const hash = location.hash.replace('#', '');
+    const tab = hash || 'descripcion';
+    setActiveTab(tab);
+  }, [location.hash]);
 
-  const tieneHijos = detalleProceso.proceso.hijos.length > 0;
+  // Manejar cambio de pestaña
+  const handleTabChange = (value) => {
+    setActiveTab(value);
+    navigate(`/proceso/${id}#${value}`, { replace: true });
+  };
+
+  // Estados de carga
+  if (loading) return <div className="p-4">Cargando...</div>;
+  if (!proceso) return <div className="p-4 text-red-500">No se encontró el detalle del proceso.</div>;
+
+  const tieneHijos = proceso.hijos?.length > 0;
 
   return (
     <section className="bg-[#90A1B9] p-2">
       <Card className="flex flex-col text-lg font-bold justify-center items-center h-6 mb-3">
         <h1 className="font-semibold">
-          Detalle del Proceso: <span className="font-bold">{ detalleProceso.proceso.codigo } { detalleProceso.proceso.nombre }</span>
+          Detalle del Proceso: <span className="font-bold">{proceso.codigo} {proceso.nombre}</span>
         </h1>
       </Card>
 
-      <Tabs value={ activeTab } onValueChange={ handleTabChange } className="flex flex-col">
+      <Tabs value={activeTab} onValueChange={handleTabChange} className="flex flex-col">
         <TabsList className="w-full h-10 bg-gray-200 rounded-t-lg flex items-center justify-around shadow-lg">
           <TabsTrigger value="descripcion">Descripción</TabsTrigger>
           <TabsTrigger value="diagrama">Diagrama</TabsTrigger>
-          {
-            tieneHijos && ( <TabsTrigger value="ficha">Ficha</TabsTrigger> )
-          }
-          {
-            !tieneHijos && ( <TabsTrigger value="procedimiento">Procedimiento</TabsTrigger> )
-          }
-
+          {tieneHijos && <TabsTrigger value="ficha">Ficha</TabsTrigger>}
+          {!tieneHijos && <TabsTrigger value="procedimiento">Procedimiento</TabsTrigger>}
           <TabsTrigger value="indicadores">Indicadores</TabsTrigger>
           <TabsTrigger value="documentos">Documentos</TabsTrigger>
           <TabsTrigger value="datos">Datos</TabsTrigger>
         </TabsList>
 
-        <TabsContent value="descripcion" className="">
-          <DescripcionProceso proceso={ detalleProceso.proceso || [] } ownersOptions={ ownersList || [] } onUpdated={ cargarDetalle } indicadores={ indicadoresList } />
+        <TabsContent value="descripcion">
+          <DescripcionProceso 
+            proceso={proceso || []} 
+            ownersOptions={ownersList || []} 
+            onUpdated={cargarProceso} 
+            indicadores={indicadoresList} 
+          />
         </TabsContent>
 
-        <TabsContent value="diagrama" className="">
-          <BpmnModeler xmlInicial={ detalleProceso?.proceso?.diagrama?.xml || undefined } procesoId={ detalleProceso.proceso.id } codigo={ detalleProceso.proceso.codigo } nombre={ detalleProceso.proceso.nombre } />
+        <TabsContent value="diagrama">
+          <BpmnModeler
+            xmlInicial={proceso?.diagrama?.xml || undefined}
+            procesoId={proceso.id}
+            codigo={proceso.codigo}
+            nombre={proceso.nombre}
+            onDiagramaActualizado={handleDiagramaActualizado}
+          />
         </TabsContent>
 
-        <TabsContent value="ficha" className="">
-          <FichaProceso proceso={ detalleProceso.proceso || [] } />
+        <TabsContent value="ficha">
+          <FichaProceso proceso={proceso || []} />
         </TabsContent>
 
-        <TabsContent value="procedimiento" className="">
-          <ProcedimientoProceso actividades={ detalleProceso?.proceso?.actividades || [] } idProceso={ detalleProceso.proceso.id || '' } />
+        <TabsContent value="procedimiento">
+          <ProcedimientoProceso 
+            actividades={proceso?.actividades || []} 
+            idProceso={proceso.id || ''} 
+          />
         </TabsContent>
 
-        <TabsContent value="indicadores" className="">
-          <IndicadoresProceso proceso={ detalleProceso || [] } onIndicadoresAgregados={ cargarDetalle } />
+        <TabsContent value="indicadores">
+          <IndicadoresProceso 
+            proceso={proceso || []} 
+            onIndicadoresAgregados={cargarProceso} 
+          />
         </TabsContent>
 
-        <TabsContent value="documentos" className="">
-          <DocumentosProceso proceso={ detalleProceso.proceso || [] } />
+        <TabsContent value="documentos">
+          <DocumentosProceso proceso={proceso || []} />
         </TabsContent>
 
-        <TabsContent value="datos" className="w-full max-w-4xl mx-auto overflow-x-auto">
-          <TempDatos proceso={ detalleProceso.proceso || [] } />
+        <TabsContent value="datos">
+          <TempDatos proceso={proceso || []} />
         </TabsContent>
       </Tabs>
     </section>

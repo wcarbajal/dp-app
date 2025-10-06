@@ -1,6 +1,6 @@
 import { Titulo } from '@/components/titulo/Titulo';
 import { Button } from '@/components/ui/button';
-import { Card, CardFooter } from '@/components/ui/card';
+import { Card, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import React from 'react';
 import { TbTrashX } from 'react-icons/tb';
@@ -11,24 +11,29 @@ import { AgregarIndicador } from './AgregarIndicador';
 
 
 export const IndicadoresProceso = ( { proceso, onIndicadoresAgregados } ) => {
-  const indicadores = proceso?.proceso?.indicadores || [];
+  const indicadores = proceso?.indicadores || [];
 
-  
+
 
   return (
     <article className='flex flex-col items-center gap-4 w-full'>
 
-      <Titulo titulo="Indicadores del Proceso" />
 
+      <div className='flex flex-col  w-full p-4 bg-white rounded-md shadow-md'>
+        <div className='flex justify-between'>
+          <CardHeader className="flex flex-col w-full">
+            <CardTitle>Indicadores del Proceso</CardTitle>
+            <CardDescription>Listado de indicadores del proceso</CardDescription>
+          </CardHeader>
 
-      <div className='flex flex-col items-center w-full p-4 bg-white rounded-md shadow-md'>
+          <AgregarIndicador mapaId={ proceso?.mapaId } procesoId={ proceso?.id } indicadoresAsociados={ indicadores } onIndicadoresAgregados={ onIndicadoresAgregados } />
 
-        <AgregarIndicador mapaId={ proceso?.proceso?.mapaId } procesoId={ proceso?.proceso?.id } indicadoresAsociados={ indicadores } onIndicadoresAgregados={ onIndicadoresAgregados } />
+        </div>
+        <Separator className="my-2" />
 
-
-        <div className="grid grid-cols-1 gap-4 mt-4 w-full md:grid-cols-2 lg:grid-cols-3">
+        <div className="grid grid-cols-1 gap-4 mt-4 w-full md:grid-cols-2 lg:grid-cols-3 px-4 auto-rows-fr " >
           { indicadores.length === 0 ? (
-            <p className="text-gray-500 py-4">No hay indicadores registrados.</p>
+            <span className="flex text-gray-500 text-sm px-2 w-full">No hay indicadores registrados.</span>
           ) : (
             indicadores.sort( ( a, b ) => {
               // Definir el orden de prioridad para nivelIndicador

@@ -245,7 +245,7 @@ export const CreateEditProceso = ( { idMapa, listadoProcesos, proceso, cargarPro
                             .sort( ( a, b ) => a.codigo.localeCompare( b.codigo ) )
                             .map( proceso => (
                               <SelectItem
-                                key={ proceso.id }
+                                key={ `proceso-${proceso.id}` }
                                 value={ proceso.id.toString() }
                                 className="break-words truncate max-w-[480px]"
                               >
