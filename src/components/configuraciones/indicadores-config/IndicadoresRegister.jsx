@@ -188,7 +188,7 @@ export const InidicadoresRegister = ( { onSubmit, initialValues } ) => {
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  <SelectItem value="0">No Seleccionado</SelectItem>
+                  <SelectItem key="0" value="0">No Seleccionado</SelectItem>
                   { roles.map( rol => (
                     <SelectItem key={ rol.id } value={ rol.id.toString() }>
                       { rol.rol }

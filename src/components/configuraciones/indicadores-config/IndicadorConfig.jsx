@@ -253,11 +253,11 @@ export function IndicadorConfig() {
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          <SelectItem value="OEI">OEI - Objetivo Estratégico Institucional</SelectItem>
-                          <SelectItem value="AEI">AEI - Objetivo Estratégico de Aprendizaje</SelectItem>
-                          <SelectItem value="PE">PE - Producto Estratégico</SelectItem>
-                          <SelectItem value="AO">AO - Actividad Operativa</SelectItem>
-                          <SelectItem value="IG">IG - Indicador de gestión</SelectItem>
+                          <SelectItem key="OEI" value="OEI">OEI - Objetivo Estratégico Institucional</SelectItem>
+                          <SelectItem key="AEI" value="AEI">AEI - Objetivo Estratégico de Aprendizaje</SelectItem>
+                          <SelectItem key="PE" value="PE">PE - Producto Estratégico</SelectItem>
+                          <SelectItem key="AO" value="AO">AO - Actividad Operativa</SelectItem>
+                          <SelectItem key="IG" value="IG">IG - Indicador de gestión</SelectItem>
                         </SelectContent>
                       </Select>
                       <FormMessage />
@@ -280,9 +280,9 @@ export function IndicadorConfig() {
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          <SelectItem value="IR">IR - Indicador de Resultado</SelectItem>
-                          <SelectItem value="IP">IP - Indicador de Producto</SelectItem>
-                          <SelectItem value="IA">IA - Indicador de Actividad</SelectItem>
+                          <SelectItem key="IR" value="IR">IR - Indicador de Resultado</SelectItem>
+                          <SelectItem key="IP" value="IP">IP - Indicador de Producto</SelectItem>
+                          <SelectItem key="IA" value="IA">IA - Indicador de Actividad</SelectItem>
                         </SelectContent>
                       </Select>
                       <FormMessage />
@@ -411,8 +411,8 @@ export function IndicadorConfig() {
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          <SelectItem value="Ascendente">Ascendente</SelectItem>
-                          <SelectItem value="Descendente">Descendente</SelectItem>
+                          <SelectItem key="Ascendente" value="Ascendente">Ascendente</SelectItem>
+                          <SelectItem key="Descendente" value="Descendente">Descendente</SelectItem>
                         </SelectContent>
                       </Select>
                       <FormMessage />

@@ -24,8 +24,8 @@ const styles = StyleSheet.create( {
     alignItems: 'center',
     width: '100%',
     height: 'auto', // Altura automática
-    minHeight: 400,
-    maxHeight: 650, // Altura máxima fija para evitar desbordamiento
+    minHeight: 300,
+    maxHeight: 500, // Altura máxima reducida para evitar desbordamiento
     backgroundColor: '#f9f9f9',
     padding: 10, // Padding para evitar que toque los bordes
   },
@@ -42,7 +42,7 @@ const styles = StyleSheet.create( {
     alignItems: 'center',
     backgroundColor: '#f5f5f5',
     width: '100%',
-    height: 400, // Altura fija más conservadora
+    height: 300, // Altura reducida para evitar desbordamiento
     border: '1pt dashed #ccc',
   }
 } );
@@ -58,7 +58,7 @@ export const Diagrama = ( { imgBase64 } ) => {
 
   return (
     <View style={{ marginTop: 15, width: '100%', maxWidth: '100%' }}>
-      <View wrap={ false } style={{ width: '100%' }}>
+      <View style={{ width: '100%' }}>
         <Text style={styles.titulo}>Diagrama de interacción de proceso</Text>
 
         <View style={ styles.table }>

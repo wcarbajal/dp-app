@@ -12,7 +12,7 @@ import { FichaPdf } from '@/components/pdf-view/FichaPdf';
 export const DocumentosProceso = ( { proceso } ) => {
 
   const [ pdfError, setPdfError ] = useState( null );
-  const [ showPdf, setShowPdf ] = useState( false );
+  const [ verPdf, setVerPdf ] = useState( false );
 
   const esFicha = proceso?.hijos?.length > 0;
 
@@ -50,9 +50,9 @@ export const DocumentosProceso = ( { proceso } ) => {
         <div className="flex rounded-xl p-2 gap-2 bg-white">
           <Button
             variant=""
-            onClick={ () => setShowPdf( !showPdf ) }
+            onClick={ () => setVerPdf( !verPdf ) }
           >
-            { showPdf ? "Ocultar Vista Previa" : "Mostrar Vista Previa" }
+            { verPdf ? "Ocultar Vista Previa" : "Mostrar Vista Previa" }
           </Button>
           <PDFDownloadLink
             document={ renderPdfComponent() }
@@ -76,7 +76,7 @@ export const DocumentosProceso = ( { proceso } ) => {
             } }
           </PDFDownloadLink>
         </div>
-        { showPdf && (
+        { verPdf && (
           <div className="border rounded-md overflow-hidden">
             <Suspense fallback={ <div className="p-4 text-center">Cargando PDF...</div> }>
               <PDFViewer width="100%" height={ 600 }>

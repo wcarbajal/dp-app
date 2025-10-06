@@ -28,10 +28,10 @@ export const Paginacion = ( { totalItems, itemsPorPagina, paginaActual, setPagin
         <SelectContent>
           <SelectGroup>
             <SelectLabel>Cantidad</SelectLabel>
-            <SelectItem value={ 10 }>10</SelectItem>
-            <SelectItem value={ 20 }>20</SelectItem>
-            <SelectItem value={ 30 }>30</SelectItem>
-            <SelectItem value={ 0 }>Todos</SelectItem>
+            <SelectItem key="items-10" value={ 10 }>10</SelectItem>
+            <SelectItem key="items-20" value={ 20 }>20</SelectItem>
+            <SelectItem key="items-30" value={ 30 }>30</SelectItem>
+            <SelectItem key="items-0" value={ 0 }>Todos</SelectItem>
           </SelectGroup>
         </SelectContent>
 

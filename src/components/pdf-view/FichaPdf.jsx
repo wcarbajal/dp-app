@@ -92,7 +92,7 @@ export const FichaPdf = ( { proceso } ) => {
           version="2"
         />
 
-        <Identificacion />
+        <Identificacion proceso={ proceso } />
         <Descripcion />
         <Indicadores />
         <Validacion />

@@ -147,9 +147,9 @@ export const CreateEditProceso = ( { idMapa, listadoProcesos, proceso, cargarPro
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        <SelectItem value="Estratégico">Estratégico</SelectItem>
-                        <SelectItem value="Misional">Misional</SelectItem>
-                        <SelectItem value="Soporte">Soporte</SelectItem>
+                        <SelectItem key="Estratégico" value="Estratégico">Estratégico</SelectItem>
+                        <SelectItem key="Misional" value="Misional">Misional</SelectItem>
+                        <SelectItem key="Soporte" value="Soporte">Soporte</SelectItem>
                       </SelectContent>
                     </Select>
                     <FormMessage />
@@ -183,16 +183,16 @@ export const CreateEditProceso = ( { idMapa, listadoProcesos, proceso, cargarPro
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          <SelectItem value="0">0</SelectItem>
-                          <SelectItem value="1">1</SelectItem>
-                          <SelectItem value="2">2</SelectItem>
-                          <SelectItem value="3">3</SelectItem>
-                          <SelectItem value="4">4</SelectItem>
-                          <SelectItem value="5">5</SelectItem>
-                          <SelectItem value="6">6</SelectItem>
-                          <SelectItem value="7">7</SelectItem>
-                          <SelectItem value="8">8</SelectItem>
-                          <SelectItem value="9">9</SelectItem>
+                          <SelectItem key="nivel-0" value="0">0</SelectItem>
+                          <SelectItem key="nivel-1" value="1">1</SelectItem>
+                          <SelectItem key="nivel-2" value="2">2</SelectItem>
+                          <SelectItem key="nivel-3" value="3">3</SelectItem>
+                          <SelectItem key="nivel-4" value="4">4</SelectItem>
+                          <SelectItem key="nivel-5" value="5">5</SelectItem>
+                          <SelectItem key="nivel-6" value="6">6</SelectItem>
+                          <SelectItem key="nivel-7" value="7">7</SelectItem>
+                          <SelectItem key="nivel-8" value="8">8</SelectItem>
+                          <SelectItem key="nivel-9" value="9">9</SelectItem>
                         </SelectContent>
                       </Select>
                       <FormMessage />

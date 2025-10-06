@@ -50,7 +50,7 @@ export const ListaMapas = ( { mapas, setMapaSeleccionado, mapaSeleccionado } ) =
         </SelectTrigger>
         <SelectContent>
           <SelectGroup>
-            <SelectItem value="none">No seleccionado</SelectItem>
+            <SelectItem key="none" value="none">No seleccionado</SelectItem>
             { mapas.map( mapa => (
               <SelectItem key={ mapa.id } value={ String( mapa.id ) }>
                 { mapa.nombre }

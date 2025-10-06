@@ -89,22 +89,38 @@ const styles = StyleSheet.create( {
 
 } );
 
-export const Identificacion = ( {
-  codigo = "E4",
-  nombre = "Mejora de procesos",
-  objetivo = "Mejorar la gestión de procesos",
-  objetivoE = "Optimizar recursos y tiempos",
-  dueno = "Juan Pérez"
-} ) => (
-  <View style={ styles.table }>
+export const Identificacion = ( { proceso } ) => {
+
+  const { codigo, nombre, objetivo, estrategico, owners, tipo, version } = proceso || {};
+  
+  // Extraer las unidades operativas de los owners
+  const obtenerUnidadesOperativas = () => {
+    if (!owners || !Array.isArray(owners) || owners.length === 0) {
+      return 'No asignado';
+    }
+    
+    // Mapear los owners para obtener sus unidades operativas
+    const unidadesOperativas = owners
+      .map(owner => owner?.unidadOperativa?.nombre)
+      .filter(nombre => nombre) // Filtrar valores nulos o undefined
+      .join(', '); // Unir con comas
+    
+    return unidadesOperativas || 'No asignado';
+  };
+
+  const duenios = obtenerUnidadesOperativas();
+
+ 
+  
+ return (<View style={ styles.table }>
     <View style={ styles.row }>
       <View style={ styles.rowMain }>
         <Text style={ styles.cellRowMain1 }>Código y nombre</Text>
         <Text style={ styles.cellRowMain2 }>{ codigo } - { nombre}</Text>
         <Text style={ styles.cellRowMain3 }>Tipo</Text>
-        <Text style={ styles.cellRowMain4 }>Estratégico</Text>
+        <Text style={ styles.cellRowMain4 }>{ tipo }</Text>
         <Text style={ styles.cellRowMain3 }>Versión</Text>
-        <Text style={ styles.cellRowMain5  }>1</Text>
+        <Text style={ styles.cellRowMain5  }>{ version }</Text>
       </View>
     </View>
     <View style={ styles.row }>
@@ -113,11 +129,12 @@ export const Identificacion = ( {
     </View>
     <View style={ styles.row }>
       <Text style={ styles.cellConcept }>ObjetivoE</Text>
-      <Text style={ styles.cellDetail }>{ objetivoE }</Text>
+      <Text style={ styles.cellDetail }>{ estrategico?.nombre || 'No asignado' }</Text>
     </View>
     <View style={ styles.row }>
       <Text style={ styles.cellConcept }>Dueño</Text>
-      <Text style={ styles.cellDetail }>{ dueno }</Text>
+      <Text style={ styles.cellDetail }>{ duenios }</Text>
     </View>
   </View>
-);
+ )
+};

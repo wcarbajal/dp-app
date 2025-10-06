@@ -130,12 +130,12 @@ export const NuevoIndicadorForm = ( { mapaId, indicadoresList, obtenerIndicadore
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent className="max-h-60 overflow-y-auto">
-                          <SelectItem value="OEI">OEI - Objetivo Estratégico Institucional</SelectItem>
-                          <SelectItem value="AEI">AEI - Objetivo Estratégico Institucional</SelectItem>
-                          <SelectItem value="IO">IO - Indicador de Resultado</SelectItem>
-                          <SelectItem value="PE">PE - Producto Esperado</SelectItem>
-                          <SelectItem value="AO">AO - Actividad Operativa</SelectItem>
-                          <SelectItem value="IG">IG - Indicador de Gestión</SelectItem>
+                          <SelectItem key="OEI" value="OEI">OEI - Objetivo Estratégico Institucional</SelectItem>
+                          <SelectItem key="AEI" value="AEI">AEI - Objetivo Estratégico de Aprendizaje</SelectItem>
+                          <SelectItem key="IO" value="IO">IO - Indicador de Resultado</SelectItem>
+                          <SelectItem key="PE" value="PE">PE - Producto Esperado</SelectItem>
+                          <SelectItem key="AO" value="AO">AO - Actividad Operativa</SelectItem>
+                          <SelectItem key="IG" value="IG">IG - Indicador de Gestión</SelectItem>
                         </SelectContent>
                       </Select>
                       <FormMessage />
@@ -158,10 +158,10 @@ export const NuevoIndicadorForm = ( { mapaId, indicadoresList, obtenerIndicadore
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent className="max-h-60 overflow-y-auto">
-                          <SelectItem value="IR">IR - Indicador de Resultado</SelectItem>
-                          <SelectItem value="IP">IP - Indicador de Proceso</SelectItem>
-                          <SelectItem value="IA">IA - Indicador de Actividad</SelectItem>
-                        
+                          <SelectItem key="IR" value="IR">IR - Indicador de Resultado</SelectItem>
+                          <SelectItem key="IP" value="IP">IP - Indicador de Proceso</SelectItem>
+                          <SelectItem key="IA" value="IA">IA - Indicador de Actividad</SelectItem>
+
                         </SelectContent>
                       </Select>
                       <FormMessage />

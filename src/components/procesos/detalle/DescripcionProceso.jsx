@@ -139,9 +139,9 @@ export const DescripcionProceso = ( { proceso, onSubmit: onSubmitProp, ownersOpt
                         <SelectValue placeholder="Seleccione un tipo" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="Estratégico">Estratégico</SelectItem>
-                        <SelectItem value="Misional">Misional</SelectItem>
-                        <SelectItem value="Soporte">Soporte</SelectItem>
+                        <SelectItem key="tipo-estrategico" value="Estratégico">Estratégico</SelectItem>
+                        <SelectItem key="tipo-misional" value="Misional">Misional</SelectItem>
+                        <SelectItem key="tipo-soporte" value="Soporte">Soporte</SelectItem>
                       </SelectContent>
                     </Select>
                   </FormControl>
@@ -163,7 +163,7 @@ export const DescripcionProceso = ( { proceso, onSubmit: onSubmitProp, ownersOpt
                       </SelectTrigger>
                       <SelectContent>
                         { [ "0", "1", "2", "3", "4", "5", "6", "7", "8", "9" ].map( ( n ) => (
-                          <SelectItem key={ n } value={ n }>
+                          <SelectItem key={ `nivel-${n}` } value={ n }>
                             { n }
                           </SelectItem>
                         ) ) }
@@ -231,12 +231,12 @@ export const DescripcionProceso = ( { proceso, onSubmit: onSubmitProp, ownersOpt
                       <SelectContent>
                         { indicadoresOEI && indicadoresOEI.length > 0 ? (
                           indicadoresOEI.map( ( ind ) => (
-                            <SelectItem key={ ind.id } value={ ind.id.toString() }>
+                            <SelectItem key={ `indicador-oei-${ind.id}` } value={ ind.id.toString() }>
                               { ind.codigo }- { ind.nombre }
                             </SelectItem>
                           ) )
                         ) : (
-                          <SelectItem disabled>No hay indicadores disponibles</SelectItem>
+                          <SelectItem key="no-indicadores-oei" value="no-disponible" disabled>No hay indicadores disponibles</SelectItem>
                         ) }
                       </SelectContent>
                     </Select>

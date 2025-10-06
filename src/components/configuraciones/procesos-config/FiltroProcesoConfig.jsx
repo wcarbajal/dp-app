@@ -12,10 +12,10 @@ export const FiltroProcesoConfig = ( {tipoFiltro, setTipoFiltro} ) => {
           <SelectValue placeholder="Filtrar tipo" />
         </SelectTrigger>
         <SelectContent className="col-span-2">
-          <SelectItem value="*">Todos</SelectItem>
-          <SelectItem value="Estratégico">Estratégico</SelectItem>
-          <SelectItem value="Misional">Misional</SelectItem>
-          <SelectItem value="Soporte">Soporte</SelectItem>
+          <SelectItem key="todos" value="*">Todos</SelectItem>
+          <SelectItem key="estrategico" value="Estratégico">Estratégico</SelectItem>
+          <SelectItem key="misional" value="Misional">Misional</SelectItem>
+          <SelectItem key="soporte" value="Soporte">Soporte</SelectItem>
         </SelectContent>
       </Select>
 

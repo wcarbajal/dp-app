@@ -157,8 +157,8 @@ export const FormRegistros = ( { proceso } ) => {
                                 <SelectValue placeholder="Seleccione un tipo" />
                               </SelectTrigger>
                               <SelectContent>
-                                <SelectItem value="físico">Físico</SelectItem>
-                                <SelectItem value="digital">Digital</SelectItem>
+                                <SelectItem key="tipo-fisico" value="físico">Físico</SelectItem>
+                                <SelectItem key="tipo-digital" value="digital">Digital</SelectItem>
                               </SelectContent>
                             </Select>
                           </FormControl>
