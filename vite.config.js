@@ -7,23 +7,52 @@ const __filename = fileURLToPath( import.meta.url );
 const __dirname = path.dirname( __filename );
 
 export default defineConfig( {
-  plugins: [ react(), tailwindcss() ],
+  plugins: [ 
+    react({
+      fastRefresh: true,
+      jsxRuntime: 'automatic'
+    }), 
+    tailwindcss() 
+  ],
   resolve: {
     alias: {
       '@': path.resolve( __dirname, './src' ),
     },
   },
   optimizeDeps: {
-    exclude: [ 'react-icons/io5', 'react-icons/ios', 'react-icons/ci', 'react-icons/hi2', 'react-icons/hi', 'react-icons/fa', 'react-icons/fa6', 'react-icons/md', 'react-icons/md2', 'react-icons/ti', 'react-icons/tb', 'react-icons/vsc', 'react-icons/bs', 'react-icons/bi', 'react-icons/cg', 'react-icons/fi', 'react-icons/fc', 'react-icons/rx', 'react-icons/si', 'react-icons/sl', 'react-icons/im' ],
+    // Solo pre-bundle las dependencias más críticas
+    include: [
+      'react',
+      'react-dom',
+      'react-router-dom'
+    ],
+    // Excluir react-icons para evitar bundling pesado
+    exclude: [
+      'react-icons'
+    ],
+    force: false, // No forzar optimización cada vez
   },
   server: {
-    port: 5173, // Cambia 3001 por el puerto que desees
-    host: true, // Permite acceso desde otras máquinas en la red local
+    port: 5173,
+    host: true,
+    strictPort: false,
+    open: false,
+    hmr: {
+      overlay: false
+    }
   },
   define: {
     'process.env': {},
     global: 'globalThis',
   },
+  esbuild: {
+    target: 'esnext',
+    logLevel: 'silent'
+  },
+  css: {
+    devSourcemap: false
+  },
+  clearScreen: false
 } )
 
 

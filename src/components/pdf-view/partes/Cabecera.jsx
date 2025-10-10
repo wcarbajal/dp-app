@@ -25,7 +25,7 @@ const styles = StyleSheet.create( {
 } );
 
 
-export const Cabecera = ({imagen, titulo, codigoFormato, version}) => {
+export const Cabecera = ({imagen}) => {
   
   // Validar si la imagen es válida
   const isValidImage = imagen && 
@@ -51,19 +51,8 @@ export const Cabecera = ({imagen, titulo, codigoFormato, version}) => {
           </View>
         )}
       </View>
-      <View style={ styles.seccionTituloCentro }>
-        <Text style={ styles.titulo }>{titulo} </Text>
-      </View>
-      <View style={ styles.seccionTituloDer }>
-        <View style={ styles.cabeceraDerecha }>
-          <Text >Código del formato </Text>
-        </View>
-        <Text>{codigoFormato}</Text>
-        <View style={ styles.cabeceraDerecha }>
-          <Text >Versión del formato </Text>
-        </View>
-        <Text>{version}</Text>
-      </View>
+      
+     
     </View>
   );
 };

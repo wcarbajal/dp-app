@@ -59,7 +59,6 @@ export const RegisterPage = () => {
       
     }
 
-console.log("Usuario registrado correctamente");
       setForm( {
       nombre: '',
       correo: '',

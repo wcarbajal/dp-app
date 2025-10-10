@@ -7,8 +7,9 @@ const styles = StyleSheet.create( {
     borderStyle: "solid",
     borderWidth: 1,
     borderBottomWidth: 0,
+    borderTopWidth: 0,
     borderColor: "black",
-    marginVertical: 10,
+    marginVertical: 0,
     fontSize: 10,
     flexDirection: "column",
   },
@@ -75,9 +76,9 @@ export const Descripcion = ( { inputOutput } ) => {
   return (
     <View style={ styles.table }>
 
-      <View style={ styles.cellCabecera }>
+    {/*   <View style={ styles.cellCabecera }>
         <Text style={ styles.textoTitulo }>Descripción del proceso</Text>
-      </View>
+      </View> */}
 
       <View style={ styles.rowTitulo }>
         <View style={ styles.cellTitulo }>

@@ -70,25 +70,25 @@ export const FormEntradasSalidas = ( { proceso } ) => {
 
     let fichaId;
 
-    console.log( "proceso en onsubmit", proceso.id );
+    
 
 
 
     if ( proceso?.ficha === null || proceso?.ficha === undefined ) {
 
-      console.log( "registrando ficha nueva" );
+      
       const fichaNueva = await fetchConToken( `procesos/${ proceso.id }/registrar-ficha` );
-      console.log( { fichaNueva } );
+      
 
 
       fichaId = fichaNueva.id;
     } else {
 
-      console.log( " ficha existente" );
+      
       fichaId = proceso.ficha.id;
     }
     const dataSend = { fichaId, ...data };
-    console.log( "data a enviar", dataSend );
+    
 
     const response = await fetchConToken( `ficha/${ fichaId }/registrar-io`, dataSend, 'POST' );
 

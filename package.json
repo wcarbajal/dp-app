@@ -5,9 +5,13 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "dev:fast": "vite --no-deps-optimization",
+    "dev:force": "vite --force",
     "build": "vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "clean": "rmdir /s /q node_modules\\.vite 2>nul & echo Cache cleared",
+    "reset": "rmdir /s /q node_modules 2>nul & del yarn.lock 2>nul & yarn install"
   },
   "dependencies": {
     "@bpmn-io/form-js": "^1.17.0",

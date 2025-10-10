@@ -8,8 +8,18 @@ const styles = StyleSheet.create( {
     borderWidth: 1,
     borderRightWidth: 0,
     borderBottomWidth: 0,
-    marginVertical: 10,
+    marginVertical: 0,
     fontSize: 10,
+  },
+  title: {
+    width: "auto",
+    backgroundColor: "#f0f0f0",
+    textAlign: "center",
+    padding: 5,
+    borderBottomWidth: 1,
+    borderRightWidth: 1,
+    fontSize: 10,
+    fontWeight: "bold",
   },
   row: {
     flexDirection: "row",
@@ -112,29 +122,33 @@ export const Identificacion = ( { proceso } ) => {
 
 
 
-  return ( <View style={ styles.table }>
-    <View style={ styles.row }>
-      <View style={ styles.rowMain }>
-        <Text style={ styles.cellRowMain1 }>Código y nombre</Text>
-        <Text style={ styles.cellRowMain2 }>{ codigo } - { nombre }</Text>
-        <Text style={ styles.cellRowMain3 }>Tipo</Text>
-        <Text style={ styles.cellRowMain4 }>{ tipo }</Text>
-        <Text style={ styles.cellRowMain3 }>Versión</Text>
-        <Text style={ styles.cellRowMain5 }>{ version }</Text>
+  return (
+    <View style={ styles.table }>
+      <View style={ styles.title }>
+        <Text >FICHA DE PRODUCTO Y PROCESO</Text>
+      </View>
+      <View style={ styles.row }>
+        <View style={ styles.rowMain }>
+          <Text style={ styles.cellRowMain1 }>Código y nombre</Text>
+          <Text style={ styles.cellRowMain2 }>{ codigo } - { nombre }</Text>
+          <Text style={ styles.cellRowMain3 }>Tipo</Text>
+          <Text style={ styles.cellRowMain4 }>{ tipo }</Text>
+          <Text style={ styles.cellRowMain3 }>Versión</Text>
+          <Text style={ styles.cellRowMain5 }>{ version }</Text>
+        </View>
+      </View>
+      <View style={ styles.row }>
+        <Text style={ styles.cellConcept }>Dueño</Text>
+        <Text style={ styles.cellDetail }>{ duenios }</Text>
+      </View>
+      <View style={ styles.row }>
+        <Text style={ styles.cellConcept }>Objetivo del proceso</Text>
+        <Text style={ styles.cellDetail }>{ objetivo }</Text>
+      </View>
+      <View style={ styles.row }>
+        <Text style={ styles.cellConcept }>Objetivo estratégico</Text>
+        <Text style={ styles.cellDetail }>{ estrategico?.nombre || 'No asignado' }</Text>
       </View>
     </View>
-    <View style={ styles.row }>
-      <Text style={ styles.cellConcept }>Dueño</Text>
-      <Text style={ styles.cellDetail }>{ duenios }</Text>
-    </View>
-    <View style={ styles.row }>
-      <Text style={ styles.cellConcept }>Objetivo del proceso</Text>
-      <Text style={ styles.cellDetail }>{ objetivo }</Text>
-    </View>
-    <View style={ styles.row }>
-      <Text style={ styles.cellConcept }>Objetivo estratégico</Text>
-      <Text style={ styles.cellDetail }>{ estrategico?.nombre || 'No asignado' }</Text>
-    </View>
-  </View>
   );
 };

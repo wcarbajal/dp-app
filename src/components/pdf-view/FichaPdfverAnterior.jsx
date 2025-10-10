@@ -54,7 +54,10 @@ export const FichaPdf = ( { proceso } ) => {
     <Document>
       <Page size="A4" style={ styles.page }>
         <Cabecera
-          imagen="/img/MINEDU.png"          
+          imagen="/img/MINEDU.png"
+          titulo="Ficha de proceso"
+          codigoFormato="FPE03.02.01"
+          version="2"
         />
 
         <Identificacion proceso={ proceso } />

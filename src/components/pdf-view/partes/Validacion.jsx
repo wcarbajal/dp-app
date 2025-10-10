@@ -1,6 +1,6 @@
 import { View, Text, StyleSheet } from '@react-pdf/renderer';
 
-const styles = StyleSheet.create({
+const styles = StyleSheet.create( {
   table: {
     display: "flex",
     width: "auto",
@@ -8,8 +8,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "black",
     borderRightWidth: 0,
-    borderBottomWidth: 0, 
-    marginVertical: 10,
+    borderBottomWidth: 0,
     fontSize: 10,
     flexDirection: "column",
   },
@@ -44,17 +43,17 @@ const styles = StyleSheet.create({
   },
   rowContenido: {
     flexDirection: "row",
-    alignItems: "center",
+    
   },
   cellContenido: {
     width: "50%",
+    height: 90,
     padding: 5,
     borderRightWidth: 1,
     borderBottomWidth: 1,
     borderColor: "black",
     textAlign: "center",
-    justifyContent: "center",
-    alignItems: "center",
+    
     display: "flex",
     backgroundColor: "#fff",
   },
@@ -67,36 +66,50 @@ const styles = StyleSheet.create({
   },
   textoContenido: {
     fontSize: 10,
+    marginTop: 5,
   }
-});
+} );
 
 
-export const Validacion = () => (
+export const Validacion = ( { owner } ) => (
 
+  
   <View style={ styles.table }>
 
     <View style={ styles.rowTitulo }>
       <View style={ styles.cellTitulo }>
+        <Text>Elaborado por:</Text>
+
+      </View>
+      <View style={ styles.cellTitulo }>
         <Text>Revisado por:</Text>
 
-      </View>      
+      </View>
       <View style={ [ styles.cellTitulo, styles.cellTituloLast ] }>
         <Text>Aprobado por: </Text>
       </View>
     </View>
 
 
-    
-      <View style={ styles.rowContenido } >
-        <View style={ styles.cellContenido }>
-          <Text style={ styles.textoContenido }>[FIRMA]</Text>
-        </View>
-        <View style={ styles.cellContenido }>
-          <Text style={ styles.textoContenido }>[FIRMA]</Text>
-        </View>
-       
+
+    <View style={ styles.rowContenido } >
+      <View style={ styles.cellContenido }>
+        <Text style={ styles.textoContenido }>{ owner }</Text>
+        <Text style={ styles.textoContenido }>[FIRMA]</Text>
+        
       </View>
-    
+      <View style={ styles.cellContenido }>
+        <Text style={ styles.textoContenido }>Unidad de Modernización de la Gestión</Text>
+        <Text style={ styles.textoContenido }>[FIRMA]</Text>
+      </View>
+      <View style={ styles.cellContenido }>
+        <Text style={ styles.textoContenido }>{ owner }</Text>        
+        
+        <Text style={ styles.textoContenido }>[FIRMA]</Text>
+      </View>
+
+    </View>
+
 
 
 
