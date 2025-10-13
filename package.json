@@ -11,7 +11,8 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "clean": "rmdir /s /q node_modules\\.vite 2>nul & echo Cache cleared",
-    "reset": "rmdir /s /q node_modules 2>nul & del yarn.lock 2>nul & yarn install"
+    "reset": "rmdir /s /q node_modules 2>nul & del yarn.lock 2>nul & yarn install",
+    "optimize:vscode": "optimize-vscode.bat"
   },
   "dependencies": {
     "@bpmn-io/form-js": "^1.17.0",

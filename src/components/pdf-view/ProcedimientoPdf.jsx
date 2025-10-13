@@ -1,10 +1,7 @@
 
 import { Document, Page, Text, View, StyleSheet, Image } from '@react-pdf/renderer';
 import { Cabecera } from './partes/Cabecera';
-import { Identificacion } from './partes/Identificacion';
-import { Descripcion } from './partes/Descripcion';
-import { Indicadores } from './partes/Indicadores';
-import { Validacion } from './partes/Validacion';
+import { ProcedimientoList } from './partes/ProcedimientoList';
 import { Diagrama } from './partes/Diagrama';
 
 
@@ -25,12 +22,12 @@ export const ProcedimientoPdf = ( { proceso } ) => {
 
   // Validar y limpiar la imagen
   let imgBase64 = "";
-  if (proceso?.diagrama?.url) {
+  if ( proceso?.diagrama?.url ) {
     const url = proceso.diagrama.url;
     // Verificar si es base64 o una URL válida
-    if (url.startsWith('data:image/')) {
+    if ( url.startsWith( 'data:image/' ) ) {
       imgBase64 = url;
-    } else if (url.startsWith('http') || url.startsWith('/')) {
+    } else if ( url.startsWith( 'http' ) || url.startsWith( '/' ) ) {
       // Es una URL normal, intentar convertir o usar directamente
       imgBase64 = url;
     }
@@ -47,13 +44,13 @@ export const ProcedimientoPdf = ( { proceso } ) => {
           version="2"
         />
 
-        <Identificacion />
-       {/*  <Descripcion />
+        <ProcedimientoList />
+
+        {/*  <Descripcion />
         <Indicadores />
         <Validacion /> */}
 
-        {imgBase64 && <Diagrama imgBase64={imgBase64} />}
-
+        <Diagrama imgBase64={ imgBase64 } />
       </Page>
     </Document>
   );

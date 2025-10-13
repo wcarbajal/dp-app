@@ -1,0 +1,50 @@
+{
+  "typescript.preferences.includePackageJsonAutoImports": "off",
+  "typescript.suggest.autoImports": false,
+  "javascript.suggest.autoImports": false,
+  "typescript.updateImportsOnFileMove.enabled": "never",
+  "javascript.updateImportsOnFileMove.enabled": "never",
+  "typescript.preferences.includeCompletionsWithSnippetText": false,
+  "javascript.preferences.includeCompletionsWithSnippetText": false,
+  "typescript.suggest.includeCompletionsWithSnippetText": false,
+  "javascript.suggest.includeCompletionsWithSnippetText": false,
+  "typescript.suggest.completeFunctionCalls": false,
+  "javascript.suggest.completeFunctionCalls": false,
+  "typescript.disableAutomaticTypeAcquisition": true,
+  "typescript.tsc.autoDetect": "off",
+  "typescript.npm": "off",
+  "typescript.validate.enable": false,
+  "javascript.validate.enable": false,
+  "typescript.preferences.allowIncompleteCompletions": false,
+  "typescript.preferences.allowRenameOfImportPath": false,
+  "emmet.showExpandedAbbreviation": "never",
+  "files.exclude": {
+    "**/node_modules": true,
+    "**/dist": true,
+    "**/build": true,
+    "**/.git": true,
+    "**/.vscode": false,
+    "**/coverage": true,
+    "**/.nyc_output": true,
+    "**/.tsbuildinfo": true,
+    "**/yarn-error.log": true
+  },
+  "search.exclude": {
+    "**/node_modules": true,
+    "**/dist": true,
+    "**/build": true,
+    "**/.git": true,
+    "**/coverage": true,
+    "**/.tsbuildinfo": true,
+    "**/yarn-error.log": true
+  },
+  "files.watcherExclude": {
+    "**/node_modules/**": true,
+    "**/dist/**": true,
+    "**/build/**": true,
+    "**/.git/**": true,
+    "**/coverage/**": true,
+    "**/.tsbuildinfo": true,
+    "**/yarn-error.log": true
+  }
+}

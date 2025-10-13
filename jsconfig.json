@@ -17,10 +17,15 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"]
-    }
+    },
+    "incremental": true,
+    "tsBuildInfoFile": ".tsbuildinfo"
   },
   "include": [
-    "src/**/*"
+    "src/**/*.js",
+    "src/**/*.jsx",
+    "src/**/*.ts",
+    "src/**/*.tsx"
   ],
   "exclude": [
     "node_modules",
@@ -31,6 +36,18 @@
     ".vscode",
     "coverage",
     "*.config.js",
-    "public"
-  ]
+    "*.config.ts",
+    "public",
+    "**/*.test.js",
+    "**/*.test.jsx",
+    "**/*.spec.js",
+    "**/*.spec.jsx",
+    "**/.git/**",
+    "**/node_modules/**",
+    "**/dist/**",
+    "**/build/**"
+  ],
+  "typeAcquisition": {
+    "enable": false
+  }
 }
