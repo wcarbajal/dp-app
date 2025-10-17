@@ -318,6 +318,7 @@ export const nuevoIndicadorSchema = z.object( {
 export const modificarIndicadorSchema = z.object( {
   codigo: z.string().min( 1, "El código es obligatorio" ),
   nombre: z.string().min( 1, "El nombre es obligatorio" ),
+  descripcion: z.string().min( 1, "La descripción es obligatoria" ).max( 500, "La descripción debe tener como máximo 500 caracteres" ),
   nivelIndicador: z.enum( [ "OEI", "AEI", "PE", "AO", "IG" ], "Selecciona una opción" ),
   tipoIndicador: z.enum( [ "IR", "IP", "IA" ], "Selecciona una opción" ),
   estado: z.boolean(),

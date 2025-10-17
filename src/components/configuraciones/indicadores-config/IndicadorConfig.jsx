@@ -70,6 +70,7 @@ export function IndicadorConfig() {
     defaultValues: {
       codigo: indicador?.codigo || "",
       nombre: indicador?.nombre || "",
+      descripcion: indicador?.descripcion || "",
       nivelIndicador: indicador?.nivelIndicador || "OEI",
       tipoIndicador: indicador?.tipoIndicador || "IR",
       estado: indicador?.estado ?? true,
@@ -236,6 +237,21 @@ export function IndicadorConfig() {
                 />
 
               </div>
+
+               <FormField
+                  control={ form.control }
+                  name="descripcion"
+
+                  render={ ( { field } ) => (
+                    <FormItem className="col-span-3">
+                      <FormLabel>Descripción</FormLabel>
+                      <FormControl>
+                        <Input { ...field } />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  ) }
+                />
               <div className="grid grid-cols-2 gap-4">
                 <FormField
                   control={ form.control }

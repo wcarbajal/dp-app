@@ -14,11 +14,14 @@ const styles = StyleSheet.create( {
   seccionTituloCentro: { width: '50%', display: 'flex', justifyContent: 'center', alignItems: 'center' },
   seccionTituloDer: { border: '1pt solid #eee', width: '25%', display: 'flex', flexDirection: 'column', alignItems: 'center', fontSize: 9, },
   cabeceraDerecha: { backgroundColor: '#D9D9D9', width: '100%', height: '10px', display: 'flex', justifyContent: 'center', alignItems: 'center' },
-  subtitulo: { display: 'flex', justifyContent: 'center', alignItems: 'center' }
+  subtitulo: { display: 'flex', justifyContent: 'center', alignItems: 'center', marginTop: 10, marginBottom: 10, fontSize: 14, fontWeight: 'bold'}
 
 } );
 
 export const ProcedimientoPdf = ( { proceso } ) => {
+
+  
+  const { codigo, nombre, version, actividades } = proceso || {};
 
   // Validar y limpiar la imagen
   let imgBase64 = "";
@@ -43,12 +46,12 @@ export const ProcedimientoPdf = ( { proceso } ) => {
           codigoFormato="FPE03.02.01"
           version="2"
         />
+        <View style={ styles.subtitulo }>
+          <Text >Procedimiento</Text>
+        </View>
+        <ProcedimientoList codigo={ codigo } listaActividades={ actividades } nombre={ nombre } version={ version } />
 
-        <ProcedimientoList />
-
-        {/*  <Descripcion />
-        <Indicadores />
-        <Validacion /> */}
+     
 
         <Diagrama imgBase64={ imgBase64 } />
       </Page>

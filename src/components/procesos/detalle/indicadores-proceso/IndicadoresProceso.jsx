@@ -11,7 +11,33 @@ import { AgregarIndicador } from './AgregarIndicador';
 
 
 export const IndicadoresProceso = ( { proceso, onIndicadoresAgregados } ) => {
+  
   const indicadores = proceso?.indicadores || [];
+
+  const indicadoresOrdenados = indicadores.sort( ( a, b ) => {
+    // Definir el orden de prioridad para nivelIndicador
+    const nivelOrder = { 'OEI': 1, 'AEI': 2, 'PE': 3, 'AO': 4, 'IG': 5 };
+
+    // Definir el orden de prioridad para tipoIndicador
+    const tipoOrder = { 'IR': 1, 'IP': 2, 'IA': 3 };
+
+    // Ordenar primero por nivelIndicador
+    const nivelComparison = ( nivelOrder[ a.nivelIndicador ] || 999 ) - ( nivelOrder[ b.nivelIndicador ] || 999 );
+
+    if ( nivelComparison !== 0 ) {
+      return nivelComparison;
+    }
+
+    // Si el nivel es igual, ordenar por tipoIndicador
+    const tipoComparison = ( tipoOrder[ a.tipoIndicador ] || 999 ) - ( tipoOrder[ b.tipoIndicador ] || 999 );
+
+    if ( tipoComparison !== 0 ) {
+      return tipoComparison;
+    }
+
+    // Si ambos son iguales, ordenar por ID como fallback
+    return a.id - b.id;
+  } );
 
 
 
@@ -35,30 +61,7 @@ export const IndicadoresProceso = ( { proceso, onIndicadoresAgregados } ) => {
           { indicadores.length === 0 ? (
             <span className="flex text-gray-500 text-sm px-2 w-full">No hay indicadores registrados.</span>
           ) : (
-            indicadores.sort( ( a, b ) => {
-              // Definir el orden de prioridad para nivelIndicador
-              const nivelOrder = { 'OEI': 1, 'AEI': 2, 'PE': 3, 'AO': 4, 'IG': 5 };
-
-              // Definir el orden de prioridad para tipoIndicador
-              const tipoOrder = { 'IR': 1, 'IP': 2, 'IA': 3 };
-
-              // Ordenar primero por nivelIndicador
-              const nivelComparison = ( nivelOrder[ a.nivelIndicador ] || 999 ) - ( nivelOrder[ b.nivelIndicador ] || 999 );
-
-              if ( nivelComparison !== 0 ) {
-                return nivelComparison;
-              }
-
-              // Si el nivel es igual, ordenar por tipoIndicador
-              const tipoComparison = ( tipoOrder[ a.tipoIndicador ] || 999 ) - ( tipoOrder[ b.tipoIndicador ] || 999 );
-
-              if ( tipoComparison !== 0 ) {
-                return tipoComparison;
-              }
-
-              // Si ambos son iguales, ordenar por ID como fallback
-              return a.id - b.id;
-            } ).map( ( indicador ) => (
+            indicadoresOrdenados.map( ( indicador ) => (
               <IndicadorItem key={ indicador.id } indicador={ indicador } proceso={ proceso } onIndicadoresAgregados={ onIndicadoresAgregados } />
             ) )
           ) }

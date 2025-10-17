@@ -26,27 +26,27 @@ export const FichaPdf = ( { proceso } ) => {
 
   let imgBase64 = "";
   //let hasValidDiagram = false;
-  
-  if (proceso?.diagrama?.url) {
+
+  if ( proceso?.diagrama?.url ) {
 
     const url = proceso.diagrama.url;
-    
+
     // Verificar si es base64 o una URL válida y no está vacía
-    if (url && url.length > 10) { // Mínimo 10 caracteres para ser una URL válida
-      if (url.startsWith('data:image/')) {
+    if ( url && url.length > 10 ) { // Mínimo 10 caracteres para ser una URL válida
+      if ( url.startsWith( 'data:image/' ) ) {
         imgBase64 = url;
-       // hasValidDiagram = true;
-        
-      } else if (url.startsWith('http') || url.startsWith('/')) {
+        // hasValidDiagram = true;
+
+      } else if ( url.startsWith( 'http' ) || url.startsWith( '/' ) ) {
         imgBase64 = url;
-      //  hasValidDiagram = true;
-        
+        //  hasValidDiagram = true;
+
       }
     } else {
-      console.log('❌ URL del diagrama no válida o muy corta');
+      console.log( '❌ URL del diagrama no válida o muy corta' );
     }
   } else {
-    console.log('❌ No hay proceso.diagrama.url');
+    console.log( '❌ No hay proceso.diagrama.url' );
   }
 
 
@@ -54,27 +54,17 @@ export const FichaPdf = ( { proceso } ) => {
     <Document>
       <Page size="A4" style={ styles.page }>
         <Cabecera
-          imagen="/img/MINEDU.png"          
+          imagen="/img/MINEDU.png"
         />
 
         <Identificacion proceso={ proceso } />
         <Descripcion inputOutput={ proceso.ficha.inputOutput } />
-        <Diagrama imgBase64={imgBase64} />
+        <Diagrama imgBase64={ imgBase64 } />
         <Riesgos riesgos={ proceso.ficha.riesgos } />
         <Registros registros={ proceso.ficha.registros } />
-        <Validacion owner={ proceso?.owners[0]?.unidadOperativa?.nombre } />
+        <Validacion owner={ proceso?.owners[ 0 ]?.unidadOperativa?.nombre } />
       </Page>
 
-      {/* Página dedicada al diagrama - solo si hay diagrama válido */}
-    {/*   {hasValidDiagram && imgBase64 && imgBase64.length > 0 && (
-        <Page 
-          size="A4" 
-          orientation={diagramPageOrientation}
-          style={styles.page}
-        >
-          <Diagrama imgBase64={imgBase64} />
-        </Page>
-      )} */}
     </Document>
   );
 };

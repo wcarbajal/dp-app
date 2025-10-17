@@ -2,11 +2,12 @@ import { Button } from '@/components/ui/button';
 import { Card, CardFooter } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { fetchConToken } from '@/helpers/fetch';
-import React from 'react';
-import { TbTrash } from 'react-icons/tb';
 import { Link } from 'react-router';
 import Swal from 'sweetalert2';
-import { Edit, Trash } from 'tabler-icons-react';
+import { Edit, Trash, Eye } from 'tabler-icons-react';
+
+import { VistaIndicadorDialog } from './VistaIndicadorDialog';
+
 
 export const IndicadorItem = ( { indicador, proceso, onIndicadoresAgregados } ) => {
 
@@ -78,6 +79,9 @@ export const IndicadorItem = ( { indicador, proceso, onIndicadoresAgregados } ) 
             <Edit color="white" />
           </Button>
         </Link>
+
+        <VistaIndicadorDialog indicador={ indicador } />
+        
         <Button variant="destructive" className="" onClick={ () => eliminarIndicadorDeProceso( indicador.id ) }>
           <Trash color="white" />
         </Button>

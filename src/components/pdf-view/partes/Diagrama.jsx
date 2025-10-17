@@ -77,7 +77,7 @@ export const Diagrama = ( { imgBase64 } ) => {
 
       <View style={ styles.table }>
         <View style={ styles.cellCabecera }>
-          <Text style={ styles.textoTitulo }>Actividades de proceso</Text>
+          <Text style={ styles.textoTitulo }>Diagrama de proceso</Text>
         </View>
         { isValidImage ? (
           <View style={ styles.contenedorImagen }>
