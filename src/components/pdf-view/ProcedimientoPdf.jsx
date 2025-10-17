@@ -40,12 +40,7 @@ export const ProcedimientoPdf = ( { proceso } ) => {
   return (
     <Document>
       <Page size="A4" style={ styles.page }>
-        <Cabecera
-          imagen="/img/MINEDU.png"
-          titulo="Procedimiento de proceso"
-          codigoFormato="FPE03.02.01"
-          version="2"
-        />
+        <Cabecera imagen="/img/MINEDU.png" />
         <View style={ styles.subtitulo }>
           <Text >Procedimiento</Text>
         </View>

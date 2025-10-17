@@ -80,7 +80,7 @@ export const IndicadorItem = ( { indicador, proceso, onIndicadoresAgregados } ) 
           </Button>
         </Link>
 
-        <VistaIndicadorDialog indicador={ indicador } />
+        <VistaIndicadorDialog  proceso={ proceso } indicador={ indicador } />
         
         <Button variant="destructive" className="" onClick={ () => eliminarIndicadorDeProceso( indicador.id ) }>
           <Trash color="white" />

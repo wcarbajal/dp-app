@@ -15,7 +15,9 @@ import { PDFViewer, PDFDownloadLink } from '@react-pdf/renderer';
 import { IndicadorPdf } from "@/components/pdf-view/IndicadorPdf";
 import { Download } from "tabler-icons-react";
 
-export const VistaIndicadorDialog = ({ indicador }) => {
+export const VistaIndicadorDialog = ({ proceso, indicador }) => {
+
+  console.log("Indicador", indicador)
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
@@ -44,7 +46,7 @@ export const VistaIndicadorDialog = ({ indicador }) => {
               border: 'none'
             }}
           >
-            <IndicadorPdf indicador={indicador} />
+            <IndicadorPdf proceso={proceso} indicador={indicador} />
           </PDFViewer>
         </div>
 
