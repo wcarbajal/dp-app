@@ -3,6 +3,7 @@ import { Document, Page, Text, View, StyleSheet, Image } from '@react-pdf/render
 import { Cabecera } from './partes/Cabecera';
 import { ProcedimientoList } from './partes/ProcedimientoList';
 import { Diagrama } from './partes/Diagrama';
+import { Validacion } from './partes/Validacion';
 
 
 
@@ -44,11 +45,11 @@ export const ProcedimientoPdf = ( { proceso } ) => {
         <View style={ styles.subtitulo }>
           <Text >Procedimiento</Text>
         </View>
-        <ProcedimientoList codigo={ codigo } listaActividades={ actividades } nombre={ nombre } version={ version } />
-
-     
+        <ProcedimientoList codigo={ codigo } listaActividades={ actividades } nombre={ nombre } version={ version } />    
 
         <Diagrama imgBase64={ imgBase64 } />
+
+        <Validacion owner={ proceso?.owners[ 0 ]?.unidadOperativa?.nombre } />
       </Page>
     </Document>
   );

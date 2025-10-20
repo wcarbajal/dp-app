@@ -3,6 +3,7 @@ import { Document, Page, Text, View, StyleSheet, Image } from '@react-pdf/render
 import { FormulaRenderer } from './FormulaRender.jsx';
 import { Cabecera } from './partes/Cabecera';
 import { capitalize } from '@/utils/text.js';
+import { Validacion } from './partes/Validacion';
 
 
 
@@ -107,12 +108,25 @@ const styles = StyleSheet.create( {
     width: '22%',
     borderLeft: '1px',
     backgroundColor: "#f0f0f0",
-    
+
   },
   col5Col5: {
     width: '20%',
     borderLeft: '1px',
     padding: 5,
+  },
+  col1col2: {
+    width: '20%',
+    backgroundColor: "#f0f0f0",
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+  col2col2: {
+    textAlign: 'center',
+    backgroundColor: "#f0f0f0",
+    fontWeight: 'bold',
+    borderLeft: '1px',
+    width: '80%',
   },
 
   content: {
@@ -201,7 +215,7 @@ export const IndicadorPdf = ( { proceso, indicador } ) => {
               <Text>Sentido</Text>
               <Text>esperado</Text>
             </View>
-            
+
 
             <View style={ styles.colContenidoX }>
               <View style={ styles.col1Col5 }>
@@ -214,7 +228,7 @@ export const IndicadorPdf = ( { proceso, indicador } ) => {
 
               </View>
               <View style={ styles.col3Col5 }>
-                <Text style={ styles.colContenido3 }>{ capitalize(indicador?.unidadMedida) || 'No asignado' }</Text>
+                <Text style={ styles.colContenido3 }>{ capitalize( indicador?.unidadMedida ) || 'No asignado' }</Text>
 
               </View>
               <View style={ styles.col2Col5 }>
@@ -228,6 +242,110 @@ export const IndicadorPdf = ( { proceso, indicador } ) => {
 
             </View>
           </View>
+
+          <View style={ styles.rowDetalle }>
+            <Text style={ styles.colSubtitulo }>Fuente de datos</Text>
+            <Text style={ styles.colContenido }>{ indicador?.fuenteDatos || 'No asignado' }</Text>
+          </View>
+
+          <View style={ styles.rowDetalle }>
+            <View style={ styles.colSubtitulo }>
+              <Text></Text>
+              <Text></Text>
+            </View>
+
+
+            <View style={ styles.colContenidoX }>
+
+              <View style={ styles.col1col2 }>
+                <Text style={ styles.colContenido3 }>Linea base</Text>
+              </View>
+
+              <View style={ styles.col2col2 }>
+                <Text style={ styles.colContenido3 }>Logros esperados</Text>
+              </View>
+
+            </View>
+
+          </View>
+
+          <View style={ styles.rowDetalle }>
+            <View style={ styles.colSubtitulo }>
+              <Text>Año</Text>
+
+            </View>
+
+
+            <View style={ styles.colContenidoX }>
+
+              <View style={ styles.col1Col5 }>
+                <Text style={ styles.colContenido3 }>[Año base]</Text>
+              </View>
+
+              <View style={ styles.col5Col5 }>
+                <Text>[Año 1]</Text>
+              </View>
+
+              <View style={ styles.col5Col5 }>
+                <Text style={ styles.colContenido3 }></Text>
+
+              </View>
+              <View style={ styles.col5Col5 }>
+                <Text ></Text>
+
+              </View>
+              <View style={ styles.col5Col5 }>
+                <Text style={ styles.colContenido3 }>[Año n]</Text>
+
+              </View>
+
+            </View>
+
+
+
+          </View>
+
+
+          <View style={ styles.rowDetalle }>
+            <View style={ styles.colSubtitulo }>
+              <Text>Valor</Text>
+
+            </View>
+
+
+            <View style={ styles.colContenidoX }>
+
+              <View style={ styles.col1Col5 }>
+                <Text style={ styles.colContenido3 }></Text>
+              </View>
+
+              <View style={ styles.col5Col5 }>
+                <Text></Text>
+              </View>
+
+              <View style={ styles.col5Col5 }>
+                <Text style={ styles.colContenido3 }></Text>
+
+              </View>
+              <View style={ styles.col5Col5 }>
+                <Text ></Text>
+
+              </View>
+              <View style={ styles.col5Col5 }>
+                <Text style={ styles.colContenido3 }></Text>
+
+              </View>
+
+            </View>
+
+
+
+          </View>
+          <Validacion owner={ proceso?.owners[ 0 ]?.unidadOperativa?.nombre } />
+
+
+
+
 
         </View>
       </Page>
