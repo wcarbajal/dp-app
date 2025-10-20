@@ -2,6 +2,7 @@
 import { Document, Page, Text, View, StyleSheet, Image } from '@react-pdf/renderer';
 import { FormulaRenderer } from './FormulaRender.jsx';
 import { Cabecera } from './partes/Cabecera';
+import { capitalize } from '@/utils/text.js';
 
 
 
@@ -33,7 +34,7 @@ const styles = StyleSheet.create( {
   colSubtitulo: {
     fontSize: 12,
     fontWeight: 'bold',
-    width: '30%',
+    width: '20%',
     backgroundColor: "#f0f0f0",
     borderLeft: '1px',
     borderBottom: '1px',
@@ -43,12 +44,12 @@ const styles = StyleSheet.create( {
     fontSize: 12,
     fontWeight: 'bold',
     width: '25%',
-    backgroundColor: "#f0f0f0",    
-    
+    backgroundColor: "#f0f0f0",
+
   },
   colContenido: {
     fontSize: 12,
-    width: '70%',
+    width: '80%',
     borderRight: '1px',
     borderBottom: '1px',
     borderLeft: '1px',
@@ -58,18 +59,18 @@ const styles = StyleSheet.create( {
   },
   colContenidoX: {
     fontSize: 12,
-    width: '70%',
+    width: '80%',
     borderRight: '1px',
     borderBottom: '1px',
     borderLeft: '1px',
     display: 'flex',
-    flexDirection: 'row',    
+    flexDirection: 'row',
   },
-   colContenido3: {
-    fontSize: 12,        
+  colContenido3: {
+    fontSize: 12,
     padding: 5,
   },
-  
+
   col1Col3: {
     width: '50%',
 
@@ -80,11 +81,40 @@ const styles = StyleSheet.create( {
     borderLeft: '1px',
     margin: 0,
     padding: 5,
+    borderLeftColor: "f0f0f0",
+    borderBottomColor: "f0f0f0",
+    fontWeight: 'bold',
   },
   col3Col3: {
     borderLeft: '1px',
     padding: 5,
   },
+  col1Col5: {
+    width: '20%',
+  },
+  col2Col5: {
+    width: '20%',
+    backgroundColor: "#f0f0f0",
+    padding: 5,
+    borderLeft: '1px',
+    fontWeight: 'bold',
+  },
+  col3Col5: {
+    width: '20%',
+    borderLeft: '1px',
+  },
+  col4Col5: {
+    width: '22%',
+    borderLeft: '1px',
+    backgroundColor: "#f0f0f0",
+    
+  },
+  col5Col5: {
+    width: '20%',
+    borderLeft: '1px',
+    padding: 5,
+  },
+
   content: {
     fontSize: 11,
     lineHeight: 1.6,
@@ -112,17 +142,17 @@ export const IndicadorPdf = ( { proceso, indicador } ) => {
           </View>
 
           <View style={ styles.rowDetalle }>
-            <Text style={ styles.colSubtitulo }>Proceso:</Text>
+            <Text style={ styles.colSubtitulo }>Proceso</Text>
             <Text style={ styles.colContenido }>{ proceso?.codigo } { proceso?.nombre }</Text>
           </View>
 
           <View style={ styles.rowDetalle }>
-            <Text style={ styles.colSubtitulo }>Producto:</Text>
+            <Text style={ styles.colSubtitulo }>Producto</Text>
             <Text style={ styles.colContenido }>Sin producto</Text>
           </View>
 
           <View style={ styles.rowDetalle }>
-            <Text style={ styles.colSubtitulo }>Nombre de indicador:</Text>
+            <Text style={ styles.colSubtitulo }>Nombre de indicador</Text>
 
             <View style={ styles.colContenidoX }>
               <View style={ styles.col1Col3 }>
@@ -130,35 +160,72 @@ export const IndicadorPdf = ( { proceso, indicador } ) => {
 
               </View>
               <View style={ styles.col2Col3 }>
-                <Text style={ styles.colSubtitulo2 }>Tipo</Text>
+                <Text style={ styles.colSubtitulo }>Tipo</Text>
 
               </View>
               <View style={ styles.col3Col3 }>
                 <Text style={ styles.colContenido2 }>{ indicador?.tipoIndicador || 'No asignado' }</Text>
 
               </View>
+              {/*             <View style={ styles.col4Col5 }>
+                <Text style={ styles.colContenido2 }>{ indicador?.tipoIndicador || 'No asignado' }</Text>
+
+              </View> */}
 
             </View>
           </View>
 
           <View style={ styles.rowDetalle }>
-            <Text style={ styles.colSubtitulo }>Justificación:</Text>
+            <Text style={ styles.colSubtitulo }>Justificación</Text>
             <Text style={ styles.colContenido }>{ indicador?.justificacion || 'No asignado' }</Text>
           </View>
 
           <View style={ styles.rowDetalle }>
-            <Text style={ styles.colSubtitulo }>Responsable:</Text>
+            <Text style={ styles.colSubtitulo }>Responsable</Text>
             <Text style={ styles.colContenido }>{ indicador?.responsable || 'No asignado' }</Text>
           </View>
 
           <View style={ styles.rowDetalle }>
-            <Text style={ styles.colSubtitulo }>Metodo de cálculo:</Text>
+            <Text style={ styles.colSubtitulo }>Metodo de cálculo</Text>
             <View style={ styles.colContenido }>
               { indicador?.formula ? (
                 <FormulaRenderer formula={ indicador.formula } />
               ) : (
                 <Text>No definida</Text>
               ) }
+            </View>
+          </View>
+
+          <View style={ styles.rowDetalle }>
+            <View style={ styles.colSubtitulo }>
+              <Text>Sentido</Text>
+              <Text>esperado</Text>
+            </View>
+            
+
+            <View style={ styles.colContenidoX }>
+              <View style={ styles.col1Col5 }>
+                <Text style={ styles.colContenido3 }>{ indicador?.sentidoEsperado || 'No asignado' }</Text>
+
+              </View>
+              <View style={ styles.col2Col5 }>
+                <Text>Unidad de</Text>
+                <Text>medida </Text>
+
+              </View>
+              <View style={ styles.col3Col5 }>
+                <Text style={ styles.colContenido3 }>{ capitalize(indicador?.unidadMedida) || 'No asignado' }</Text>
+
+              </View>
+              <View style={ styles.col2Col5 }>
+                <Text >Frecuencia</Text>
+
+              </View>
+              <View style={ styles.col5Col5 }>
+                <Text style={ styles.colContenido3 }>{ indicador?.frecuencia || 'No asignado' }</Text>
+
+              </View>
+
             </View>
           </View>
 
