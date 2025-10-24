@@ -21,6 +21,7 @@ import { UnidadFuncionalConfig } from '@/components/configuraciones/unidad-funci
 import { UsuarioConfig } from '@/components/configuraciones/usuarios-config/UsuariosConfig';
 import { IndicadoresConfig } from '@/components/configuraciones/indicadores-config/IndicadoresConfig';
 import { IndicadorConfig } from '@/components/configuraciones/indicadores-config/IndicadorConfig';
+import { ResultadosIndicadorPage } from '@/pages/ResultadosIndicadorPage';
 
 
 
@@ -48,6 +49,7 @@ export const PrincipalRouter = () => {
         <Route path="unidades-funcionales" element={ <UnidadFuncionalConfig /> } />
         <Route path="indicadores" element={ <IndicadoresConfig /> } />
         <Route path="indicador/:id" element={ <IndicadorConfig /> } />
+        <Route path="indicador/:indicadorId/resultados" element={ <ResultadosIndicadorPage /> } />
 
 
 
