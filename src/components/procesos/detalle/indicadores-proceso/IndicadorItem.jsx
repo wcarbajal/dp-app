@@ -17,6 +17,8 @@ import { ResultadosIndicador } from './ResutadosIndicador';
 
 export const IndicadorItem = ( { indicador, proceso, onIndicadoresAgregados } ) => {
 
+  console.log("el indicador ", indicador)
+
   const eliminarIndicadorDeProceso = async ( indicadorId ) => {
 
     const eliminarIndicador = await fetchConToken( `indicador/sin-proceso/${ indicadorId }`, {}, 'GET' );
