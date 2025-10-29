@@ -144,7 +144,7 @@ export const ProcesoPage = () => {
           {!tieneHijos && <TabsTrigger value="procedimiento">Procedimiento</TabsTrigger>}
           <TabsTrigger value="indicadores">Indicadores</TabsTrigger>
           <TabsTrigger value="documentos">Documentos</TabsTrigger>
-          <TabsTrigger value="datos">Datos</TabsTrigger>
+          
         </TabsList>
 
         <TabsContent value="descripcion">
@@ -188,9 +188,6 @@ export const ProcesoPage = () => {
           <DocumentosProceso proceso={proceso || []} />
         </TabsContent>
 
-        <TabsContent value="datos">
-          <TempDatos proceso={proceso || []} />
-        </TabsContent>
       </Tabs>
     </section>
   );

@@ -4,6 +4,7 @@ import { FormulaRenderer } from './FormulaRender.jsx';
 import { Cabecera } from './partes/Cabecera';
 import { capitalize } from '@/utils/text.js';
 import { Validacion } from './partes/Validacion';
+import { formatearFecha } from '@/helpers/string';
 
 
 
@@ -143,7 +144,7 @@ const styles = StyleSheet.create( {
 } );
 
 
-export const IndicadorPdf = ( { proceso, indicador } ) => {
+export const IndicadorPdf = ( { proceso, indicador, resultados = [] } ) => {
   return (
     <Document>
       <Page size="A4" style={ styles.page }>
@@ -212,8 +213,8 @@ export const IndicadorPdf = ( { proceso, indicador } ) => {
 
           <View style={ styles.rowDetalle }>
             <View style={ styles.colSubtitulo }>
-              <Text>Sentido</Text>
-              <Text>esperado</Text>
+              <Text style={ styles.colContenido3 }>Sentido</Text>
+              <Text style={ styles.colContenido3 }>esperado</Text>
             </View>
 
 
@@ -223,8 +224,8 @@ export const IndicadorPdf = ( { proceso, indicador } ) => {
 
               </View>
               <View style={ styles.col2Col5 }>
-                <Text>Unidad de</Text>
-                <Text>medida </Text>
+                <Text style={ styles.colContenido3 }>Unidad de</Text>
+                <Text style={ styles.colContenido3 }>medida </Text>
 
               </View>
               <View style={ styles.col3Col5 }>
@@ -232,7 +233,7 @@ export const IndicadorPdf = ( { proceso, indicador } ) => {
 
               </View>
               <View style={ styles.col2Col5 }>
-                <Text >Frecuencia</Text>
+                <Text style={ styles.colContenido3 }>Frecuencia</Text>
 
               </View>
               <View style={ styles.col5Col5 }>
@@ -250,8 +251,8 @@ export const IndicadorPdf = ( { proceso, indicador } ) => {
 
           <View style={ styles.rowDetalle }>
             <View style={ styles.colSubtitulo }>
-              <Text></Text>
-              <Text></Text>
+              <Text style={ styles.colContenido3 }></Text>
+              <Text style={ styles.colContenido3 }></Text>
             </View>
 
 
@@ -271,7 +272,7 @@ export const IndicadorPdf = ( { proceso, indicador } ) => {
 
           <View style={ styles.rowDetalle }>
             <View style={ styles.colSubtitulo }>
-              <Text>Año</Text>
+              <Text style={ styles.colContenido3 }>Año / fecha</Text>
 
             </View>
 
@@ -279,26 +280,17 @@ export const IndicadorPdf = ( { proceso, indicador } ) => {
             <View style={ styles.colContenidoX }>
 
               <View style={ styles.col1Col5 }>
-                <Text style={ styles.colContenido3 }>[Año base]</Text>
+                <Text style={ styles.colContenido3 }>{formatearFecha(indicador?.creadoEn || '')}</Text>
               </View>
 
-              <View style={ styles.col5Col5 }>
-                <Text>[Año 1]</Text>
-              </View>
+               {
+                resultados.length > 0 && resultados.map( ( resultado ) => (
+                  <View key={ resultado.id } style={ styles.col5Col5 }>
+                    <Text style={ styles.colContenido3 }>{ formatearFecha( resultado.fechaRegistro || '0' ) }</Text>
+                  </View>
 
-              <View style={ styles.col5Col5 }>
-                <Text style={ styles.colContenido3 }></Text>
-
-              </View>
-              <View style={ styles.col5Col5 }>
-                <Text ></Text>
-
-              </View>
-              <View style={ styles.col5Col5 }>
-                <Text style={ styles.colContenido3 }>[Año n]</Text>
-
-              </View>
-
+                ))
+              }
             </View>
 
 
@@ -308,7 +300,7 @@ export const IndicadorPdf = ( { proceso, indicador } ) => {
 
           <View style={ styles.rowDetalle }>
             <View style={ styles.colSubtitulo }>
-              <Text>Valor</Text>
+              <Text style={ styles.colContenido3 }>Valor</Text>
 
             </View>
 
@@ -316,26 +308,17 @@ export const IndicadorPdf = ( { proceso, indicador } ) => {
             <View style={ styles.colContenidoX }>
 
               <View style={ styles.col1Col5 }>
-                <Text style={ styles.colContenido3 }></Text>
+                <Text style={ styles.colContenido3 }>{indicador?.lineaBase || 'No asignado'}</Text>
               </View>
 
-              <View style={ styles.col5Col5 }>
-                <Text></Text>
-              </View>
+              {
+                resultados.length > 0 && resultados.map( ( resultado ) => (
+                  <View key={ resultado.id } style={ styles.col5Col5 }>
+                    <Text style={ styles.colContenido3 }>{ String(resultado.valor || '0') }</Text>
+                  </View>
 
-              <View style={ styles.col5Col5 }>
-                <Text style={ styles.colContenido3 }></Text>
-
-              </View>
-              <View style={ styles.col5Col5 }>
-                <Text ></Text>
-
-              </View>
-              <View style={ styles.col5Col5 }>
-                <Text style={ styles.colContenido3 }></Text>
-
-              </View>
-
+                ))
+              }
             </View>
 
 

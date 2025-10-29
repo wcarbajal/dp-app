@@ -28,7 +28,7 @@ export const ReportePage = () => {
     const obtenerMapas = async () => {
       setLoading( true );
       const mapas = await cargarMapas();
-      console.log( "Mapas cargados:", mapas );
+      
       setMapas( mapas );
       setLoading( false );
     };
@@ -47,7 +47,7 @@ export const ReportePage = () => {
 
   // Consultar datos según selección
   const obtenerDatos = async () => {
-    console.log( "la seleccion" );
+    
     setDatos( [
       {
         id: 1,

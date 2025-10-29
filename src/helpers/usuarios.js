@@ -1,23 +1,21 @@
-
-
 import { fetchConToken } from './fetch';
 
-export const cargarMapas = async () => {
+export const cargarUsuarios = async () => {
   try {
-    console.log('Intentando cargar mapas...');
-    
-    const response = await fetchConToken('mapa', {}, 'GET');
-    
+    console.log('Intentando cargar usuarios...');
+
+    const response = await fetchConToken('usuarios', {}, 'GET');
+
     console.log('Respuesta del servidor:', response);
     
     // Verificar si la respuesta es exitosa
     if (!response.ok) {
-      throw new Error(`Error ${response.status}: ${response.statusText || 'Error al cargar mapas'}`);
+      throw new Error(`Error ${response.status}: ${response.statusText || 'Error al cargar usuarios'}`);
     }
     
     // Verificar si tenemos datos
-    if (response.mapas && Array.isArray(response.mapas)) {
-      return response.mapas;
+    if (response.usuarios && Array.isArray(response.usuarios)) {
+      return response.usuarios;
     } else {
       console.warn('Estructura de respuesta inesperada:', response);
       return [];
@@ -32,20 +30,5 @@ export const cargarMapas = async () => {
     }
     
     throw error;
-  }
-};
-
-export const cargarDataChart = async (id) => {
-  
-  try {
-    const respuestaChart = await fetchConToken(`mapa/${id}/data-chart`);
-    
-    if (respuestaChart.ok) {
-      return respuestaChart;
-    }
-    return [];
-  } catch (error) {
-    console.error("Error al cargar mapas:", error);
-    return [];
   }
 };

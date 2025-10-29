@@ -21,7 +21,7 @@ export const SocketProvider = ({ children }) => {
     useEffect(() => {
       if (auth.logged){
         
-//        console.log({socket})
+
         conectarSocket();
       }
     }, [auth, conectarSocket])

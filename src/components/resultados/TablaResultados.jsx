@@ -54,7 +54,7 @@ export const TablaResultados = ( {
           // Recargar resultados
           const resultadosResponse = await fetchConToken( `indicador/resultados/${ indicadorId }`, {}, 'GET' );
 
-          console.log( "resultao despues de eliminar", resultadosResponse );
+          
 
           if ( resultadosResponse.ok ) {
             setResultados( resultadosResponse.resultados || [] );
@@ -78,8 +78,6 @@ export const TablaResultados = ( {
 
   // Manejar edición de resultado
   const handleEdit = ( resultado ) => {
-    console.log('handleEdit - Iniciando edición de resultado:', resultado.id);
-    console.log('handleEdit - accordionValue actual:', accordionValue);
     
     setEditingResult( resultado );
 
@@ -105,15 +103,15 @@ export const TablaResultados = ( {
     } );
 
     // Abrir el accordion primero
-    console.log('handleEdit - Intentando abrir accordion con valor: formulario-resultado');
+    
     setAccordionValue( "formulario-resultado" );
     
-    console.log('handleEdit - setAccordionValue ejecutado');
+    
 
     // Dar tiempo para que se abra el accordion y luego hacer scroll
     setTimeout( () => {
       const elemento = document.getElementById( 'formulario-resultado' );
-      console.log('handleEdit - Elemento formulario-resultado encontrado:', !!elemento);
+      
       
       if ( elemento ) {
         elemento.scrollIntoView( {

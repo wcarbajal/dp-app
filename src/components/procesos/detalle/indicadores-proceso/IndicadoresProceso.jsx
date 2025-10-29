@@ -14,7 +14,7 @@ export const IndicadoresProceso = ( { proceso, onIndicadoresAgregados } ) => {
   
   const indicadores = proceso?.indicadores || [];
 
-  console.log("Indicadores del proceso:", proceso?.indicadores);
+  
 
   const indicadoresOrdenados = indicadores.sort( ( a, b ) => {
     // Definir el orden de prioridad para nivelIndicador

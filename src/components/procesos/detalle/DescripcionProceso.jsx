@@ -54,10 +54,10 @@ export const DescripcionProceso = ( { proceso, onSubmit: onSubmitProp, ownersOpt
 
 
     if ( onSubmitProp ) {
-      console.log( "onSubmitProp", values );
+      
       onSubmitProp( values );
     } else {
-      console.log( "Formulario enviado:", values );
+      
       // Por defecto, solo muestra los datos en consola
       const actualizarProceso = await fetchConToken( `procesos/descripcion/${ proceso.id }`, values, "PUT" );
 

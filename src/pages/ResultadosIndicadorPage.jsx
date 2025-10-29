@@ -52,7 +52,7 @@ export const ResultadosIndicadorPage = () => {
         // Cargar resultados
         const resultadosResponse = await fetchConToken( `indicador/resultados/${ indicadorId }`, {}, 'GET' );
 
-        console.log( "resultadosResponse", resultadosResponse );
+        
 
         if ( resultadosResponse.ok ) {
           setResultados( resultadosResponse.resultados || [] );
@@ -78,7 +78,7 @@ export const ResultadosIndicadorPage = () => {
 
   // Manejar guardado de resultado
   const handleSave = async ( data ) => {
-    console.log( " la data ", data );
+    
     try {
       
       const resultadoData = {
@@ -86,15 +86,14 @@ export const ResultadosIndicadorPage = () => {
         indicadorId: parseInt( indicadorId ),
         ...( editingResult && { id: editingResult.id } ),
       };
-      console.log( "el resultadoData", resultadoData );
+      
 
       const method = editingResult ? 'PUT' : 'POST';
       const endpoint = editingResult
         ? `resultado/${ editingResult.id }`
         : 'resultado';
 
-      console.log( "el Metodo", method );
-      console.log( "el endpoint", endpoint );
+
 
       const response = await fetchConToken( endpoint, resultadoData, method );
 
@@ -114,7 +113,7 @@ export const ResultadosIndicadorPage = () => {
         if ( resultadosResponse.ok ) {
           setResultados( resultadosResponse.resultados || [] );
         }
-        console.log( "actualizacion de resultados", resultadosResponse );
+        
 
         // Limpiar formulario
         form.reset( {

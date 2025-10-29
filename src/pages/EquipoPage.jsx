@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Dialog, DialogContent, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
@@ -7,6 +7,7 @@ import { Select, SelectItem } from "@/components/ui/select";
 import { Card } from '@/components/ui/card';
 import { ListaMapas } from '@/components/ListaMapas';
 import { cargarMapas } from '@/helpers/mapas';
+import { fetchConToken } from "@/helpers/fetch";
 
 export const EquipoPage = () => {
 
@@ -17,24 +18,47 @@ export const EquipoPage = () => {
   const [ usuarios, setUsuarios ] = useState( [] );
   const [ procesos, setProcesos ] = useState( [] );
   const [ modalUsuario, setModalUsuario ] = useState( null );
-  //const [modalAsignar, setModalAsignar] = useState(null);
   const [ nuevoUsuario, setNuevoUsuario ] = useState( { nombre: "", email: "" } );
 
-  useEffect( () => {
-    const obtenerMapas = async () => {
+
+  // Convertir obtenerMapas en useCallback
+  const obtenerMapas = useCallback( async () => {
+    try {
       setLoading( true );
       const mapas = await cargarMapas();
       setMapas( mapas );
+    } catch ( error ) {
+      console.error( 'Error al cargar mapas:', error );
+      setMapas( [] ); // Fallback en caso de error
+    } finally {
       setLoading( false );
-    };
-    obtenerMapas();
-  }, [ mapaSeleccionado ] );
+    }
+  }, [] ); // Sin dependencias porque cargarMapas es una función externa
 
-  // Cargar usuarios y procesos
   useEffect( () => {
-    fetch( "/api/usuarios" ).then( r => r.json() ).then( setUsuarios );
-    fetch( "/api/procesos" ).then( r => r.json() ).then( setProcesos );
-  }, [] );
+    obtenerMapas();
+  }, [ obtenerMapas ] ); // Ahora depende de obtenerMapas
+
+  // cargar usuarios
+
+    // Convertir obtenerMapas en useCallback
+  const obtenerUsuarios = useCallback( async () => {
+    try {
+      setLoading( true );
+      const usuarios = await fetchConToken( 'usuarios', {}, 'GET' );
+      setUsuarios( usuarios );
+    } catch ( error ) {
+      console.error( 'Error al cargar mapas:', error );
+      setMapas( [] ); // Fallback en caso de error
+    } finally {
+      setLoading( false );
+    }
+  }, [] ); // Sin dependencias porque cargarMapas es una función externa
+
+  useEffect( () => {
+    obtenerUsuarios();
+  }, [ obtenerUsuarios ] ); // Ahora depende de obtenerUsuarios
+
 
   // Crear usuario
   const crearUsuario = async () => {

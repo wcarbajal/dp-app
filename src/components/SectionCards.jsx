@@ -30,7 +30,7 @@ export const DashboardCards = () => {
       if ( !mapaSeleccionado ) return;
 
       const resDataChart = await cargarDataChart( mapaSeleccionado.id );
-      console.log( "resDataChart", resDataChart );
+      
 
       setDataChart( resDataChart );
 

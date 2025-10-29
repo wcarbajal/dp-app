@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -19,10 +20,31 @@ import { Eye } from "tabler-icons-react";
 import { PDFViewer, PDFDownloadLink } from '@react-pdf/renderer';
 import { IndicadorPdf } from "@/components/pdf-view/IndicadorPdf";
 import { Download } from "tabler-icons-react";
+import { fetchConToken } from "@/helpers/fetch"; 
+
 
 export const VistaIndicadorDialog = ( { proceso, indicador } ) => {
 
-  console.log( "Indicador", indicador );
+  const [ resultados, setResultados ] = useState([]);
+
+  
+
+  const cargarResultados = async (indicadorId) => {
+
+    const response = await fetchConToken( `indicador/resultados/${ indicadorId }`, {}, 'GET' );
+    if ( response.ok ) {
+      setResultados( response.resultados );
+    }
+    
+  }
+
+  useEffect(  () => {
+    cargarResultados(indicador?.id);
+   
+  }, [indicador?.id])
+  
+
+  
   return (
     <AlertDialog>
       <AlertDialogTrigger>
@@ -60,14 +82,14 @@ export const VistaIndicadorDialog = ( { proceso, indicador } ) => {
               border: 'none'
             } }
           >
-            <IndicadorPdf proceso={ proceso } indicador={ indicador } />
+            <IndicadorPdf proceso={ proceso } indicador={ indicador } resultados={ resultados } />
           </PDFViewer>
         </div>
 
         <AlertDialogFooter>
           <AlertDialogCancel>Cerrar</AlertDialogCancel>
           <PDFDownloadLink
-            document={ <IndicadorPdf indicador={ indicador } /> }
+            document={ <IndicadorPdf proceso={ proceso } indicador={ indicador } resultados={ resultados } /> }
             fileName={ `indicador-${ indicador?.nombre?.replace( /\s+/g, '-' )?.toLowerCase() || 'sin-nombre' }.pdf` }
           >
             { ( { loading } ) => (

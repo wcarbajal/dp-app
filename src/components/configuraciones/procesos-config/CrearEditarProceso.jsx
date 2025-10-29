@@ -35,28 +35,23 @@ export const CreateEditProceso = ( { idMapa, listadoProcesos, proceso, cargarPro
 
   const onSubmit = async ( values ) => {
 
-    console.log( "Submitting form with values:", values );
+  
 
     try {
       let respuesta;
 
-      console.log( { respuesta } );
-
       const valuesToSend = { ...values };
-      console.log( "valuesToSend before adjustment:", valuesToSend );
-
+      
       if ( valuesToSend.parentId === "" ) {
         delete valuesToSend.parentId;
       }
 
-      console.log( { proceso } );
-
-      if ( proceso && proceso.id ) {
+       if ( proceso && proceso.id ) {
 
         respuesta = await fetchConToken( `procesos/${ proceso.id }/actualizar`, valuesToSend, "PUT" );
       } else {
         respuesta = await fetchConToken( `procesos/${ idMapa }/registrar`, valuesToSend, "POST" );
-        console.log( { respuesta } );
+        
       }
 
       if ( respuesta.ok ) {
