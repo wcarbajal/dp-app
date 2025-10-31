@@ -9,9 +9,6 @@ import BpmnModel from 'bpmn-js/lib/Modeler';
 import { BpmnPropertiesPanelModule, BpmnPropertiesProviderModule } from 'bpmn-js-properties-panel';
 import '@bpmn-io/properties-panel/dist/assets/properties-panel.css';
 
-
-
-
 import { useEffect, useRef, useState } from 'react';
 import { Button } from '../ui/button';
 import customTranslate from './customTranslate';
@@ -21,16 +18,147 @@ import { IoCodeDownloadOutline, IoDownloadOutline } from 'react-icons/io5';
 import { FaRegSave } from "react-icons/fa";
 import { fetchConToken } from '@/helpers/fetch';
 import Swal from 'sweetalert2';
+import { Activity, ChartDots3, X } from 'tabler-icons-react';
+
+import { AnalizadorProcesos } from '@/components/validar/AnalizadorProcesos';
+import { ValidadorBPMN } from '@/components/bpmn/ValidadorBPMN';
+import { Dialog,  DialogContent, DialogDescription, DialogFooter, 
+  DialogHeader, DialogTitle, DialogTrigger
+} from '@/components/ui/dialog';
 
 
 export const BpmnModeler = ( { xmlInicial, procesoId, codigo, nombre, onDiagramaActualizado } ) => {
 
   const [ open, setOpen ] = useState( true );
 
+  const [ modalAnalisisOpen, setModalAnalisisOpen ] = useState( false );
+  const [ procesoExtraido, setProcesoExtraido ] = useState( null );
+
   const containerRef = useRef( null );
   const modelerRef = useRef( null );
 
   const LOCAL_KEY = `${ codigo } ${ nombre } - bpmn-xml`;
+
+  // Función para extraer información del diagrama BPMN
+  const extraerInformacionProceso = async () => {
+    if ( !modelerRef.current ) return null;
+
+    try {
+      const elementRegistry = modelerRef.current.get( 'elementRegistry' );
+      const elementos = elementRegistry.getAll();
+
+      const actividades = [];
+      let inicios = 0;
+      let finales = 0;
+      let decisiones = 0;
+
+      elementos.forEach( elemento => {
+        if ( !elemento.businessObject ) return;
+
+        const bo = elemento.businessObject;
+
+        switch ( bo.$type ) {
+          case 'bpmn:StartEvent':
+            inicios++;
+            actividades.push( {
+              id: elemento.id,
+              nombre: bo.name || 'Evento de Inicio',
+              tipo: 'start',
+              descripcion: 'Punto de inicio del proceso'
+            } );
+            break;
+
+          case 'bpmn:EndEvent':
+            finales++;
+            actividades.push( {
+              id: elemento.id,
+              nombre: bo.name || 'Evento Final',
+              tipo: 'end',
+              descripcion: 'Punto final del proceso'
+            } );
+            break;
+
+          case 'bpmn:Task':
+          case 'bpmn:UserTask':
+          case 'bpmn:ServiceTask':
+          case 'bpmn:ManualTask':
+          case 'bpmn:ScriptTask':
+          case 'bpmn:BusinessRuleTask':
+          case 'bpmn:SendTask':
+          case 'bpmn:ReceiveTask':
+            actividades.push( {
+              id: elemento.id,
+              nombre: bo.name || 'Tarea sin nombre',
+              tipo: 'task',
+              tipoEspecifico: bo.$type.replace( 'bpmn:', '' ),
+              descripcion: bo.documentation?.[ 0 ]?.text || 'Sin descripción'
+            } );
+            break;
+
+          case 'bpmn:ExclusiveGateway':
+          case 'bpmn:InclusiveGateway':
+          case 'bpmn:ParallelGateway':
+          case 'bpmn:ComplexGateway':
+          case 'bpmn:EventBasedGateway':
+            decisiones++;
+            actividades.push( {
+              id: elemento.id,
+              nombre: bo.name || `Gateway ${ bo.$type.replace( 'bpmn:', '' ) }`,
+              tipo: 'decision',
+              tipoEspecifico: bo.$type.replace( 'bpmn:', '' ),
+              descripcion: 'Punto de decisión en el flujo'
+            } );
+            break;
+
+          case 'bpmn:SubProcess':
+          case 'bpmn:CallActivity':
+            actividades.push( {
+              id: elemento.id,
+              nombre: bo.name || 'Subproceso',
+              tipo: 'subprocess',
+              descripcion: 'Subproceso o actividad llamada'
+            } );
+            break;
+        }
+      } );
+
+      return {
+        id: procesoId,
+        nombre: nombre || 'Proceso BPMN',
+        descripcion: `Proceso modelado en BPMN con ${ actividades.length } elementos`,
+        objetivo: 'Automatizar y optimizar el flujo de trabajo definido',
+        tipo: 'BPMN',
+        actividades: actividades,
+        metricas: {
+          totalElementos: elementos.length,
+          eventosInicio: inicios,
+          eventosFinales: finales,
+          decisiones: decisiones,
+          tareas: actividades.filter( a => a.tipo === 'task' ).length
+        }
+      };
+    } catch ( error ) {
+      console.error( 'Error extrayendo información del proceso:', error );
+      return null;
+    }
+  };
+
+  // Manejar apertura del modal de análisis
+  const handleAbrirAnalisis = async () => {
+    const proceso = await extraerInformacionProceso();
+    if ( proceso ) {
+      setProcesoExtraido( proceso );
+      setModalAnalisisOpen( true );
+    } else {
+      Swal.fire( {
+        title: 'Error',
+        text: 'No se pudo extraer información del diagrama BPMN',
+        icon: 'error',
+        confirmButtonText: 'Entendido'
+      } );
+    }
+  };
+
 
   // Función para aplicar estilos por defecto a todos los elementos BPMN
   // Función para convertir SVG a PNG en base64
@@ -448,6 +576,84 @@ export const BpmnModeler = ( { xmlInicial, procesoId, codigo, nombre, onDiagrama
             <FaRegSave />
             Guardar
           </Button>
+          {/* Modal de Análisis */ }
+          <Dialog open={ modalAnalisisOpen } onOpenChange={ setModalAnalisisOpen }>
+            <DialogTrigger asChild>
+              <Button
+                onClick={ handleAbrirAnalisis }
+                variant="secondary"
+                className="gap-2"
+              >
+                <ChartDots3 className="w-4 h-4" />
+                Analizar
+              </Button>
+            </DialogTrigger>
+
+            <DialogContent className="max-w-6xl max-h-[90vh] overflow-hidden flex flex-col">
+              <DialogHeader>
+                <DialogTitle className="flex items-center gap-2">
+                  <Activity className="w-5 h-5" />
+                  Análisis Inteligente del Proceso BPMN
+                </DialogTitle>
+                <DialogDescription>
+                  Análisis semántico y validación de flujos BPMN usando Inteligencia Artificial
+                </DialogDescription>
+              </DialogHeader>
+
+              <div className="flex-1 overflow-y-auto space-y-4 py-4">
+                { procesoExtraido && (
+                  <>
+                    {/* Información del proceso extraído */ }
+                    <Card className="p-4">
+                      <h4 className="font-semibold mb-2">📊 Información del Proceso</h4>
+                      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+                        <div>
+                          <span className="font-medium">Elementos:</span>
+                          <div className="text-lg font-bold text-blue-600">
+                            { procesoExtraido.metricas?.totalElementos || 0 }
+                          </div>
+                        </div>
+                        <div>
+                          <span className="font-medium">Tareas:</span>
+                          <div className="text-lg font-bold text-green-600">
+                            { procesoExtraido.metricas?.tareas || 0 }
+                          </div>
+                        </div>
+                        <div>
+                          <span className="font-medium">Decisiones:</span>
+                          <div className="text-lg font-bold text-yellow-600">
+                            { procesoExtraido.metricas?.decisiones || 0 }
+                          </div>
+                        </div>
+                        <div>
+                          <span className="font-medium">Eventos:</span>
+                          <div className="text-lg font-bold text-purple-600">
+                            { ( procesoExtraido.metricas?.eventosInicio || 0 ) +
+                              ( procesoExtraido.metricas?.eventosFinales || 0 ) }
+                          </div>
+                        </div>
+                      </div>
+                    </Card>
+
+                    {/* Componentes de análisis */ }
+                   {/*  <AnalizadorProcesos proceso={ procesoExtraido } /> */}
+                    <ValidadorBPMN procesoCompleto={ procesoExtraido } />
+                  </>
+                ) }
+              </div>
+
+              <DialogFooter>
+                <Button
+                  variant="outline"
+                  onClick={ () => setModalAnalisisOpen( false ) }
+                  className="gap-2"
+                >
+                  <X className="w-4 h-4" />
+                  Cerrar
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
         </div>
       </Card>
       <Card style={ { display: 'flex', height: '70vh', position: 'relative', width: '100%' } }>

@@ -4,6 +4,7 @@ import { DocumentosProceso } from '@/components/procesos/detalle/DocumentosProce
 import { FichaProceso } from '@/components/procesos/detalle/FichaProceso';
 import { IndicadoresProceso } from '@/components/procesos/detalle/indicadores-proceso/IndicadoresProceso';
 import { ProcedimientoProceso } from '@/components/procesos/detalle/ProcedimientoProceso';
+import { AnalizadorProcesos } from '@/components/validar/AnalizadorProcesos';
 import { TempDatos } from '@/components/procesos/detalle/TempDatos';
 import { Card } from '@/components/ui/card';
 import { Tabs, TabsList, TabsContent, TabsTrigger } from '@/components/ui/tabs';
@@ -143,8 +144,8 @@ export const ProcesoPage = () => {
           {tieneHijos && <TabsTrigger value="ficha">Ficha</TabsTrigger>}
           {!tieneHijos && <TabsTrigger value="procedimiento">Procedimiento</TabsTrigger>}
           <TabsTrigger value="indicadores">Indicadores</TabsTrigger>
-          <TabsTrigger value="documentos">Documentos</TabsTrigger>
-          
+          <TabsTrigger value="documentos">Documentos</TabsTrigger>          
+          <TabsTrigger value="analisis">Análisis</TabsTrigger>
         </TabsList>
 
         <TabsContent value="descripcion">
@@ -186,6 +187,9 @@ export const ProcesoPage = () => {
 
         <TabsContent value="documentos">
           <DocumentosProceso proceso={proceso || []} />
+        </TabsContent>
+        <TabsContent value="analisis">
+          <AnalizadorProcesos proceso={proceso || []} />
         </TabsContent>
 
       </Tabs>

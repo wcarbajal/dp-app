@@ -11,6 +11,8 @@ import { TempDatos } from './detalle/TempDatos';
 
 import { BpmnModeler } from '../bpmn/BpmnModeler';
 
+/* No activo */
+
 export const DetalleProceso = ( { procesoId } ) => {
 
   const [ detalleProceso, setDetalleProceso ] = useState( null );
@@ -60,12 +62,12 @@ export const DetalleProceso = ( { procesoId } ) => {
         <TabsTrigger value="indicadores">Indicadores</TabsTrigger>
         <TabsTrigger value="documentos">Documentos</TabsTrigger>
         <TabsTrigger value="datos">Datos</TabsTrigger>
+        <TabsTrigger value="analisis">Análisis</TabsTrigger>
       </TabsList>
       <TabsContent value="descripcion" className=" ">
         <DescripcionProceso proceso={ detalleProceso.proceso || [] } ownersOptions={ ownersList || [] } onUpdated={ cargarDetalle } />
       </TabsContent>
-      <TabsContent value="diagrama" className="  ">
-        {/* <DiagramaProceso proceso={ detalleProceso.proceso || [] } onUpdated={cargarDetalle}/> */ }
+      <TabsContent value="diagrama" className="  ">       
         <BpmnModeler xmlInicial={ detalleProceso?.proceso?.diagrama?.xml || undefined } procesoId={ detalleProceso.proceso.id } codigo={ detalleProceso.proceso.codigo } nombre={ detalleProceso.proceso.nombre } />
       </TabsContent>
       <TabsContent value="ficha" className=" ">
@@ -82,8 +84,9 @@ export const DetalleProceso = ( { procesoId } ) => {
       </TabsContent>
       <TabsContent value="datos" className="w-full max-w-4xl mx-auto overflow-x-auto ">
         <TempDatos proceso={ detalleProceso.proceso || [] } />
-
-
+      </TabsContent>
+      <TabsContent value="analisis" className="w-full max-w-4xl mx-auto overflow-x-auto ">
+        <AnalizadorProcesos proceso={ detalleProceso.proceso || [] } />
       </TabsContent>
     </Tabs>
 
